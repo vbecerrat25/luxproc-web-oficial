@@ -1,0 +1,6 @@
+{
+  "name": "LUXPROC",
+  "description": "Plataforma interactiva para gestionar proyectos de desarrollo de software (CRM, ERP, Arquitectura Web) e innovación, con reserva de reuniones en tiempo real sincronizada con Google Calendar y Google Meet.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
