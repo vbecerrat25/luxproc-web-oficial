@@ -12,13 +12,30 @@ import BusinessInfo from "./components/BusinessInfo";
 import Solutions from "./components/Solutions";
 import CalendarBooking from "./components/CalendarBooking";
 import ContactForm from "./components/ContactForm";
-import DeveloperConsole from "./components/DeveloperConsole";
 import { Cpu } from "lucide-react";
 import { LegalModals, RegulatoryBadges } from "./components/LegalModals";
 
 export default function App() {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    return false;
+  });
   const [activeLegalModal, setActiveLegalModal] = useState<"reclamaciones" | "arco" | "terminos" | null>(null);
+
+  // Listen to system prefers-color-scheme settings dynamically
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (e: MediaQueryListEvent) => {
+      setIsDarkMode(e.matches);
+    };
+    
+    // Modern listener syntax
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
 
   // Update root system class to toggle tailwind modes smoothly
   useEffect(() => {
@@ -56,10 +73,7 @@ export default function App() {
       {/* 8. Dedicated Contact formulations */}
       <ContactForm />
 
-      {/* 9. Operations Control and Sinc log monitor console */}
-      <DeveloperConsole />
-
-      {/* 10. Polished Corporate Footer */}
+      {/* 9. Polished Corporate Footer */}
       <footer className="relative bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-10 pb-16 px-6 md:px-12 lg:px-20 z-10 text-center sm:text-left transition-colors duration-300 overflow-hidden">
         {/* Subtle decorative background glows to fill wide screen empty margins with elegant ambient light */}
         <div className="absolute top-[-50px] left-[-80px] w-[350px] h-[350px] bg-blue-500/[0.04] dark:bg-blue-400/[0.03] rounded-full blur-[80px] pointer-events-none z-0" />

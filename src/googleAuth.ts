@@ -38,6 +38,21 @@ let isSigningIn = false;
 // Cache the access token in memory.
 let cachedAccessToken: string | null = null;
 
+// Track the last opened window reference to instantly detect closed popups
+let lastOpenedWindow: Window | null = null;
+try {
+  const originalWindowOpen = window.open;
+  window.open = function (url?: string | URL, target?: string, features?: string): Window | null {
+    const win = originalWindowOpen.call(window, url, target, features);
+    if (win) {
+      lastOpenedWindow = win;
+    }
+    return win;
+  };
+} catch (e) {
+  console.warn("Could not intercept window.open:", e);
+}
+
 // Listeners for auth state changes
 type AuthCallback = (user: User, token: string) => void;
 type FailureCallback = () => void;
@@ -73,9 +88,29 @@ export const initAuth = (
 
 // Must be called from a button click or user interaction
 export const googleSignIn = async (): Promise<{ user: User; accessToken: string } | null> => {
+  let pollInterval: any;
   try {
     isSigningIn = true;
-    const result = await signInWithPopup(auth, provider);
+    lastOpenedWindow = null; // Reset track reference
+
+    const signInPromise = signInWithPopup(auth, provider);
+
+    const detectClosedPromise = new Promise<never>((_, reject) => {
+      pollInterval = setInterval(() => {
+        if (lastOpenedWindow && lastOpenedWindow.closed) {
+          clearInterval(pollInterval);
+          const error = new Error("La ventana se cerró por el usuario.");
+          (error as any).code = "auth/popup-closed-by-user";
+          reject(error);
+        }
+      }, 200);
+    });
+
+    const result = await Promise.race([signInPromise, detectClosedPromise]);
+    if (!result) {
+      throw new Error("No se pudo iniciar sesión.");
+    }
+
     const credential = GoogleAuthProvider.credentialFromResult(result);
     if (!credential?.accessToken) {
       throw new Error("No se pudo obtener el Token de Acceso desde Google Authentication.");
@@ -88,9 +123,17 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
 
     return { user: result.user, accessToken: cachedAccessToken };
   } catch (error: any) {
-    console.error("Error durante Google Sign-In:", error);
+    const errCode = error?.code || "";
+    if (errCode === "auth/popup-closed-by-user" || error?.message?.includes("popup-closed-by-user") || error?.message?.includes("cerró")) {
+      console.warn("Google Sign-In popup closed or blocked:", error.message);
+    } else {
+      console.error("Error durante Google Sign-In:", error);
+    }
     throw error;
   } finally {
+    if (pollInterval) {
+      clearInterval(pollInterval);
+    }
     isSigningIn = false;
   }
 };

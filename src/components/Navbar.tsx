@@ -110,7 +110,16 @@ export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           
           {/* Brand Logo design */}
-          <a href="#" id="company-brand" className="flex items-center group cursor-pointer">
+          <a 
+            href="#" 
+            id="company-brand" 
+            className="flex items-center group cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              window.dispatchEvent(new CustomEvent("reset-to-home"));
+            }}
+          >
             <img 
               src="https://i.imgur.com/W8A2oCf.png" 
               alt="LUXPROC S.A.C." 

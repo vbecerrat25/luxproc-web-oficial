@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   Building, 
@@ -44,6 +44,16 @@ export default function Solutions() {
   const [activeModules, setActiveModules] = useState<string[]>(["leads", "funnel", "intelligence"]);
   const [selectedSolution, setSelectedSolution] = useState<any | null>(null);
   const [isERPFulviewOpen, setIsERPFulviewOpen] = useState(false);
+
+  // Listen for reset-to-home event to close any subviews/modals
+  useEffect(() => {
+    const handleReset = () => {
+      setIsERPFulviewOpen(false);
+      setSelectedSolution(null);
+    };
+    window.addEventListener("reset-to-home", handleReset);
+    return () => window.removeEventListener("reset-to-home", handleReset);
+  }, []);
 
   // All core solutions list
   const CORE_SOLUTIONS = [
@@ -758,7 +768,7 @@ export default function Solutions() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 10 }}
               transition={{ type: "spring", stiffness: 350, damping: 25 }}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl relative overflow-hidden z-10 text-left"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 md:p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl relative z-10 text-left"
             >
               {/* Decorative design highlight */}
               <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${selectedSolution.color}`} />

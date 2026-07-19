@@ -1,10 +1,12 @@
 {
-  "projectId": "vento-calza-77370362-c8202",
-  "appId": "1:777575853575:web:87575cf21a36071b0204a2",
-  "apiKey": "AIzaSyCQ49MBW_eLJxucfj7hTsATaWexMILZwVQ",
-  "authDomain": "vento-calza-77370362-c8202.firebaseapp.com",
-  "storageBucket": "vento-calza-77370362-c8202.firebasestorage.app",
-  "messagingSenderId": "777575853575",
+  "projectId": "luxproc",
+  "appId": "1:292605339341:web:e8348243101eeab0542b84",
+  "apiKey": "AIzaSyDBvWe3PqPf2NbIw5G2m2B6FZ1TS7XsG7s",
+  "authDomain": "luxproc.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-portaldeproyecto-fe6578fa-a9a7-41f4-aece-22008baf1346",
+  "storageBucket": "luxproc.firebasestorage.app",
+  "messagingSenderId": "292605339341",
   "measurementId": "",
-  "oAuthClientId": "777575853575-e1f89d1g02rpmbcssf6cc8d2q64qj1h5.apps.googleusercontent.com"
+  "oAuthClientId": "292605339341-1u9t7acvbhfp9im2her8puugqo9qgfb8.apps.googleusercontent.com",
+  "recaptchaSiteKey": ""
 }

@@ -14,15 +14,16 @@ import {
   Workflow,
   Plus,
   RefreshCw,
-  BellRing
+  BellRing,
+  ExternalLink
 } from "lucide-react";
 import { Booking } from "../types";
 import { initAuth, googleSignIn, logout } from "../googleAuth";
 
 const TIMEZONES = [
+  { id: "America/Bogota", name: "Bogotá / Lima (UTC-5)", offset: -5 },
   { id: "America/Santiago", name: "Santiago de Chile (UTC-4/3)", offset: -4 },
   { id: "Europe/Madrid", name: "Madrid / España (UTC+2/1)", offset: 120 }, // approximate representation in local standard formats
-  { id: "America/Bogota", name: "Bogotá / Lima (UTC-5)", offset: -5 },
   { id: "America/Mexico_City", name: "Ciudad de México (UTC-6)", offset: -6 },
   { id: "America/Argentina/Buenos_Aires", name: "Buenos Aires (UTC-3)", offset: -3 },
   { id: "UTC", name: "Tiempo Universal Coordinado (UTC)", offset: 0 },
@@ -154,7 +155,8 @@ const sendGmailConfirmation = async (
 };
 
 export default function CalendarBooking() {
-  const [selectedTimezone, setSelectedTimezone] = useState("America/Santiago");
+  const [selectedTimezone, setSelectedTimezone] = useState("America/Bogota");
+  const [dynamicTimezones, setDynamicTimezones] = useState(TIMEZONES);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedSlot, setSelectedSlot] = useState<string>("");
   const [activeShift, setActiveShift] = useState<"morning" | "afternoon">("morning");
@@ -221,9 +223,56 @@ export default function CalendarBooking() {
 
   useEffect(() => {
     fetchBookings();
+
+    // Auto-detect and set system timezone
+    try {
+      const systemTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (systemTz) {
+        // Map America/Lima to America/Bogota as they are identical UTC-5, or allow America/Lima itself
+        const matchedTz = systemTz === "America/Lima" ? "America/Bogota" : systemTz;
+        setSelectedTimezone(matchedTz);
+
+        // Check if the timezone exists in our static list
+        const exists = TIMEZONES.some((tz) => tz.id === matchedTz);
+        if (!exists) {
+          let offsetStr = "";
+          try {
+            const date = new Date();
+            const offsetMinutes = -date.getTimezoneOffset();
+            const offsetHours = Math.floor(offsetMinutes / 60);
+            const sign = offsetHours >= 0 ? "+" : "";
+            offsetStr = ` (UTC${sign}${offsetHours})`;
+          } catch (err) {}
+
+          const friendlyName = matchedTz.includes("/")
+            ? matchedTz.split("/")[1].replace(/_/g, " ")
+            : matchedTz;
+
+          const newTz = {
+            id: matchedTz,
+            name: `${friendlyName}${offsetStr}`,
+            offset: 0
+          };
+          setDynamicTimezones([newTz, ...TIMEZONES]);
+        }
+      }
+    } catch (e) {
+      console.warn("Could not auto-detect system timezone:", e);
+    }
+
     // Pre-select first date
     if (businessDays.length > 0) {
-      setSelectedDate(businessDays[0].dateStr);
+      const firstDate = businessDays[0].dateStr;
+      setSelectedDate(firstDate);
+      
+      const now = new Date();
+      const yr = now.getFullYear();
+      const mo = String(now.getMonth() + 1).padStart(2, "0");
+      const dy = String(now.getDate()).padStart(2, "0");
+      const todayStr = `${yr}-${mo}-${dy}`;
+      if (firstDate === todayStr && (now.getHours() * 60 + now.getMinutes()) >= (12 * 60 + 30)) {
+        setActiveShift("afternoon");
+      }
     }
 
     // Initialize auth state listener
@@ -258,27 +307,29 @@ export default function CalendarBooking() {
         if (res.user.email) setUserEmail(res.user.email);
       }
     } catch (err: any) {
-      console.error("Error during Google Sign-in:", err);
-      
       const errMsg = err.message || "";
       const errCode = err.code || "";
       
       if (
         errCode === "auth/popup-closed-by-user" || 
         errMsg.includes("popup-closed-by-user") ||
-        errMsg.includes("closed-by-user")
+        errMsg.includes("closed-by-user") ||
+        errMsg.includes("cerró")
       ) {
+        console.warn("Google Sign-in closed by user/browser.");
         setErrorMessage(
-          "La ventana de Google se cerró antes de completar el inicio de sesión. Si estás utilizando la vista previa de AI Studio, haz clic en el botón de la esquina superior derecha 'Abrir en pestaña nueva' para que las ventanas de autenticación funcionen de forma 100% segura."
+          "La ventana de Google se cerró antes de completar el inicio de sesión."
         );
       } else if (
         errCode === "auth/popup-blocked" ||
         errMsg.includes("popup-blocked")
       ) {
+        console.warn("Google Sign-in popup blocked by browser.");
         setErrorMessage(
-          "El navegador bloqueó la ventana emergente de inicio de sesión. Por favor, habilita las ventanas emergentes o abre la plataforma web en una pestaña nueva."
+          "El navegador bloqueó la ventana emergente de inicio de sesión de Google."
         );
       } else {
+        console.error("Error during Google Sign-in:", err);
         setErrorMessage(
           err.message || "Fallo al iniciar sesión con Google. Por favor, inténtelo nuevamente."
         );
@@ -441,11 +492,36 @@ export default function CalendarBooking() {
     return new Date(selectedDate + "T00:00:00").toLocaleDateString('es-ES', options);
   };
 
+  const isTodaySelected = () => {
+    if (!selectedDate) return false;
+    const now = new Date();
+    const yr = now.getFullYear();
+    const mo = String(now.getMonth() + 1).padStart(2, "0");
+    const dy = String(now.getDate()).padStart(2, "0");
+    return selectedDate === `${yr}-${mo}-${dy}`;
+  };
+
+  const isTodayPast1230 = () => {
+    if (!isTodaySelected()) return false;
+    const now = new Date();
+    return (now.getHours() * 60 + now.getMinutes()) >= (12 * 60 + 30);
+  };
+
   // Verify conflicts for a specific slot on selected date
   const isSlotBooked = (slotTime: string) => {
     if (slotTime === "13:00" || slotTime === "13:30" || slotTime === "14:00") {
       return true;
     }
+    
+    // Check if slot has already passed today
+    if (isTodaySelected()) {
+      const now = new Date();
+      const [sh, sm] = slotTime.split(":").map(Number);
+      if ((sh * 60 + sm) < (now.getHours() * 60 + now.getMinutes())) {
+        return true;
+      }
+    }
+
     return existingBookings.some(
       (b) => b.status === "confirmed" && b.date === selectedDate && b.time === slotTime
     );
@@ -528,7 +604,7 @@ END:VCALENDAR`;
                 onChange={(e) => setSelectedTimezone(e.target.value)}
                 className="w-full text-xs font-bold bg-transparent text-slate-800 dark:text-white focus:outline-none border-b border-slate-300 dark:border-slate-700 py-1 cursor-pointer"
               >
-                {TIMEZONES.map((tz) => (
+                {dynamicTimezones.map((tz) => (
                   <option key={tz.id} value={tz.id} className="dark:bg-slate-900 dark:text-white text-xs">
                     {tz.name}
                   </option>
@@ -570,6 +646,18 @@ END:VCALENDAR`;
                           onClick={() => {
                             setSelectedDate(day.dateStr);
                             setSelectedSlot(""); // clear slot on day shift
+                            
+                            // Auto-set shift based on current time if selected date is today
+                            const now = new Date();
+                            const yr = now.getFullYear();
+                            const mo = String(now.getMonth() + 1).padStart(2, "0");
+                            const dy = String(now.getDate()).padStart(2, "0");
+                            const todayStr = `${yr}-${mo}-${dy}`;
+                            if (day.dateStr === todayStr && (now.getHours() * 60 + now.getMinutes()) >= (12 * 60 + 30)) {
+                              setActiveShift("afternoon");
+                            } else {
+                              setActiveShift("morning");
+                            }
                           }}
                           className={`flex-shrink-0 flex flex-col items-center justify-between p-4 w-20 rounded-2xl border transition-all cursor-pointer ${
                             isSelected
@@ -601,33 +689,35 @@ END:VCALENDAR`;
                     </h3>
 
                     {/* Shift tabs for compact visual size */}
-                    <div className="flex bg-slate-150 dark:bg-slate-900 p-1 rounded-xl w-fit border border-slate-200/50 dark:border-slate-800/80 self-start sm:self-auto">
-                      <button
-                        type="button"
-                        onClick={() => setActiveShift("morning")}
-                        className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                          activeShift === "morning"
-                            ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm"
-                            : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
-                        }`}
-                      >
-                        <span>🌅</span> Mañana
-                        {hasSelectedSlotInShift("morning") && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
-                        )}
-                      </button>
+                    <div className="flex bg-slate-200/80 dark:bg-slate-900 p-1.5 rounded-2xl w-fit border border-slate-300/40 dark:border-slate-800 self-start sm:self-auto gap-1">
+                      {(!isTodaySelected() || !isTodayPast1230()) && (
+                        <button
+                          type="button"
+                          onClick={() => setActiveShift("morning")}
+                          className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${
+                            activeShift === "morning"
+                              ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-[1.02]"
+                              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-300/40 dark:hover:bg-slate-800/50"
+                          }`}
+                        >
+                          <span>🌅</span> Mañana
+                          {hasSelectedSlotInShift("morning") && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                          )}
+                        </button>
+                      )}
                       <button
                         type="button"
                         onClick={() => setActiveShift("afternoon")}
-                        className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                        className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${
                           activeShift === "afternoon"
-                            ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm"
-                            : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+                            ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-[1.02]"
+                            : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-300/40 dark:hover:bg-slate-800/50"
                         }`}
                       >
                         <span>🌇</span> Tarde
                         {hasSelectedSlotInShift("afternoon") && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                         )}
                       </button>
                     </div>

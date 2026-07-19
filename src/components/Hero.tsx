@@ -119,9 +119,15 @@ export default function Hero() {
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl sm:text-5xl md:text-6.5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1] min-h-[3.3em] md:min-h-[2.2em]"
+            className="text-4xl sm:text-5xl md:text-6.5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1]"
           >
-            <TypewriterHeading />
+            {/* On mobile, show static, on md screens show typewriter */}
+            <span className="inline md:hidden">
+              Sistemas ERP, CRM y <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-400 dark:to-indigo-300">Desarrollo Moderno</span> Sin Fricciones.
+            </span>
+            <span className="hidden md:inline">
+              <TypewriterHeading />
+            </span>
           </motion.h1>
 
           <motion.p
