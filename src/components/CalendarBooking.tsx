@@ -16,8 +16,7 @@ import {
   RefreshCw,
   BellRing,
   ExternalLink,
-  Lock,
-  Download
+  Lock
 } from "lucide-react";
 import { Booking } from "../types";
 import { initAuth, googleSignIn, logout } from "../googleAuth";
@@ -1173,20 +1172,8 @@ END:VCALENDAR`;
                     onClick={() => downloadIcsFile(bookingSuccessData.booking)}
                     className="p-3 px-4 bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700/80 rounded-xl text-xs font-semibold flex items-center gap-2.5 cursor-pointer text-slate-200 shadow-md"
                   >
-                    <img 
-                      src="https://i.imgur.com/9PTaAa4.png" 
-                      alt="LUXPROC" 
-                      className="w-5 h-5 object-contain"
-                      referrerPolicy="no-referrer" 
-                    />
+                    <Plus className="w-4 h-4 text-emerald-400" />
                     <span>Descargar Evento (.ics)</span>
-                  </button>
-
-                  <button
-                    onClick={() => window.dispatchEvent(new CustomEvent("open-download-logo"))}
-                    className="p-3 px-4 bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700/80 rounded-xl text-xs font-semibold flex items-center gap-2 cursor-pointer text-slate-200"
-                  >
-                    <Download className="w-4 h-4 text-amber-400" /> Descargar Logo Oficial
                   </button>
 
                   <button

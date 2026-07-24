@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Eye, Target, Compass, Sparkles, Building2, Terminal, ShieldCheck, Cpu, Award, MessageSquareText, Layers, ChevronRight, Download, Image as ImageIcon } from "lucide-react";
+import { Eye, Target, Compass, Sparkles, Building2, Terminal, ShieldCheck, Cpu, Award, MessageSquareText, Layers, ChevronRight } from "lucide-react";
 
 export default function BusinessInfo() {
   const containerVariants = {
@@ -309,42 +309,6 @@ export default function BusinessInfo() {
             <p className="text-2xl md:text-4xl font-extrabold text-indigo-600 dark:text-indigo-400">100%</p>
             <p className="text-xs uppercase font-bold tracking-wider text-slate-600 dark:text-slate-300 mt-1">Sincronización Directa Calendar</p>
           </div>
-        </motion.div>
-
-        {/* Official Brand & Logo Download Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-blue-900/40 via-indigo-900/30 to-slate-900/60 border border-blue-500/30 backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl"
-        >
-          <div className="flex items-center gap-5">
-            <div className="w-16 h-16 rounded-2xl bg-slate-950/80 border border-blue-400/30 p-2 flex items-center justify-center shrink-0 shadow-inner">
-              <img 
-                src="https://i.imgur.com/9PTaAa4.png" 
-                alt="Isotipo LUXPROC HD" 
-                className="max-h-full max-w-full object-contain filter drop-shadow"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-            <div>
-              <h4 className="text-lg font-extrabold text-white flex items-center gap-2">
-                <span>Kit de Marca Oficial & Isotipo Vectorial HD</span>
-                <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-md bg-blue-500/20 border border-blue-400/40 text-blue-300">1254x1254 PNG</span>
-              </h4>
-              <p className="text-xs text-slate-300 mt-1 max-w-xl leading-relaxed">
-                Descarga el logotipo corporativo oficial de LUXPROC S.A.C. en altísima calidad HD con transparencia limpia para presentaciones, documentos y notas de prensa.
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={() => window.dispatchEvent(new CustomEvent("open-download-logo"))}
-            className="px-6 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-extrabold flex items-center gap-2 shadow-lg shadow-blue-500/30 transition-all shrink-0 active:scale-95 cursor-pointer"
-          >
-            <Download className="w-4 h-4" />
-            <span>Descargar Logo Oficial</span>
-          </button>
         </motion.div>
 
       </div>

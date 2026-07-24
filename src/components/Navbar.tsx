@@ -148,12 +148,6 @@ export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
             >
               Nuestras Redes
             </button>
-            <button
-              onClick={() => window.dispatchEvent(new CustomEvent("open-download-logo"))}
-              className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer flex items-center gap-1.5"
-            >
-              <Download className="w-3.5 h-3.5 text-blue-500" /> Descargar Logo
-            </button>
           </nav>
 
           {/* Controls - Light/Dark toggle + Call to action */}

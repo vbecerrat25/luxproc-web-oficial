@@ -4,91 +4,232 @@ import {
   Sparkles, 
   ArrowRight, 
   Check, 
-  Star, 
-  ShieldCheck, 
   Cpu, 
-  Layers 
+  Activity,
+  Terminal,
+  Zap,
+  Radio,
+  CheckCircle2
 } from "lucide-react";
 
+// Robust, elegant Typewriter Heading with zero layout glitching
 function TypewriterHeading() {
-  const text1 = "Sistemas ERP, CRM y ";
-  const text2 = "Desarrollo Moderno";
-  const text3 = " Sin Fricciones.";
-  
+  const fullText = "Sistemas ERP, CRM y Desarrollo Moderno Sin Fricciones.";
   const [charCount, setCharCount] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    const totalLength = text1.length + text2.length + text3.length;
-    
+
     if (!isDeleting) {
-      if (charCount < totalLength) {
+      if (charCount < fullText.length) {
         timer = setTimeout(() => {
           setCharCount((prev) => prev + 1);
-        }, 75); // Write pace
+        }, 60); // Typing speed
       } else {
-        // Hold on completed state
+        // Pause for 3.5s when typing completes
         timer = setTimeout(() => {
           setIsDeleting(true);
-        }, 4000);
+        }, 3500);
       }
     } else {
       if (charCount > 0) {
         timer = setTimeout(() => {
           setCharCount((prev) => prev - 1);
-        }, 25); // Faster deleting pace
+        }, 25); // Faster deletion speed
       } else {
-        // Pause momentarily on blank state before retyping
+        // Pause briefly on blank before typing again
         timer = setTimeout(() => {
           setIsDeleting(false);
-        }, 600);
+        }, 400);
       }
     }
 
     return () => clearTimeout(timer);
   }, [charCount, isDeleting]);
 
-  let display1 = "";
-  let display2 = "";
-  let display3 = "";
-
-  let remaining = charCount;
-
-  if (remaining <= text1.length) {
-    display1 = text1.slice(0, remaining);
-    remaining = 0;
-  } else {
-    display1 = text1;
-    remaining -= text1.length;
-  }
-
-  if (remaining > 0) {
-    if (remaining <= text2.length) {
-      display2 = text2.slice(0, remaining);
-      remaining = 0;
-    } else {
-      display2 = text2;
-      remaining -= text2.length;
-    }
-  }
-
-  if (remaining > 0) {
-    display3 = text3.slice(0, remaining);
-  }
+  // Derived sliced parts to ensure clean text styling without DOM duplication
+  // "Sistemas ERP, CRM y " -> length 20
+  // "Desarrollo Moderno"  -> length 18 (indices 20 to 38)
+  // " Sin Fricciones."     -> length 17 (indices 38 to 55)
+  const part1Text = fullText.slice(0, Math.min(charCount, 20));
+  const part2Text = charCount > 20 ? fullText.slice(20, Math.min(charCount, 38)) : "";
+  const part3Text = charCount > 38 ? fullText.slice(38, Math.min(charCount, 55)) : "";
 
   return (
-    <span className="relative">
-      <span>{display1}</span>
-      {display2 && (
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-400 dark:to-indigo-300">
-          {display2}
+    <span className="inline">
+      <span>{part1Text}</span>
+      {part2Text && (
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-500 dark:from-blue-400 dark:via-indigo-300 dark:to-cyan-300">
+          {part2Text}
         </span>
       )}
-      <span>{display3}</span>
-      {/* Elegantly styled blinking cursor representing active input */}
-      <span className="inline-block w-[3px] h-[0.9em] bg-blue-600 dark:bg-amber-400 ml-1 translate-y-[5%] animate-pulse" />
+      <span>{part3Text}</span>
+      <span className="inline-block w-[3px] h-[0.85em] bg-blue-600 dark:bg-amber-400 ml-1.5 translate-y-[8%] animate-pulse" />
     </span>
+  );
+}
+
+// Live Operating Dashboard mockup component (Simulating active system execution)
+function LiveOperatingDashboard() {
+  const [latency, setLatency] = useState(12);
+  const [execCount, setExecCount] = useState(1420);
+  const [activeLogIndex, setActiveLogIndex] = useState(0);
+
+  const logs = [
+    "Sincronización Google Meet: ACTIVA (0 colisiones)",
+    "Engine ERP: Procesando cola de inventario real-time",
+    "API Gateway: TLS 1.3 WebSocket transmision 100% OK",
+    "Módulo I+D+i: Despliegue automático de microservicios"
+  ];
+
+  // Micro updates to simulate real live data stream
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLatency(Math.floor(Math.random() * 5) + 10); // 10-14ms latency
+      setExecCount((prev) => prev + Math.floor(Math.random() * 3) + 1);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const logInterval = setInterval(() => {
+      setActiveLogIndex((prev) => (prev + 1) % logs.length);
+    }, 3200);
+    return () => clearInterval(logInterval);
+  }, []);
+
+  return (
+    <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-2xl relative overflow-hidden">
+      
+      {/* Top Header Bar */}
+      <div className="flex justify-between items-center pb-3.5 border-b border-slate-100 dark:border-slate-800/80 mb-4">
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-red-400/90" />
+            <div className="w-3 h-3 rounded-full bg-amber-400/90" />
+            <div className="w-3 h-3 rounded-full bg-emerald-400/90" />
+          </div>
+          <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 ml-2 tracking-wide hidden sm:inline">
+            SECURE_DASHBOARD://LOGISTICS
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-mono font-bold border border-emerald-500/20">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+            LIVE {latency}ms
+          </span>
+        </div>
+      </div>
+
+      {/* Main Dashboard Interactive Elements */}
+      <div className="space-y-3.5 font-sans select-none">
+        
+        {/* Box 1: Dynamic KPI Grid */}
+        <div className="grid grid-cols-2 gap-3 text-xs">
+          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-blue-500/10 to-indigo-500/5 border border-blue-500/15 dark:border-blue-500/20 relative overflow-hidden group">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold tracking-wider">EFICIENCIA ERP</span>
+              <Activity className="w-3.5 h-3.5 text-blue-500 animate-pulse" />
+            </div>
+            <span className="text-xl font-extrabold text-blue-600 dark:text-blue-400 mt-1 block">
+              +240%
+            </span>
+            <div className="mt-1 flex items-center gap-1 text-[9px] text-emerald-600 dark:text-emerald-400 font-semibold">
+              <Zap className="w-2.5 h-2.5 fill-current" /> Optimización en tiempo real
+            </div>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-teal-500/5 border border-emerald-500/15 dark:border-emerald-500/20">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold tracking-wider">PROCESOS AUTOM.</span>
+              <Radio className="w-3.5 h-3.5 text-emerald-500 animate-pulse" />
+            </div>
+            <span className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1 block">
+              99.9%
+            </span>
+            <div className="mt-1 text-[9px] text-slate-500 dark:text-slate-400 font-mono">
+              {execCount.toLocaleString()} ops/min
+            </div>
+          </div>
+        </div>
+
+        {/* Box 2: Meeting integration row with animated streaming indicator */}
+        <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/60 relative overflow-hidden">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 shrink-0">
+                <Cpu className="w-4 h-4 animate-spin-slow" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <h5 className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate">
+                    Conexión Google Meet
+                  </h5>
+                  <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
+                </div>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5 font-medium">
+                  Sincronización de Calendario Estable
+                </p>
+              </div>
+            </div>
+
+            <span className="text-[9px] font-mono px-2 py-1 rounded-full bg-emerald-500/10 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/30 shrink-0">
+              CONECTADO
+            </span>
+          </div>
+
+          {/* Animated data pulse beam */}
+          <div className="mt-2.5 w-full h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden relative">
+            <motion.div 
+              animate={{ x: ["-100%", "200%"] }} 
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }} 
+              className="w-1/3 h-full bg-gradient-to-r from-transparent via-blue-500 to-transparent rounded-full" 
+            />
+          </div>
+        </div>
+
+        {/* Box 3: Flow chart simulation with animated equalizer telemetry bars */}
+        <div className="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 space-y-2">
+          <div className="flex justify-between items-center text-[10px] font-bold text-slate-500 dark:text-slate-400">
+            <span className="flex items-center gap-1">
+              <Terminal className="w-3 h-3 text-blue-500" />
+              DESARROLLO A MEDIDA
+            </span>
+            <span className="text-indigo-600 dark:text-indigo-400 font-mono">FASE I+D+i</span>
+          </div>
+
+          {/* Equalizer bars animation */}
+          <div className="flex gap-1.5 h-5 items-end pt-1">
+            <motion.div animate={{ height: ["40%", "80%", "50%", "90%", "40%"] }} transition={{ repeat: Infinity, duration: 1.8 }} className="bg-slate-300 dark:bg-slate-700 w-full rounded-sm" />
+            <motion.div animate={{ height: ["60%", "30%", "95%", "60%", "70%"] }} transition={{ repeat: Infinity, duration: 2.2 }} className="bg-slate-300 dark:bg-slate-700 w-full rounded-sm" />
+            <motion.div animate={{ height: ["80%", "50%", "70%", "40%", "85%"] }} transition={{ repeat: Infinity, duration: 1.5 }} className="bg-slate-300 dark:bg-slate-700 w-full rounded-sm" />
+            <motion.div animate={{ height: ["50%", "100%", "60%", "90%", "50%"] }} transition={{ repeat: Infinity, duration: 1.9 }} className="bg-blue-600 w-full rounded-sm shadow-sm shadow-blue-500/50" />
+            <motion.div animate={{ height: ["90%", "60%", "100%", "75%", "90%"] }} transition={{ repeat: Infinity, duration: 2.1 }} className="bg-blue-500 w-full rounded-sm shadow-sm shadow-blue-500/50" />
+            <motion.div animate={{ height: ["70%", "95%", "50%", "85%", "70%"] }} transition={{ repeat: Infinity, duration: 1.7 }} className="bg-indigo-500 w-full rounded-sm shadow-sm shadow-indigo-500/50" />
+          </div>
+
+          {/* Live system log ticker line */}
+          <div className="mt-2 pt-2 border-t border-slate-200/60 dark:border-slate-800/80 flex items-center justify-between text-[9px] font-mono text-slate-500 dark:text-slate-400">
+            <div className="flex items-center gap-1.5 truncate">
+              <span className="text-blue-500 font-bold">&gt;</span>
+              <motion.span 
+                key={activeLogIndex}
+                initial={{ opacity: 0, y: 3 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="truncate"
+              >
+                {logs[activeLogIndex]}
+              </motion.span>
+            </div>
+            <span className="text-emerald-500 font-bold shrink-0 ml-2">100% OK</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
   );
 }
 
@@ -119,15 +260,10 @@ export default function Hero() {
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl sm:text-5xl md:text-6.5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1]"
+            transition={{ duration: 0.5 }}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-6.5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]"
           >
-            {/* On mobile, show static, on md screens show typewriter */}
-            <span className="inline md:hidden">
-              Sistemas ERP, CRM y <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-400 dark:to-indigo-300">Desarrollo Moderno</span> Sin Fricciones.
-            </span>
-            <span className="hidden md:inline">
-              <TypewriterHeading />
-            </span>
+            <TypewriterHeading />
           </motion.h1>
 
           <motion.p
@@ -188,72 +324,12 @@ export default function Hero() {
           {/* Background glowing frame */}
           <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/10 via-indigo-600/5 to-transparent rounded-3xl blur-2xl -z-10" />
 
-          {/* Double stack mockup browser frames for supreme visual polish */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-2xl relative">
-            
-            <div className="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-800 mb-4">
-              <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-red-400" />
-                <div className="w-3 h-3 rounded-full bg-amber-400" />
-                <div className="w-3 h-3 rounded-full bg-emerald-400" />
-              </div>
-              <span className="text-[9px] font-mono font-bold text-slate-400 tracking-wider">SECURE_DASHBOARD://LOGISTICS</span>
-              <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
-            </div>
-
-            {/* Simulated UI components */}
-            <div className="space-y-4 font-sans select-none">
-              
-              {/* Box 1: KPI Grid */}
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="p-3.5 rounded-2xl bg-blue-500/5 border border-blue-500/10">
-                  <span className="text-[10px] text-slate-400 block font-semibold leading-none">EFICIENCIA ERP</span>
-                  <span className="text-xl font-extrabold text-blue-600 dark:text-blue-400 mt-1 block">+240%</span>
-                </div>
-                <div className="p-3.5 rounded-2xl bg-emerald-500/5 border border-emerald-500/10">
-                  <span className="text-[10px] text-slate-400 block font-semibold leading-none">PROCESOS AUTOM.</span>
-                  <span className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1 block">99.9%</span>
-                </div>
-              </div>
-
-              {/* Box 2: Meeting integration row */}
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-blue-600 text-white shadow-sm">
-                    <Cpu className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h5 className="text-xs font-bold text-slate-800 dark:text-slate-100 leading-snug">Conexión Google Meet</h5>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Sincronización de Calendario Estable</p>
-                  </div>
-                </div>
-                <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-bold">
-                  CONECTADO
-                </span>
-              </div>
-
-              {/* Box 3: Flow chart simulation */}
-              <div className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
-                <div className="flex justify-between items-center text-[10px] font-semibold text-slate-400">
-                  <span>DESARROLLO A MEDIDA</span>
-                  <span className="text-indigo-400">FASE I+D+i</span>
-                </div>
-                <div className="flex gap-1 h-3.5 items-end">
-                  <div className="bg-slate-200 dark:bg-slate-800 h-full w-full rounded-sm" />
-                  <div className="bg-slate-200 dark:bg-slate-800 h-full w-full rounded-sm" />
-                  <div className="bg-slate-200 dark:bg-slate-800 h-full w-full rounded-sm" />
-                  <div className="bg-blue-600 h-full w-full rounded-sm" />
-                  <div className="bg-blue-600 h-5/6 w-full rounded-sm" />
-                  <div className="bg-indigo-500 h-2/3 w-full rounded-sm" />
-                </div>
-              </div>
-
-            </div>
-
-          </div>
+          {/* Interactive Live Operating Dashboard */}
+          <LiveOperatingDashboard />
         </motion.div>
 
       </div>
     </section>
   );
 }
+
