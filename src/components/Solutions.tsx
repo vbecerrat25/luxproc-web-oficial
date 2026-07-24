@@ -25,7 +25,16 @@ import {
   Truck,
   Factory,
   ShieldAlert,
-  Globe
+  Globe,
+  Code,
+  Layout,
+  Server,
+  Lock,
+  Search,
+  CreditCard,
+  Smartphone,
+  Gauge,
+  Workflow
 } from "lucide-react";
 
 // Types for the CRM and ERP modules
@@ -44,15 +53,50 @@ export default function Solutions() {
   const [activeModules, setActiveModules] = useState<string[]>(["leads", "funnel", "intelligence"]);
   const [selectedSolution, setSelectedSolution] = useState<any | null>(null);
   const [isERPFulviewOpen, setIsERPFulviewOpen] = useState(false);
+  const [isWebFullviewOpen, setIsWebFullviewOpen] = useState(false);
+  const [isSolutionsFullviewOpen, setIsSolutionsFullviewOpen] = useState(false);
 
-  // Listen for reset-to-home event to close any subviews/modals
+  // Listen for reset-to-home and custom fullview triggers
   useEffect(() => {
     const handleReset = () => {
       setIsERPFulviewOpen(false);
+      setIsWebFullviewOpen(false);
+      setIsSolutionsFullviewOpen(false);
       setSelectedSolution(null);
     };
+    const handleOpenSolutions = () => {
+      setIsSolutionsFullviewOpen(true);
+      setIsERPFulviewOpen(false);
+      setIsWebFullviewOpen(false);
+      setSelectedSolution(null);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    const handleOpenWeb = () => {
+      setIsWebFullviewOpen(true);
+      setIsERPFulviewOpen(false);
+      setIsSolutionsFullviewOpen(false);
+      setSelectedSolution(null);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    const handleOpenERP = () => {
+      setIsERPFulviewOpen(true);
+      setIsWebFullviewOpen(false);
+      setIsSolutionsFullviewOpen(false);
+      setSelectedSolution(null);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
     window.addEventListener("reset-to-home", handleReset);
-    return () => window.removeEventListener("reset-to-home", handleReset);
+    window.addEventListener("open-solutions-fullview", handleOpenSolutions);
+    window.addEventListener("open-web-fullview", handleOpenWeb);
+    window.addEventListener("open-erp-fullview", handleOpenERP);
+
+    return () => {
+      window.removeEventListener("reset-to-home", handleReset);
+      window.removeEventListener("open-solutions-fullview", handleOpenSolutions);
+      window.removeEventListener("open-web-fullview", handleOpenWeb);
+      window.removeEventListener("open-erp-fullview", handleOpenERP);
+    };
   }, []);
 
   // All core solutions list
@@ -497,16 +541,37 @@ export default function Solutions() {
     <section id="soluciones" className="relative py-24 px-4 bg-transparent transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-4">
+          <div 
+            onClick={() => {
+              setIsSolutionsFullviewOpen(true);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-4 cursor-pointer hover:bg-emerald-500/20 transition-all shadow-sm"
+          >
             <Layers className="w-3.5 h-3.5" />
             Nuestras Soluciones Corporativas
           </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-800 dark:text-white">
+          <h2 
+            onClick={() => {
+              setIsSolutionsFullviewOpen(true);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-800 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
             Ingeniería que trasciende límites
           </h2>
           <p className="mt-4 text-sm md:text-base text-slate-700 dark:text-slate-200 leading-relaxed">
             Unificamos el espectro tecnológico completo. Desde la consultoría e implementación de software de planificación empresarial (ERP) y relaciones comerciales (CRM), hasta el diseño de hardware robusto y automatizaciones industriales (instalaciones eléctricas).
           </p>
+          <button
+            onClick={() => {
+              setIsSolutionsFullviewOpen(true);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition-all cursor-pointer shadow-md shadow-blue-500/20 active:scale-[0.98]"
+          >
+            Ver Vista Completa de Soluciones <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
 
         {/* 6 Grid Solutions Cards */}
@@ -536,6 +601,9 @@ export default function Solutions() {
                 onClick={() => {
                   if (sol.id === "erp") {
                     setIsERPFulviewOpen(true);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  } else if (sol.id === "web") {
+                    setIsWebFullviewOpen(true);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   } else {
                     setSelectedSolution(sol);
@@ -1098,6 +1166,443 @@ export default function Solutions() {
                   <button
                     onClick={() => {
                       setIsERPFulviewOpen(false);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className="py-3.5 px-8 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/10 transition-all active:scale-[0.98] cursor-pointer"
+                  >
+                    Volver a Inicio
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Web Full-page View */}
+      <AnimatePresence>
+        {isWebFullviewOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ type: "spring", stiffness: 260, damping: 28 }}
+            className="fixed inset-0 z-50 bg-slate-50 dark:bg-slate-950 overflow-y-auto text-left"
+          >
+            {/* Background elements */}
+            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-teal-500/5 dark:bg-teal-600/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-emerald-500/5 dark:bg-emerald-600/5 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative">
+              
+              {/* Floating Header */}
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-12 pb-6 border-b border-slate-200 dark:border-slate-800">
+                <button
+                  onClick={() => setIsWebFullviewOpen(false)}
+                  className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-teal-600 dark:text-slate-300 dark:hover:text-teal-400 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm transition-all hover:shadow-md cursor-pointer group"
+                >
+                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Volver al Inicio
+                </button>
+                <div className="flex items-center gap-3 font-mono text-[11px] text-slate-600 dark:text-slate-400">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                    Motor Web: <span className="font-bold text-slate-800 dark:text-white">LUXPROC SSR/ISR</span>
+                  </span>
+                  <span className="text-slate-300 dark:text-slate-700">|</span>
+                  <span>Arquitectura de Alto Rendimiento</span>
+                </div>
+              </div>
+
+              {/* Main Banner Hero */}
+              <div className="mb-16 text-left max-w-4xl">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-4">
+                  <Terminal className="w-3.5 h-3.5" />
+                  Arquitectura Web Moderna
+                </div>
+                <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+                  Plataformas Web Ultra-Veloces & <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-teal-600 dark:from-emerald-400 dark:to-teal-400">SEO de Alto Rendimiento</span>
+                </h1>
+                <p className="mt-6 text-base md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+                  Construimos experiencias web avanzadas utilizando React, Next.js y Tailwind CSS. Optimizadas nativamente para ofrecer tiempos de carga récord, Core Web Vitals impecables y posicionamiento orgánico imbatible en motores de búsqueda.
+                </p>
+              </div>
+
+              {/* Content Grid: ¿Qué es? & ¿Por qué importa? */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
+                
+                {/* Section: ¿Qué es la Arquitectura Web Moderna? */}
+                <div className="p-8 md:p-10 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-md">
+                  <div className="p-3 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 w-fit rounded-2xl mb-6">
+                    <Code className="w-6 h-6" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                    ¿Qué es la Arquitectura Web Moderna y para qué sirve?
+                  </h2>
+                  <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                    A diferencia de los sitios web tradicionales lentos y rígidos, una <strong>Arquitectura Web Moderna (SSR/ISR)</strong> procesa la información en la nube antes de enviarla al usuario, entregando páginas instantáneas pre-renderizadas.
+                    <br /><br />
+                    Sirve para ofrecer una experiencia de navegación fluida tipo app nativa, eliminar pantallas de carga congeladas y permitir que las plataformas comerciales procesen miles de usuarios en paralelo con integración directa a pasarelas de pago y sistemas CRM.
+                  </p>
+                </div>
+
+                {/* Section: ¿Por qué es crucial para la presencia digital? */}
+                <div className="p-8 md:p-10 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-md flex flex-col justify-between">
+                  <div>
+                    <div className="p-3 bg-teal-500/10 text-teal-600 dark:text-teal-400 w-fit rounded-2xl mb-6">
+                      <Gauge className="w-6 h-6" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                      ¿Por qué es crucial para tu negocio digital?
+                    </h2>
+                    <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed mb-6">
+                      Un sitio web lento pierde hasta el 53% de sus visitantes antes de cargar. Nuestra ingeniería web garantiza máximas conversiones y seguridad:
+                    </p>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {[
+                        { title: "SEO Orgánico Prioritario", desc: "Código semántico limpio indexado instantáneamente por Google." },
+                        { title: "Core Web Vitals < 1.0s", desc: "Tiempos de respuesta súper-rápidos con distribución CDN global." },
+                        { title: "Cifrado SSL & Pagos", desc: "Pasarelas de pago integradas con estándares bancarios." },
+                        { title: "Infraestructura Serverless", desc: "Escalado automático que soporta picos masivos de tráfico sin caídas." }
+                      ].map((item, idx) => (
+                        <li key={idx} className="flex gap-2.5 items-start">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-1" />
+                          <div>
+                            <h4 className="text-xs font-bold text-slate-900 dark:text-white">{item.title}</h4>
+                            <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">{item.desc}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Title Sector: PLATAFORMAS WEB ESPECIALIZADAS */}
+              <div className="text-center max-w-3xl mx-auto mb-12">
+                <span className="text-xs font-extrabold tracking-widest text-emerald-600 dark:text-emerald-400 uppercase font-mono">
+                  Ecosistemas Web Especializados
+                </span>
+                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-3">
+                  Soluciones Web Diseñadas para tu Propósito
+                </h2>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mt-3 leading-relaxed">
+                  Desarrollamos soluciones web escalables adaptadas a cada necesidad operativa y comercial de tu organización.
+                </p>
+              </div>
+
+              {/* Grid 4 Web Platforms */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+                {[
+                  {
+                    id: "web-seo",
+                    title: "LUXPROC Corporate SEO Web",
+                    sector: "Branding & Posicionamiento",
+                    desc: "Portales empresariales diseñados para proyectar solvencia corporativa, dominar las búsquedas en Google y captar prospectos calificados en tiempo real.",
+                    icon: Search,
+                    color: "border-emerald-500/30 hover:border-emerald-500/60",
+                    badgeColor: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+                    features: ["Estructura Schema.org completa para Google", "Tiempo de carga récord (<800ms LCP)", "Formularios integrados con CRM multiagente"]
+                  },
+                  {
+                    id: "web-saas",
+                    title: "LUXPROC SaaS & App Dashboards",
+                    sector: "Sistemas Web Complejos",
+                    desc: "Paneles administrativos en tiempo real para gestión de usuarios, métricas financieras, visualizaciones gráficas y orquestación de datos masivos.",
+                    icon: Layout,
+                    color: "border-blue-500/30 hover:border-blue-500/60",
+                    badgeColor: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+                    features: ["Autenticación por roles y permisos JWT", "Actualizaciones de datos por WebSockets", "Exportación de reportes PDF/Excel en 1 clic"]
+                  },
+                  {
+                    id: "web-ecommerce",
+                    title: "LUXPROC Omnichannel E-commerce",
+                    sector: "Ventas Digitales",
+                    desc: "Tiendas virtuales de alta velocidad con checkout sin fricción, integración nativa con pasarelas de pago y sincronización de inventario con ERP.",
+                    icon: CreditCard,
+                    color: "border-purple-500/30 hover:border-purple-500/60",
+                    badgeColor: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
+                    features: ["Pasarelas Webpay, Stripe & Mercado Pago", "Catálogo dinámico optimizado para móviles", "Cálculo automático de costos de envío por zona"]
+                  },
+                  {
+                    id: "web-pwa",
+                    title: "LUXPROC Cloud PWA & Serverless",
+                    sector: "Progresive Web Apps",
+                    desc: "Plataformas web instalables como aplicaciones en teléfonos y computadoras, con funcionamiento fuera de línea e infraestructura autoadaptativa.",
+                    icon: Smartphone,
+                    color: "border-cyan-500/30 hover:border-cyan-500/60",
+                    badgeColor: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400",
+                    features: ["Notificaciones push personalizadas", "Caché inteligente para uso sin internet", "Despliegue distribuido en CDN global"]
+                  }
+                ].map((sec) => (
+                  <div
+                    key={sec.id}
+                    className={`p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border ${sec.color} shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-6">
+                        <span className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${sec.badgeColor}`}>
+                          {sec.sector}
+                        </span>
+                        <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                          <sec.icon className="w-5 h-5" />
+                        </div>
+                      </div>
+
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{sec.title}</h3>
+                      <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed mb-6">{sec.desc}</p>
+
+                      <div className="space-y-2 mb-6">
+                        {sec.features.map((feat, fIdx) => (
+                          <div key={fIdx} className="flex gap-2 items-center text-xs text-slate-600 dark:text-slate-400 font-medium">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+                            <span>{feat}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Web Performance Metrics Box */}
+                      <div className="relative border border-slate-200/60 dark:border-slate-800/80 rounded-2xl p-4 bg-slate-50 dark:bg-slate-950/50 mb-6 font-mono text-[10px] text-slate-600 dark:text-slate-300 space-y-1.5">
+                        <div className="flex justify-between items-center text-emerald-500 font-bold border-b border-slate-200 dark:border-slate-800 pb-1">
+                          <span>CORE WEB VITALS</span>
+                          <span>SCORES: 100%</span>
+                        </div>
+                        <div className="flex justify-between"><span>LCP (Speed):</span> <span className="text-emerald-500 font-bold">0.6s</span></div>
+                        <div className="flex justify-between"><span>CLS (Stability):</span> <span className="text-emerald-500 font-bold">0.00</span></div>
+                        <div className="flex justify-between"><span>FID (Interactivity):</span> <span className="text-emerald-500 font-bold">12ms</span></div>
+                      </div>
+                    </div>
+
+                    <button className="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-not-allowed">
+                      Ver Demo de Arquitectura Web <ExternalLink className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Consultation call */}
+              <div className="p-8 md:p-12 rounded-3xl bg-gradient-to-br from-slate-900 to-teal-950 text-white text-center border border-teal-500/20 shadow-xl relative overflow-hidden mb-16">
+                <Sparkles className="w-10 h-10 text-amber-300 mx-auto mb-6 animate-pulse" />
+                <h3 className="text-2xl md:text-3xl font-extrabold mb-4 leading-tight">
+                  ¿Quieres una plataforma web con velocidad e impacto superior?
+                </h3>
+                <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-8">
+                  Nuestros ingenieros en frontend y backend diseñan sistemas web listos para escalar tus ventas y automatizar procesos comerciales.
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                  <a
+                    href="#contacto"
+                    onClick={() => {
+                      setIsWebFullviewOpen(false);
+                      setTimeout(() => {
+                        const target = document.getElementById("contacto");
+                        if (target) target.scrollIntoView({ behavior: "smooth" });
+                      }, 100);
+                    }}
+                    className="py-3.5 px-8 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-sm transition-all shadow-md active:scale-[0.98] cursor-pointer"
+                  >
+                    Cotizar Arquitectura Web
+                  </a>
+                  <button
+                    onClick={() => {
+                      setIsWebFullviewOpen(false);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className="py-3.5 px-8 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/10 transition-all active:scale-[0.98] cursor-pointer"
+                  >
+                    Volver a Inicio
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Solutions Full-page View: Ingeniería que trasciende límites */}
+      <AnimatePresence>
+        {isSolutionsFullviewOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ type: "spring", stiffness: 260, damping: 28 }}
+            className="fixed inset-0 z-50 bg-slate-50 dark:bg-slate-950 overflow-y-auto text-left"
+          >
+            {/* Background elements */}
+            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-500/5 dark:bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-indigo-500/5 dark:bg-indigo-600/5 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative">
+              
+              {/* Floating Header */}
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-12 pb-6 border-b border-slate-200 dark:border-slate-800">
+                <button
+                  onClick={() => setIsSolutionsFullviewOpen(false)}
+                  className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm transition-all hover:shadow-md cursor-pointer group"
+                >
+                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Volver al Inicio
+                </button>
+                <div className="flex items-center gap-3 font-mono text-[11px] text-slate-600 dark:text-slate-400">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                    Ingeniería LUXPROC: <span className="font-bold text-slate-800 dark:text-white">Física & Digital</span>
+                  </span>
+                  <span className="text-slate-300 dark:text-slate-700">|</span>
+                  <span>Soluciones Integradas de Alto Impacto</span>
+                </div>
+              </div>
+
+              {/* Main Banner Hero */}
+              <div className="mb-16 text-left max-w-4xl">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold uppercase tracking-wider mb-4">
+                  <Layers className="w-3.5 h-3.5" />
+                  Nuestras Soluciones Corporativas
+                </div>
+                <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+                  Ingeniería que <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400">Trasciende Límites</span>
+                </h1>
+                <p className="mt-6 text-base md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+                  Unificamos el espectro tecnológico completo. Desde la consultoría e implementación de software de planificación empresarial (ERP) y relaciones comerciales (CRM), hasta el diseño de hardware robusto, proyectos de innovación científica (I+D+i) y automatizaciones industriales (instalaciones eléctricas).
+                </p>
+              </div>
+
+              {/* Content Grid: Enfoque Holístico & ¿Por qué un ecosistema integrado? */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
+                
+                {/* Section: Enfoque de Ingeniería Integrada */}
+                <div className="p-8 md:p-10 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-md">
+                  <div className="p-3 bg-blue-500/10 text-blue-600 dark:text-blue-400 w-fit rounded-2xl mb-6">
+                    <Workflow className="w-6 h-6" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                    Ingeniería Física y Digital bajo el Mismo Techo
+                  </h2>
+                  <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                    La mayoría de las empresas se ven obligadas a coordinar con múltiples proveedores desconectados: una empresa para el software, otra para las instalaciones eléctricas y otra para el desarrollo web o hardware.
+                    <br /><br />
+                    En LUXPROC rompemos este paradigma. Nuestra visión unificada permite que la telemetría de tus sensores de planta alimente directamente tu ERP en la nube, mientras tu CRM canaliza la atención al cliente sin fricciones.
+                  </p>
+                </div>
+
+                {/* Section: Beneficios del Ecosistema Integrado */}
+                <div className="p-8 md:p-10 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-md flex flex-col justify-between">
+                  <div>
+                    <div className="p-3 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 w-fit rounded-2xl mb-6">
+                      <Sparkles className="w-6 h-6" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                      ¿Por qué elegir un ecosistema integral?
+                    </h2>
+                    <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed mb-6">
+                      Elimina intermediarios e incompatibilidades. Ofrecemos garantías técnicas de extremo a extremo:
+                    </p>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {[
+                        { title: "Sincronización Total", desc: "Comunicación fluida entre hardware, tableros y software." },
+                        { title: "Responsabilidad Única", desc: "Soporte centralizado sin culpar a terceros." },
+                        { title: "Optimizaciones de Costo", desc: "Arquitectura modular que aprovecha componentes ya instalados." },
+                        { title: "I+D+i para Patentes", desc: "Desarrollos a la medida protegidos intelectualmente." }
+                      ].map((item, idx) => (
+                        <li key={idx} className="flex gap-2.5 items-start">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-1" />
+                          <div>
+                            <h4 className="text-xs font-bold text-slate-900 dark:text-white">{item.title}</h4>
+                            <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">{item.desc}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Title Sector: MATRIZ DE LOS 6 PILARES DE INGENIERÍA */}
+              <div className="text-center max-w-3xl mx-auto mb-12">
+                <span className="text-xs font-extrabold tracking-widest text-blue-600 dark:text-blue-400 uppercase font-mono">
+                  Portafolio Integral de Soluciones
+                </span>
+                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-3">
+                  Los 6 Pilares de Ingeniería LUXPROC
+                </h2>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mt-3 leading-relaxed">
+                  Haz clic en cualquiera de nuestras soluciones para abrir sus especificaciones técnicas completas.
+                </p>
+              </div>
+
+              {/* Grid 6 Pillars Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+                {CORE_SOLUTIONS.map((sol, index) => {
+                  const Icon = sol.icon;
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        if (sol.id === "erp") {
+                          setIsERPFulviewOpen(true);
+                          setIsSolutionsFullviewOpen(false);
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                        } else if (sol.id === "web") {
+                          setIsWebFullviewOpen(true);
+                          setIsSolutionsFullviewOpen(false);
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                        } else {
+                          setSelectedSolution(sol);
+                        }
+                      }}
+                      className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-blue-500/40 transition-all flex flex-col justify-between cursor-pointer group"
+                    >
+                      <div>
+                        <div className={`p-4 rounded-2xl bg-gradient-to-br ${sol.color} text-white w-fit mb-6 shadow-md`}>
+                          <Icon className="w-6 h-6" />
+                        </div>
+                        <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-full">
+                          {sol.badge}
+                        </span>
+                        <h3 className="text-lg md:text-xl font-bold text-slate-800 dark:text-white mt-4 mb-2 group-hover:text-blue-500 transition-colors">
+                          {sol.title}
+                        </h3>
+                        <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                          {sol.description}
+                        </p>
+                      </div>
+                      <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 font-bold group-hover:gap-3 transition-all">
+                        Abrir detalles completos <ArrowRight className="w-4 h-4" />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Consultation Call */}
+              <div className="p-8 md:p-12 rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white text-center border border-indigo-500/20 shadow-xl relative overflow-hidden mb-16">
+                <Sparkles className="w-10 h-10 text-amber-300 mx-auto mb-6 animate-pulse" />
+                <h3 className="text-2xl md:text-3xl font-extrabold mb-4 leading-tight">
+                  ¿Tienes un reto de ingeniería o un proyecto complejo?
+                </h3>
+                <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-8">
+                  Nuestros ingenieros analizan tu infraestructura actual y formulan la mejor estrategia de integración física y digital.
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                  <a
+                    href="#contacto"
+                    onClick={() => {
+                      setIsSolutionsFullviewOpen(false);
+                      setTimeout(() => {
+                        const target = document.getElementById("contacto");
+                        if (target) target.scrollIntoView({ behavior: "smooth" });
+                      }, 100);
+                    }}
+                    className="py-3.5 px-8 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm transition-all shadow-md active:scale-[0.98] cursor-pointer"
+                  >
+                    Solicitar Diagnóstico Técnico
+                  </a>
+                  <button
+                    onClick={() => {
+                      setIsSolutionsFullviewOpen(false);
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
                     className="py-3.5 px-8 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/10 transition-all active:scale-[0.98] cursor-pointer"

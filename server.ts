@@ -14,6 +14,7 @@ interface Booking {
   timezone: string;
   meetUrl: string;
   notes?: string;
+  phone?: string;
   status: "confirmed" | "cancelled";
   createdAt: string;
   calendarEventId?: string;
@@ -126,7 +127,7 @@ async function startServer() {
 
   // API - Create booking
   app.post("/api/bookings", (req, res) => {
-    const { name, email, projectName, date, time, timezone, notes, meetUrl: customMeetUrl, calendarEventId } = req.body;
+    const { name, email, projectName, date, time, timezone, notes, phone, meetUrl: customMeetUrl, calendarEventId } = req.body;
 
     if (!name || !email || !projectName || !date || !time) {
       return res.status(400).json({ error: "Faltan campos obligatorios para agendar la cita." });
@@ -154,6 +155,7 @@ async function startServer() {
       timezone: timezone || "UTC",
       meetUrl,
       notes,
+      phone,
       status: "confirmed",
       createdAt: new Date().toISOString(),
       calendarEventId: calendarEventId || undefined,
@@ -167,7 +169,7 @@ async function startServer() {
       bookingId: newBooking.id,
       recipient: email,
       subject: `Confirmación de Reunión: ${projectName} via Google Meet`,
-      body: `Estimado/a ${name},\n\nSu reservación para el proyecto "${projectName}" ha sido sincronizada con éxito en nuestro calendario corporativo de Google.\n\nDetalles del evento:\n- Fecha: ${date}\n- Hora: ${time} (${timezone})\n- Enlace de Google Meet: ${meetUrl}\n\nSe enviará un correo recordatorio automático 15 minutos antes de la reunión.\n\nSaludos cordiales,\nSyncDevelopment Corp.`,
+      body: `Estimado/a ${name},\n\nSu reservación para el proyecto "${projectName}" ha sido sincronizada con éxito en nuestro calendario corporativo de Google.\n\nDetalles del evento:\n- Fecha: ${date}\n- Hora: ${time} (${timezone})\n- Celular: ${phone || "No provisto"}\n- Enlace de Google Meet: ${meetUrl}\n\nSe enviará un correo recordatorio automático 15 minutos antes de la reunión.\n\nSaludos cordiales,\nSyncDevelopment Corp.`,
       sentAt: new Date().toISOString(),
       type: "confirmation"
     };

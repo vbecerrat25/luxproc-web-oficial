@@ -12,7 +12,9 @@ import BusinessInfo from "./components/BusinessInfo";
 import Solutions from "./components/Solutions";
 import CalendarBooking from "./components/CalendarBooking";
 import ContactForm from "./components/ContactForm";
-import { Cpu } from "lucide-react";
+import BrandLogo from "./components/BrandLogo";
+import BrandDownloadModal from "./components/BrandDownloadModal";
+import { Cpu, Download } from "lucide-react";
 import { LegalModals, RegulatoryBadges } from "./components/LegalModals";
 
 export default function App() {
@@ -23,6 +25,7 @@ export default function App() {
     return false;
   });
   const [activeLegalModal, setActiveLegalModal] = useState<"reclamaciones" | "arco" | "terminos" | null>(null);
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
   // Listen to system prefers-color-scheme settings dynamically
   useEffect(() => {
@@ -35,6 +38,15 @@ export default function App() {
     // Modern listener syntax
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
+  // Listen for global open-download-logo event
+  useEffect(() => {
+    const handleOpenDownload = () => {
+      setIsDownloadModalOpen(true);
+    };
+    window.addEventListener("open-download-logo", handleOpenDownload);
+    return () => window.removeEventListener("open-download-logo", handleOpenDownload);
   }, []);
 
   // Update root system class to toggle tailwind modes smoothly
@@ -85,13 +97,15 @@ export default function App() {
         <div className="relative max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 lg:gap-12 z-10">
           
           <div className="md:col-span-4 space-y-4">
-            <div className="flex items-center justify-center sm:justify-start">
-              <img 
-                src="https://i.imgur.com/W8A2oCf.png" 
-                alt="LUXPROC S.A.C." 
-                className="h-28 md:h-36 w-auto object-contain dark:invert dark:hue-rotate-180 transition-all duration-300"
-                referrerPolicy="no-referrer"
-              />
+            <div className="flex flex-col sm:items-start items-center gap-3">
+              <BrandLogo className="h-20 md:h-24 w-auto" isDarkMode={isDarkMode} />
+              <button
+                onClick={() => setIsDownloadModalOpen(true)}
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 dark:text-blue-400 font-bold text-xs transition-all cursor-pointer border border-blue-500/20 shadow-sm active:scale-95"
+              >
+                <Download className="w-3.5 h-3.5 text-blue-500" />
+                Descargar Logo Oficial (1254x1254 HD)
+              </button>
             </div>
             
             <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
@@ -134,6 +148,9 @@ export default function App() {
 
       {/* Interactive Regulatory compliance modals */}
       <LegalModals activeModal={activeLegalModal} onClose={() => setActiveLegalModal(null)} />
+
+      {/* Brand & Logo HD Download Modal */}
+      <BrandDownloadModal isOpen={isDownloadModalOpen} onClose={() => setIsDownloadModalOpen(false)} />
 
     </div>
   );

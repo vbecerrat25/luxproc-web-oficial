@@ -13,6 +13,7 @@ export interface Booking {
   timezone: string;
   meetUrl: string;
   notes?: string;
+  phone?: string;
   status: "confirmed" | "cancelled";
   createdAt: string;
   calendarEventId?: string;

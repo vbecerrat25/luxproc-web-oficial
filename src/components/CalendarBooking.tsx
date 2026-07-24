@@ -15,7 +15,9 @@ import {
   Plus,
   RefreshCw,
   BellRing,
-  ExternalLink
+  ExternalLink,
+  Lock,
+  Download
 } from "lucide-react";
 import { Booking } from "../types";
 import { initAuth, googleSignIn, logout } from "../googleAuth";
@@ -45,6 +47,7 @@ const sendGmailConfirmation = async (
   timezone: string,
   meetUrl: string,
   notes: string,
+  phone: string,
   accessToken: string
 ) => {
   try {
@@ -55,7 +58,7 @@ const sendGmailConfirmation = async (
       day: 'numeric'
     });
 
-    const emailSubject = `Confirmación de Reunión LUXPROC: ${projectName}`;
+    const emailSubject = `Confirmación de Reunión: ${projectName}`;
     
     const emailBodyHtml = `
       <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 16px; background-color: #ffffff; color: #1e293b;">
@@ -71,11 +74,19 @@ const sendGmailConfirmation = async (
           </p>
         </div>
 
-        <h3 style="font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 12px; font-weight: 700;">Detalles de la Cita</h3>
+        <h3 style="font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 12px; font-weight: 700;">Detalles de la Reunión</h3>
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
           <tr>
-            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #64748b; width: 30%;">Proyecto / Empresa:</td>
+            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #64748b; width: 30%;">Título de la Reunión:</td>
             <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; font-weight: 600; color: #0f172a;">${projectName}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #64748b;">Solicitante:</td>
+            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; font-weight: 600; color: #0f172a;">${clientName}</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #64748b;">Número de Celular:</td>
+            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; font-weight: 600; color: #0f172a;">${phone || "No provisto"}</td>
           </tr>
           <tr>
             <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #64748b;">Fecha:</td>
@@ -86,8 +97,8 @@ const sendGmailConfirmation = async (
             <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; font-weight: 600; color: #2563eb;">${time} (${timezone})</td>
           </tr>
           <tr>
-            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #64748b;">Notas / Requerimientos:</td>
-            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #334155;">${notes || "Sin notas adicionales."}</td>
+            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #64748b;">Motivo de la Reunión:</td>
+            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #334155;">${notes || "Sin motivo detallado."}</td>
           </tr>
         </table>
 
@@ -173,6 +184,7 @@ export default function CalendarBooking() {
   const [userEmail, setUserEmail] = useState("");
   const [userProjectName, setUserProjectName] = useState("");
   const [userNotes, setUserNotes] = useState("");
+  const [userPhone, setUserPhone] = useState("");
   
   // Results screen state
   const [bookingSuccessData, setBookingSuccessData] = useState<{
@@ -280,7 +292,9 @@ export default function CalendarBooking() {
       (currentUser, accessToken) => {
         setUser(currentUser);
         setToken(accessToken);
-        if (currentUser.displayName) setUserName(currentUser.displayName);
+        if (currentUser.displayName) {
+          setUserName(prev => prev.trim() ? prev : currentUser.displayName || "");
+        }
         if (currentUser.email) setUserEmail(currentUser.email);
       },
       () => {
@@ -303,7 +317,9 @@ export default function CalendarBooking() {
       if (res) {
         setUser(res.user);
         setToken(res.accessToken);
-        if (res.user.displayName) setUserName(res.user.displayName);
+        if (res.user.displayName) {
+          setUserName(prev => prev.trim() ? prev : res.user.displayName || "");
+        }
         if (res.user.email) setUserEmail(res.user.email);
       }
     } catch (err: any) {
@@ -341,7 +357,7 @@ export default function CalendarBooking() {
 
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!userName || !userEmail || !userProjectName || !selectedDate || !selectedSlot) {
+    if (!userName || !userEmail || !userProjectName || !userPhone || !selectedDate || !selectedSlot) {
       setErrorMessage("Por favor complete todos los datos del formulario.");
       return;
     }
@@ -379,8 +395,8 @@ export default function CalendarBooking() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          summary: `Consultoría Técnica LUXPROC: ${userProjectName}`,
-          description: `Reunión de Consultoría de Alta Ingeniería y Ecosistemas Digitales.\n\nDetalles del Proyecto:\n- Proyecto/Empresa: ${userProjectName}\n- Notas del cliente: ${userNotes || "Ninguna"}\n- Correo del cliente: ${userEmail}\n- Nombre del cliente: ${userName}\n\nSincronizado de manera 100% real vía LUXPROC con Google Calendar y Meet.`,
+          summary: `Reunión: ${userProjectName}`,
+          description: `Reunión de Consultoría de Ingeniería - LUXPROC.\n\nDetalles de la Reunión:\n- Título: ${userProjectName}\n- Solicitante: ${userName}\n- Número de Celular: ${userPhone}\n- Motivo de la reunión: ${userNotes || "Ninguno"}\n- Correo de contacto: ${userEmail}\n\nSincronizado de manera automática 100% real vía LUXPROC con Google Calendar y Meet.`,
           start: {
             dateTime: startDateTime,
             timeZone: selectedTimezone
@@ -434,6 +450,7 @@ export default function CalendarBooking() {
         selectedTimezone,
         meetUrl,
         userNotes,
+        userPhone,
         token
       );
 
@@ -449,6 +466,7 @@ export default function CalendarBooking() {
           time: selectedSlot,
           timezone: selectedTimezone,
           notes: userNotes,
+          phone: userPhone,
           meetUrl: meetUrl,
           calendarEventId: gcalEvent.id
         })
@@ -472,6 +490,7 @@ export default function CalendarBooking() {
         setUserEmail("");
         setUserProjectName("");
         setUserNotes("");
+        setUserPhone("");
         setSelectedSlot("");
         fetchBookings(); // Refresh conflicts grid
       } else {
@@ -570,6 +589,12 @@ END:VCALENDAR`;
     if (shift === "morning") return hour < 13;
     return hour >= 13;
   };
+
+  const isFormFilled = 
+    userName.trim() !== "" && 
+    userProjectName.trim() !== "" && 
+    userPhone.trim() !== "" && 
+    userNotes.trim() !== "";
 
   return (
     <section id="calendario" className="py-24 px-4 bg-transparent transition-colors duration-300">
@@ -885,49 +910,11 @@ END:VCALENDAR`;
                           </p>
                         </div>
 
-                        {!token ? (
-                          <div className="flex flex-col items-center justify-center text-center py-6 space-y-5 h-full">
-                            <div className="p-4 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full">
-                              <Video className="w-8 h-8 stroke-[2]" />
-                            </div>
-                            <div className="space-y-2">
-                              <h4 className="text-xs font-extrabold text-slate-800 dark:text-white uppercase tracking-wider">
-                                Autenticación Google Requerida
-                              </h4>
-                              <p className="text-[11px] text-slate-600 dark:text-slate-300 max-w-sm leading-relaxed">
-                                Para garantizar una sincronización real de calendario y crear salas de Google Meet 100% funcionales, inicia sesión de forma segura con tu cuenta de Google.
-                              </p>
-                            </div>
-                            
-                            {/* Official Google Button Style */}
-                            <button
-                              type="button"
-                              onClick={handleGoogleLogin}
-                              disabled={isLoggingIn}
-                              className="flex items-center gap-3 px-5 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:shadow-md active:scale-[0.98] transition-all cursor-pointer font-bold text-xs disabled:opacity-50"
-                            >
-                              {isLoggingIn ? (
-                                <RefreshCw className="w-4 h-4 animate-spin text-blue-500" />
-                              ) : (
-                                <svg className="w-4 h-4" viewBox="0 0 24 24">
-                                  <path fill="#EA4335" d="M12 5.04c1.62 0 3.08.56 4.22 1.66l3.15-3.15C17.45 1.84 14.9 1 12 1 7.35 1 3.4 3.65 1.5 7.5l3.8 2.95C6.2 7.04 8.85 5.04 12 5.04z" />
-                                  <path fill="#4285F4" d="M23.5 12.25c0-.82-.07-1.6-.2-2.35H12v4.45h6.45c-.28 1.45-1.1 2.68-2.33 3.5l3.6 2.8c2.1-1.94 3.3-4.8 3.3-8.4z" />
-                                  <path fill="#FBBC05" d="M5.3 14.5c-.25-.75-.4-1.55-.4-2.5s.15-1.75.4-2.5L1.5 6.55C.55 8.45 0 10.15 0 12s.55 3.55 1.5 5.45l3.8-2.95z" />
-                                  <path fill="#34A853" d="M12 23c3.25 0 5.95-1.08 7.95-2.9l-3.6-2.8c-1.1.74-2.5 1.18-4.35 1.18-3.15 0-5.8-2-6.7-4.95l-3.8 2.95C3.4 20.35 7.35 23 12 23z" />
-                                </svg>
-                              )}
-                              <span>{isLoggingIn ? "Conectando..." : "Iniciar Sesión con Google"}</span>
-                            </button>
-
-                            {errorMessage && (
-                              <p className="text-[10px] text-red-500 font-semibold">{errorMessage}</p>
-                            )}
-                          </div>
-                        ) : (
-                          <form onSubmit={handleBookingSubmit} className="space-y-4">
+                        <form onSubmit={handleBookingSubmit} className="space-y-4">
+                          {token && (
                             <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 text-[10px] text-emerald-600 dark:text-emerald-400">
                               <span className="flex items-center gap-1 font-semibold">
-                                <Check className="w-3.5 h-3.5 stroke-[3]" /> Conectado con Google
+                                <Check className="w-3.5 h-3.5 stroke-[3]" /> Conectado como: {userEmail}
                               </span>
                               <button
                                 type="button"
@@ -937,25 +924,27 @@ END:VCALENDAR`;
                                 Cerrar Sesión
                               </button>
                             </div>
+                          )}
 
-                            <div className="space-y-1.5">
-                              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                                <User className="w-3.5 h-3.5" /> Nombre Completo:
-                              </label>
-                              <input
-                                type="text"
-                                required
-                                readOnly
-                                placeholder="Nombre completo"
-                                value={userName}
-                                className="w-full text-xs md:text-sm p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100/60 dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 focus:outline-none cursor-not-allowed shadow-sm"
-                              />
-                            </div>
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                              <User className="w-3.5 h-3.5" /> Nombre de la Persona que solicita la reunión:
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              placeholder="Nombre completo del solicitante"
+                              value={userName}
+                              onChange={(e) => setUserName(e.target.value)}
+                              className="w-full text-xs md:text-sm p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white focus:outline-none focus:border-blue-500 transition-all shadow-sm"
+                            />
+                          </div>
 
-                            <div className="space-y-1.5">
-                              <label className="text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                                <Mail className="w-3.5 h-3.5" /> Correo Electrónico:
-                              </label>
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                              <Mail className="w-3.5 h-3.5" /> Correo Electrónico:
+                            </label>
+                            {token ? (
                               <input
                                 type="email"
                                 required
@@ -964,43 +953,61 @@ END:VCALENDAR`;
                                 value={userEmail}
                                 className="w-full text-xs md:text-sm p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100/60 dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 focus:outline-none cursor-not-allowed shadow-sm"
                               />
-                              <p className="text-[10px] text-slate-400">
-                                * Correo verificado por Google. Se enviarán invitaciones de Google Calendar automáticas.
-                              </p>
-                            </div>
-
-                            <div className="space-y-1.5">
-                              <label className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                                📌 Título de Proyecto o Empresa:
-                              </label>
-                              <input
-                                type="text"
-                                required
-                                placeholder="Ej. Implementación ERP / Consultoría R&D"
-                                value={userProjectName}
-                                onChange={(e) => setUserProjectName(e.target.value)}
-                                className="w-full text-xs md:text-sm p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:border-blue-500 text-slate-800 dark:text-white transition-all shadow-sm"
-                              />
-                            </div>
-
-                            <div className="space-y-1.5">
-                              <label className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                                🗒️ Notas o requerimientos específicos:
-                              </label>
-                              <textarea
-                                placeholder="Ej. Buscamos automatizar facturación SII e inventario IoT..."
-                                value={userNotes}
-                                onChange={(e) => setUserNotes(e.target.value)}
-                                className="w-full text-xs md:text-sm p-3 h-20 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:border-blue-500 text-slate-800 dark:text-white transition-all shadow-sm resize-none"
-                              />
-                            </div>
-
-                            {errorMessage && (
-                              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-xs text-red-500 flex justify-between items-center font-semibold">
-                                <span>⚠️ {errorMessage}</span>
+                            ) : (
+                              <div className="w-full text-xs md:text-sm p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 text-slate-400 dark:text-slate-500 italic">
+                                * Se sincronizará automáticamente al iniciar sesión con Google
                               </div>
                             )}
+                          </div>
 
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                              📌 Título de la Reunión:
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              placeholder="Ej. Planificación de ERP / Sesión de Consultoría Técnica"
+                              value={userProjectName}
+                              onChange={(e) => setUserProjectName(e.target.value)}
+                              className="w-full text-xs md:text-sm p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:border-blue-500 text-slate-800 dark:text-white transition-all shadow-sm"
+                            />
+                          </div>
+
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                              📞 Número de Celular:
+                            </label>
+                            <input
+                              type="tel"
+                              required
+                              placeholder="Ej. +51 987 654 321"
+                              value={userPhone}
+                              onChange={(e) => setUserPhone(e.target.value)}
+                              className="w-full text-xs md:text-sm p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:border-blue-500 text-slate-800 dark:text-white transition-all shadow-sm"
+                            />
+                          </div>
+
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                              🗒️ Motivo de la Reunión:
+                            </label>
+                            <textarea
+                              required
+                              placeholder="Ej. Analizar problemas de sincronización de la base de datos y proponer un roadmap de ingeniería..."
+                              value={userNotes}
+                              onChange={(e) => setUserNotes(e.target.value)}
+                              className="w-full text-xs md:text-sm p-3 h-20 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:border-blue-500 text-slate-800 dark:text-white transition-all shadow-sm resize-none"
+                            />
+                          </div>
+
+                          {errorMessage && (
+                            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-xs text-red-500 flex justify-between items-center font-semibold">
+                              <span>⚠️ {errorMessage}</span>
+                            </div>
+                          )}
+
+                          {token ? (
                             <button
                               type="submit"
                               disabled={isLoading}
@@ -1009,7 +1016,7 @@ END:VCALENDAR`;
                               {isLoading ? (
                                 <>
                                   <RefreshCw className="w-4 h-4 animate-spin" />
-                                  Agendando con Google APIs...
+                                  <span>Sincronizando con Google Meet & Calendar...</span>
                                 </>
                               ) : (
                                 <>
@@ -1018,8 +1025,58 @@ END:VCALENDAR`;
                                 </>
                               )}
                             </button>
-                          </form>
-                        )}
+                          ) : (
+                            <div className="space-y-3 pt-2">
+                              {!isFormFilled ? (
+                                <div className="space-y-2">
+                                  <button
+                                    type="button"
+                                    disabled
+                                    className="w-full p-4 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-600 font-bold text-xs md:text-sm flex items-center justify-center gap-2 cursor-not-allowed"
+                                  >
+                                    <Lock className="w-4 h-4" />
+                                    Complete los campos para iniciar sesión
+                                  </button>
+                                  <p className="text-[10px] text-center text-slate-400 dark:text-slate-500">
+                                    * Complete su nombre, título, celular y motivo de la reunión para desbloquear la sincronización con Google.
+                                  </p>
+                                </div>
+                              ) : (
+                                <div className="space-y-3">
+                                  <div className="p-3 rounded-xl bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 text-center">
+                                    <p className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-1.5">
+                                      <Check className="w-4 h-4 stroke-[3]" /> ¡Detalles de reunión listos!
+                                    </p>
+                                    <p className="text-[9.5px] text-slate-500 dark:text-slate-400 mt-1">
+                                      Ahora proceda a iniciar sesión con Google para autorizar su calendario y sincronizar el enlace de Meet automáticamente.
+                                    </p>
+                                  </div>
+
+                                  <button
+                                    type="button"
+                                    onClick={handleGoogleLogin}
+                                    disabled={isLoggingIn}
+                                    className="w-full flex items-center justify-center gap-3 px-5 py-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-blue-600 hover:bg-blue-550 text-white font-bold text-xs md:text-sm shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.98] disabled:opacity-50"
+                                  >
+                                    {isLoggingIn ? (
+                                      <RefreshCw className="w-4 h-4 animate-spin" />
+                                    ) : (
+                                      <svg className="w-4 h-4" viewBox="0 0 24 24">
+                                        <path fill="#EA4335" d="M12 5.04c1.62 0 3.08.56 4.22 1.66l3.15-3.15C17.45 1.84 14.9 1 12 1 7.35 1 3.4 3.65 1.5 7.5l3.8 2.95C6.2 7.04 8.85 5.04 12 5.04z" />
+                                        <path fill="#4285F4" d="M23.5 12.25c0-.82-.07-1.6-.2-2.35H12v4.45h6.45c-.28 1.45-1.1 2.68-2.33 3.5l3.6 2.8c2.1-1.94 3.3-4.8 3.3-8.4z" />
+                                        <path fill="#FBBC05" d="M5.3 14.5c-.25-.75-.4-1.55-.4-2.5s.15-1.75.4-2.5L1.5 6.55C.55 8.45 0 10.15 0 12s.55 3.55 1.5 5.45l3.8-2.95z" />
+                                        <path fill="#34A853" d="M12 23c3.25 0 5.95-1.08 7.95-2.9l-3.6-2.8c-1.1.74-2.5 1.18-4.35 1.18-3.15 0-5.8-2-6.7-4.95l-3.8 2.95C3.4 20.35 7.35 23 12 23z" />
+                                      </svg>
+                                    )}
+                                    <span>{isLoggingIn ? "Conectando con Google..." : "Iniciar Sesión con Google"}</span>
+                                  </button>
+                                </div>
+                              )}
+
+                              {/* No 403 guide needed since we are live in production */}
+                            </div>
+                          )}
+                        </form>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -1111,19 +1168,32 @@ END:VCALENDAR`;
                 </div>
 
                 {/* Operations and download simulation buttons */}
-                <div className="pt-4 flex flex-wrap gap-3 justify-center">
+                <div className="pt-4 flex flex-wrap gap-3 justify-center items-center">
                   <button
                     onClick={() => downloadIcsFile(bookingSuccessData.booking)}
-                    className="p-3 bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700/80 rounded-xl text-xs font-semibold flex items-center gap-2 cursor-pointer"
+                    className="p-3 px-4 bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700/80 rounded-xl text-xs font-semibold flex items-center gap-2.5 cursor-pointer text-slate-200 shadow-md"
                   >
-                    <Plus className="w-4 h-4 text-emerald-400" /> Descargar Evento (.ics)
+                    <img 
+                      src="https://i.imgur.com/9PTaAa4.png" 
+                      alt="LUXPROC" 
+                      className="w-5 h-5 object-contain"
+                      referrerPolicy="no-referrer" 
+                    />
+                    <span>Descargar Evento (.ics)</span>
+                  </button>
+
+                  <button
+                    onClick={() => window.dispatchEvent(new CustomEvent("open-download-logo"))}
+                    className="p-3 px-4 bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700/80 rounded-xl text-xs font-semibold flex items-center gap-2 cursor-pointer text-slate-200"
+                  >
+                    <Download className="w-4 h-4 text-amber-400" /> Descargar Logo Oficial
                   </button>
 
                   <button
                     onClick={() => {
                       setBookingSuccessData(null);
                     }}
-                    className="p-3 bg-blue-600 hover:bg-blue-550 transition-colors rounded-xl text-xs font-bold text-white cursor-pointer"
+                    className="p-3 px-4 bg-blue-600 hover:bg-blue-550 transition-colors rounded-xl text-xs font-bold text-white cursor-pointer"
                   >
                     Volver al Calendario
                   </button>

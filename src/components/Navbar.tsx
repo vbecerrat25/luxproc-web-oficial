@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import BrandLogo from "./BrandLogo";
 import { 
   Sun, 
   Moon, 
@@ -9,7 +10,8 @@ import {
   Sparkles,
   Workflow,
   X,
-  Share2
+  Share2,
+  Download
 } from "lucide-react";
 
 interface NavbarProps {
@@ -120,12 +122,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
               window.dispatchEvent(new CustomEvent("reset-to-home"));
             }}
           >
-            <img 
-              src="https://i.imgur.com/W8A2oCf.png" 
-              alt="LUXPROC S.A.C." 
-              className="h-14 md:h-16 w-auto object-contain dark:invert dark:hue-rotate-180 transition-all duration-300"
-              referrerPolicy="no-referrer"
-            />
+            <BrandLogo className="h-12 md:h-14 w-auto" isDarkMode={isDarkMode} />
           </a>
 
           {/* Desktop Anchor Navigation links */}
@@ -138,7 +135,10 @@ export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
             </a>
             <a
               href="#soluciones"
-              className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors"
+              onClick={(e) => {
+                window.dispatchEvent(new CustomEvent("open-solutions-fullview"));
+              }}
+              className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
             >
               Soluciones
             </a>
@@ -146,7 +146,13 @@ export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
               onClick={() => setIsSocialsOpen(true)}
               className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
             >
-              Nuestras Redes Sociales
+              Nuestras Redes
+            </button>
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent("open-download-logo"))}
+              className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer flex items-center gap-1.5"
+            >
+              <Download className="w-3.5 h-3.5 text-blue-500" /> Descargar Logo
             </button>
           </nav>
 
