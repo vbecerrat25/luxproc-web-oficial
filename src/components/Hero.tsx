@@ -12,7 +12,7 @@ import {
   CheckCircle2
 } from "lucide-react";
 
-// Robust, elegant Typewriter Heading with zero layout glitching
+// Robust, elegant Typewriter Heading with zero layout or translation glitching
 function TypewriterHeading() {
   const fullText = "Sistemas ERP, CRM y Desarrollo Moderno Sin Fricciones.";
   const [charCount, setCharCount] = useState(0);
@@ -25,7 +25,7 @@ function TypewriterHeading() {
       if (charCount < fullText.length) {
         timer = setTimeout(() => {
           setCharCount((prev) => prev + 1);
-        }, 60); // Typing speed
+        }, 55); // Smooth typing speed
       } else {
         // Pause for 3.5s when typing completes
         timer = setTimeout(() => {
@@ -36,9 +36,9 @@ function TypewriterHeading() {
       if (charCount > 0) {
         timer = setTimeout(() => {
           setCharCount((prev) => prev - 1);
-        }, 25); // Faster deletion speed
+        }, 22); // Faster deletion speed
       } else {
-        // Pause briefly on blank before typing again
+        // Pause briefly on blank state before retyping
         timer = setTimeout(() => {
           setIsDeleting(false);
         }, 400);
@@ -48,23 +48,24 @@ function TypewriterHeading() {
     return () => clearTimeout(timer);
   }, [charCount, isDeleting]);
 
-  // Derived sliced parts to ensure clean text styling without DOM duplication
-  // "Sistemas ERP, CRM y " -> length 20
-  // "Desarrollo Moderno"  -> length 18 (indices 20 to 38)
-  // " Sin Fricciones."     -> length 17 (indices 38 to 55)
-  const part1Text = fullText.slice(0, Math.min(charCount, 20));
-  const part2Text = charCount > 20 ? fullText.slice(20, Math.min(charCount, 38)) : "";
-  const part3Text = charCount > 38 ? fullText.slice(38, Math.min(charCount, 55)) : "";
+  // Derived sliced parts to ensure clean text styling without DOM duplication or spaces collapsing
+  // Part 1: "Sistemas ERP, CRM y " (length 20)
+  // Part 2: "Desarrollo Moderno"  (length 18, index 20 to 38)
+  // Part 3: " Sin Fricciones."     (index 38+)
+  const currentTypedText = fullText.slice(0, charCount);
+  const part1 = currentTypedText.slice(0, 20);
+  const part2 = currentTypedText.length > 20 ? currentTypedText.slice(20, 38) : "";
+  const part3 = currentTypedText.length > 38 ? currentTypedText.slice(38) : "";
 
   return (
-    <span className="inline">
-      <span>{part1Text}</span>
-      {part2Text && (
+    <span className="notranslate inline whitespace-pre-wrap" translate="no">
+      {part1}
+      {part2 && (
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-500 dark:from-blue-400 dark:via-indigo-300 dark:to-cyan-300">
-          {part2Text}
+          {part2}
         </span>
       )}
-      <span>{part3Text}</span>
+      {part3}
       <span className="inline-block w-[3px] h-[0.85em] bg-blue-600 dark:bg-amber-400 ml-1.5 translate-y-[8%] animate-pulse" />
     </span>
   );
@@ -261,7 +262,8 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-6.5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]"
+            className="notranslate text-4xl sm:text-5xl md:text-6xl lg:text-6.5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]"
+            translate="no"
           >
             <TypewriterHeading />
           </motion.h1>
