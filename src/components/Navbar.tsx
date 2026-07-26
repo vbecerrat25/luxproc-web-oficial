@@ -126,13 +126,15 @@ export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
           </a>
 
           {/* Desktop Anchor Navigation links */}
-          <nav className="hidden md:flex items-center gap-8">
-            <a
-              href="#empresa"
-              className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors"
+          <nav className="hidden md:flex items-center gap-7">
+            <button
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent("open-nosotros-fullview"));
+              }}
+              className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
             >
               Quiénes Somos
-            </a>
+            </button>
             <a
               href="#soluciones"
               onClick={(e) => {
@@ -148,11 +150,29 @@ export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
             >
               Nuestras Redes
             </button>
+            <button
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent("open-nosotros-fullview"));
+              }}
+              className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
+            >
+              Nosotros
+            </button>
           </nav>
 
           {/* Controls - Light/Dark toggle + Call to action */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             
+            {/* Mobile Nosotros button */}
+            <button
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent("open-nosotros-fullview"));
+              }}
+              className="md:hidden px-3 py-1.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider hover:bg-blue-500/20 transition-all cursor-pointer"
+            >
+              Nosotros
+            </button>
+
             {/* Mobile/All screens networks shortcut */}
             <button
               onClick={() => setIsSocialsOpen(true)}

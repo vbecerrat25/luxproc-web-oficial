@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import MaintenanceSystemModal from "./MaintenanceSystemModal";
 import { 
   Building, 
   Settings, 
@@ -55,6 +56,7 @@ export default function Solutions() {
   const [isERPFulviewOpen, setIsERPFulviewOpen] = useState(false);
   const [isWebFullviewOpen, setIsWebFullviewOpen] = useState(false);
   const [isSolutionsFullviewOpen, setIsSolutionsFullviewOpen] = useState(false);
+  const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
 
   // Listen for reset-to-home and custom fullview triggers
   useEffect(() => {
@@ -1151,11 +1153,11 @@ export default function Solutions() {
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <a
-                    href="#contacto"
+                    href="#calendario"
                     onClick={() => {
                       setIsERPFulviewOpen(false);
                       setTimeout(() => {
-                        const target = document.getElementById("contacto");
+                        const target = document.getElementById("calendario");
                         if (target) target.scrollIntoView({ behavior: "smooth" });
                       }, 100);
                     }}
@@ -1292,9 +1294,43 @@ export default function Solutions() {
                 </p>
               </div>
 
-              {/* Grid 4 Web Platforms */}
+
+
+              {/* Grid 6 Web Platforms */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
                 {[
+                  {
+                    id: "web-diagnostico",
+                    title: "Plataforma de Diagnóstico de Madurez Digital",
+                    sector: "Evaluación Avanzada 2026",
+                    desc: "Auditoría interactiva en 20 dimensiones de negocio. Genera mapas de araña (Radar), análisis de semáforos, informe PDF y plan de mejora tecnológica.",
+                    icon: BarChart3,
+                    color: "border-blue-500/50 hover:border-blue-500/90 bg-gradient-to-br from-blue-500/5 to-teal-500/5 dark:from-blue-900/20 dark:to-slate-900",
+                    badgeColor: "bg-blue-500/20 text-blue-600 dark:text-blue-300 font-extrabold border border-blue-500/30",
+                    features: [
+                      "Evaluación de 20 dimensiones críticas de negocio",
+                      "Gráfico Spider Radar & Matriz de Priorización Advisory",
+                      "Informe PDF descargable & Plan de Mejora en fases"
+                    ],
+                    externalUrl: "https://diagn-stico-de-madurez-digital.ai.studio",
+                    ctaText: "Comenzar Diagnóstico Digital"
+                  },
+                  {
+                    id: "web-mantenimiento",
+                    title: "LUXPROC Cloud Maintenance System",
+                    sector: "Mantenimiento Industrial & Confiabilidad",
+                    desc: "Gestión integral de activos industriales, KPIs OEE/MTBF/MTTR en tiempo real, mantenimiento preventivo/predictivo y control de repuestos ISO 9001/55001.",
+                    icon: Gauge,
+                    color: "border-blue-500/50 hover:border-blue-500/90 bg-gradient-to-br from-blue-500/5 to-indigo-500/5 dark:from-blue-900/20 dark:to-slate-900",
+                    badgeColor: "bg-blue-500/20 text-blue-600 dark:text-blue-300 font-extrabold border border-blue-500/30",
+                    features: [
+                      "Monitoreo en tiempo real de OEE (91%), MTBF y MTTR",
+                      "Gestión de OT's e Inspección Predictiva (Termografía/Vibración)",
+                      "Almacén de Repuestos Críticos & Control de Cambios ISO"
+                    ],
+                    externalUrl: "https://maintenancecloud-1109.ai.studio",
+                    ctaText: "Ver Demo de Dashboard Industrial"
+                  },
                   {
                     id: "web-seo",
                     title: "LUXPROC Corporate SEO Web",
@@ -1374,9 +1410,27 @@ export default function Solutions() {
                       </div>
                     </div>
 
-                    <button className="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-not-allowed">
-                      Ver Demo de Arquitectura Web <ExternalLink className="w-3.5 h-3.5" />
-                    </button>
+                    {sec.externalUrl ? (
+                      <a
+                        href={sec.externalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-[0.98] cursor-pointer"
+                      >
+                        {sec.ctaText || "Ver Demo de Arquitectura Web"} <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    ) : sec.isInteractiveModal ? (
+                      <button
+                        onClick={sec.modalTrigger}
+                        className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md hover:shadow-lg active:scale-[0.98] cursor-pointer"
+                      >
+                        Ver Demo de Dashboard Industrial <ExternalLink className="w-3.5 h-3.5" />
+                      </button>
+                    ) : (
+                      <button className="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-not-allowed">
+                        Ver Demo de Arquitectura Web <ExternalLink className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -1392,11 +1446,11 @@ export default function Solutions() {
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <a
-                    href="#contacto"
+                    href="#calendario"
                     onClick={() => {
                       setIsWebFullviewOpen(false);
                       setTimeout(() => {
-                        const target = document.getElementById("contacto");
+                        const target = document.getElementById("calendario");
                         if (target) target.scrollIntoView({ behavior: "smooth" });
                       }, 100);
                     }}
@@ -1588,17 +1642,17 @@ export default function Solutions() {
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <a
-                    href="#contacto"
+                    href="#calendario"
                     onClick={() => {
                       setIsSolutionsFullviewOpen(false);
                       setTimeout(() => {
-                        const target = document.getElementById("contacto");
+                        const target = document.getElementById("calendario");
                         if (target) target.scrollIntoView({ behavior: "smooth" });
                       }, 100);
                     }}
                     className="py-3.5 px-8 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm transition-all shadow-md active:scale-[0.98] cursor-pointer"
                   >
-                    Solicitar Diagnóstico Técnico
+                    Agendar Consultoría de Ingeniería
                   </a>
                   <button
                     onClick={() => {
@@ -1616,6 +1670,11 @@ export default function Solutions() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <MaintenanceSystemModal
+        isOpen={isMaintenanceModalOpen}
+        onClose={() => setIsMaintenanceModalOpen(false)}
+      />
     </section>
   );
 }
