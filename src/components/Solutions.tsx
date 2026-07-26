@@ -1036,15 +1036,21 @@ export default function Solutions() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
                 {[
                   {
-                    id: "industrial",
-                    title: "LUXPROC Industrial (MRP)",
-                    sector: "Manufactura e Ingeniería",
-                    desc: "Control de órdenes de fabricación, costos de materias primas, control de mermas e integración con sensores IoT para telemetría de producción en planta física.",
+                    id: "shoe-leather",
+                    title: "Luxproc Shoe & Leather ERP",
+                    sector: "Cuero, Calzado y Textil",
+                    desc: "Control integral de inventario de materia prima (MP), control de producción, control de ventas, gestión de operadores, indicadores clave, órdenes de compra, generador de QR, código de barras e impresión de reportes PDF.",
                     icon: Factory,
-                    color: "border-orange-500/30 hover:border-orange-500/60",
-                    badgeColor: "bg-orange-500/10 text-orange-600 dark:text-orange-400",
-                    btnColor: "bg-orange-600 hover:bg-orange-700",
-                    features: ["Planificación de Requerimiento de Materiales (MRP)", "Tiempos de máquina e integración con PLC", "Costeo automático de productos terminados"]
+                    color: "border-amber-500/40 hover:border-amber-500/80 bg-gradient-to-br from-amber-500/5 to-orange-500/5 dark:from-amber-950/20 dark:to-slate-900",
+                    badgeColor: "bg-amber-500/20 text-amber-600 dark:text-amber-300 font-extrabold border border-amber-500/30",
+                    btnColor: "bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500",
+                    features: [
+                      "Control de Inventario Materia Prima (MP) & Órdenes de Compra",
+                      "Control de Producción, Operadores, Ventas e Indicadores KPI",
+                      "Generador de QR, Código de Barras e Impresión de Reportes PDF"
+                    ],
+                    externalUrl: "https://shoes-leather-erp-platform.ai.studio",
+                    ctaText: "Ir a Luxproc Shoe & Leather ERP"
                   },
                   {
                     id: "commerce",
@@ -1134,9 +1140,20 @@ export default function Solutions() {
                       </div>
                     </div>
 
-                    <button className="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-not-allowed">
-                      Ver Demo del Sector <ExternalLink className="w-3.5 h-3.5" />
-                    </button>
+                    {sec.externalUrl ? (
+                      <a
+                        href={sec.externalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`w-full py-3 px-4 rounded-xl ${sec.btnColor || "bg-orange-600 hover:bg-orange-700"} text-white font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-[0.98] cursor-pointer`}
+                      >
+                        {sec.ctaText || "Ver Demo del Sector"} <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    ) : (
+                      <button className="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-not-allowed">
+                        Ver Demo del Sector <ExternalLink className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
