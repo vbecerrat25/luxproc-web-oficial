@@ -122,7 +122,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
               window.dispatchEvent(new CustomEvent("reset-to-home"));
             }}
           >
-            <BrandLogo className="h-12 md:h-14 w-auto" isDarkMode={isDarkMode} />
+            <BrandLogo className="h-12 sm:h-[50px] md:h-[56px] lg:h-[60px] w-auto max-w-[240px] md:max-w-[280px]" isDarkMode={isDarkMode} />
           </a>
 
           {/* Desktop Anchor Navigation links */}

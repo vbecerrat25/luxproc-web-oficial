@@ -84,7 +84,7 @@ if (typeof window !== "undefined") {
     try {
       const img = new Image();
       img.crossOrigin = "anonymous";
-      img.src = "https://i.imgur.com/dQgxO9K.png";
+      img.src = "https://i.imgur.com/FsmNAB6.png";
       img.onload = () => {
         try {
           const canvas = document.createElement("canvas");
@@ -94,27 +94,8 @@ if (typeof window !== "undefined") {
           const ctx = canvas.getContext("2d");
           if (!ctx) return;
 
-          // Draw the brand icon portion (leftmost ~34% of original logo)
-          const srcCropWidth = img.width * 0.34;
-          const srcCropHeight = img.height;
-          ctx.drawImage(img, 0, 0, srcCropWidth, srcCropHeight, 2, 2, size - 4, size - 4);
-
-          // Process pixels to remove light/white background
-          const imgData = ctx.getImageData(0, 0, size, size);
-          const data = imgData.data;
-          for (let i = 0; i < data.length; i += 4) {
-            const r = data[i];
-            const g = data[i + 1];
-            const b = data[i + 2];
-            if (r > 215 && g > 215 && b > 215) {
-              data[i + 3] = 0;
-            } else if (r > 185 && g > 185 && b > 185) {
-              const brightness = (r + g + b) / 3;
-              const alphaRatio = (215 - brightness) / 30;
-              data[i + 3] = Math.floor(Math.max(0, Math.min(255, alphaRatio * 255)));
-            }
-          }
-          ctx.putImageData(imgData, 0, 0);
+          // Draw square logo directly
+          ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, size, size);
 
           const faviconUrl = canvas.toDataURL("image/png");
           let link = document.querySelector("link[rel*='icon']") as HTMLLinkElement | null;
@@ -127,6 +108,12 @@ if (typeof window !== "undefined") {
           link.href = faviconUrl;
         } catch (e) {
           console.warn("Favicon processing fallback:", e);
+        }
+      };
+      img.onerror = () => {
+        let link = document.querySelector("link[rel*='icon']") as HTMLLinkElement | null;
+        if (link) {
+          link.href = "/favicon.png";
         }
       };
     } catch {

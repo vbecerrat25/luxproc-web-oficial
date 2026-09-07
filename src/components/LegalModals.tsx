@@ -134,7 +134,7 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
                           Libro de Reclamaciones Virtual
                         </h3>
                         <p className="text-xs text-slate-500 dark:text-slate-400">
-                          LUXPROC S.A.C. • RUC: 20609341103 • Conforme a la Ley N° 29571 Código de Protección y Defensa del Consumidor.
+                          LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. • RUC: 20609341103 • Conforme a la Ley N° 29571 Código de Protección y Defensa del Consumidor.
                         </p>
                       </div>
                     </div>
@@ -587,7 +587,7 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
 
                   <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">1. Licenciamiento y Uso del Software</h4>
                   <p>
-                    LUXPROC S.A.C. otorga licencias de uso de software a medida y plataformas web según las estipulaciones contractuales acordadas de manera independiente para cada proyecto comercial. Queda terminantemente prohibida la ingeniería inversa, distribución no autorizada o explotación mercantil sin consentimiento expreso firmado por el Ingeniero Víctor Becerra o representante facultado de la empresa.
+                    LUXPROC S.A.C. otorga licencias de uso de software a medida y plataformas web según las estipulaciones contractuales acordadas de manera independiente para cada proyecto comercial. Queda terminantemente prohibida la ingeniería inversa, distribución no autorizada o explotación mercantil sin consentimiento expreso firmado por Carmen Terán Vda. de Becerra o representante facultado de la empresa.
                   </p>
 
                   <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">2. Integraciones de Terceros e APIs</h4>

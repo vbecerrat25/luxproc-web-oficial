@@ -87,10 +87,10 @@ export default function App() {
           
           <div className="md:col-span-4 space-y-4">
             <div className="flex flex-col sm:items-start items-center gap-3">
-              <BrandLogo className="h-20 md:h-24 w-auto" isDarkMode={isDarkMode} />
+              <BrandLogo className="h-28 sm:h-32 md:h-36 lg:h-40 w-auto max-w-[480px] lg:max-w-[520px]" isDarkMode={isDarkMode} />
             </div>
             
-            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm leading-relaxed">
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm md:max-w-md leading-relaxed">
               Líderes en ingeniería física y digital integrada. Desarrollamos ERPs, CRMs avanzados, arquitecturas web escalables y lideramos proyectos de innovación científica (I+D+i) para orquestar la eficiencia del mañana.
             </p>
           </div>
@@ -124,7 +124,7 @@ export default function App() {
 
         {/* Legal copyrights details bar */}
         <div className="relative max-w-[1400px] mx-auto mt-12 pt-8 border-t border-slate-200/60 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-400 font-medium z-10">
-          <p>© {new Date().getFullYear()} LUXPROC S.A.C. Todos los derechos reservados. | Dominio Oficial: <a href="http://www.luxproc.com" className="text-blue-500 hover:underline font-mono" target="_blank" rel="noopener noreferrer">www.luxproc.com</a></p>
+          <p>© {new Date().getFullYear()} LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. Todos los derechos reservados. | Dominio Oficial: <a href="http://www.luxproc.com" className="text-blue-500 hover:underline font-mono" target="_blank" rel="noopener noreferrer">www.luxproc.com</a></p>
         </div>
       </footer>
 

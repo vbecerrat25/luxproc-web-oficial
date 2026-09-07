@@ -32,7 +32,8 @@ import {
   Info,
   Thermometer,
   Waves,
-  Droplet
+  Droplet,
+  BarChart3
 } from "lucide-react";
 
 interface MaintenanceSystemModalProps {

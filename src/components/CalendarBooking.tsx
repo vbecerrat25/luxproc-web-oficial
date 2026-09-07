@@ -832,15 +832,12 @@ END:VCALENDAR`;
 
                             {/* Host details */}
                             <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/40 dark:border-slate-800 flex items-center gap-3">
-                              <img
-                                src="https://i.imgur.com/XdWDVQ3.jpeg"
-                                alt="Victor Becerra"
-                                className="w-12 h-12 rounded-full object-cover border border-slate-200 dark:border-slate-700"
-                                referrerPolicy="no-referrer"
-                              />
+                              <div className="w-10 h-10 rounded-xl bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-600 dark:text-blue-400 flex-shrink-0">
+                                <User className="w-5 h-5" />
+                              </div>
                               <div>
-                                <p className="text-xs font-bold text-slate-800 dark:text-white">Victor Becerra</p>
-                                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">CEO & Co-Fundador • Consultor Líder</p>
+                                <p className="text-xs font-bold text-slate-800 dark:text-white">Carmen Terán Vda. de Becerra</p>
+                                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">CEO & Co-Fundadora • Dirección Ejecutiva</p>
                               </div>
                             </div>
 

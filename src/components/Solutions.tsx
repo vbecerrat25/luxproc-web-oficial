@@ -1436,9 +1436,9 @@ export default function Solutions() {
                       >
                         {sec.ctaText || "Ver Demo de Arquitectura Web"} <ExternalLink className="w-3.5 h-3.5" />
                       </a>
-                    ) : sec.isInteractiveModal ? (
+                    ) : (sec as any).isInteractiveModal ? (
                       <button
-                        onClick={sec.modalTrigger}
+                        onClick={(sec as any).modalTrigger}
                         className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md hover:shadow-lg active:scale-[0.98] cursor-pointer"
                       >
                         Ver Demo de Dashboard Industrial <ExternalLink className="w-3.5 h-3.5" />
