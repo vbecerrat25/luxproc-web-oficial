@@ -14,16 +14,21 @@ import {
   Layers, 
   ArrowLeft 
 } from "lucide-react";
+import { useScrollLock, resetScrollLock } from "../utils/scrollLock";
 
 export default function BusinessInfo() {
   const [isOpen, setIsOpen] = useState(false);
+  useScrollLock(isOpen);
 
   useEffect(() => {
     const handleOpen = () => {
       setIsOpen(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
-    const handleReset = () => setIsOpen(false);
+    const handleReset = () => {
+      setIsOpen(false);
+      resetScrollLock();
+    };
 
     window.addEventListener("open-nosotros-fullview", handleOpen);
     window.addEventListener("reset-to-home", handleReset);
@@ -116,30 +121,32 @@ export default function BusinessInfo() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ type: "spring", stiffness: 260, damping: 28 }}
-          className="fixed inset-0 z-50 bg-slate-50 dark:bg-slate-950 overflow-y-auto text-left"
+          className="fixed inset-0 z-50 bg-slate-50 dark:bg-slate-950 overflow-y-auto overflow-x-hidden text-left"
         >
           {/* Ambient lighting overlays */}
-          <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-500/5 dark:bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-cyan-500/5 dark:bg-cyan-600/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-1/4 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-blue-500/5 dark:bg-blue-600/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-1/4 right-1/4 w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-cyan-500/5 dark:bg-cyan-600/5 rounded-full blur-3xl" />
+          </div>
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 relative z-10 w-full overflow-x-hidden">
             
             {/* Top Navigation Bar */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-12 pb-6 border-b border-slate-200 dark:border-slate-800">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-8 sm:mb-12 pb-5 border-b border-slate-200 dark:border-slate-800 w-full">
               <button
                 onClick={() => setIsOpen(false)}
-                className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm transition-all hover:shadow-md cursor-pointer group"
+                className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm transition-all hover:shadow-md cursor-pointer group"
               >
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Volver al Inicio
               </button>
 
-              <div className="flex items-center gap-3 font-mono text-[11px] text-slate-600 dark:text-slate-400">
+              <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 font-mono text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-400">
                 <span className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-ping" />
+                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-ping" />
                   Ventana Corporativa: <span className="font-bold text-slate-800 dark:text-white">Nosotros</span>
                 </span>
-                <span className="text-slate-300 dark:text-slate-700">|</span>
-                <span>Cultura, Misión, Visión & Principios</span>
+                <span className="hidden sm:inline text-slate-300 dark:text-slate-700">|</span>
+                <span className="text-slate-500 dark:text-slate-400">Cultura, Misión, Visión & Principios</span>
               </div>
             </div>
 

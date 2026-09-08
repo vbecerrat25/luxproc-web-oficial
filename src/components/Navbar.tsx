@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import BrandLogo from "./BrandLogo";
+import { useScrollLock } from "../utils/scrollLock";
 import { 
   Sun, 
   Moon, 
@@ -105,6 +106,7 @@ const SOCIAL_NETWORKS: SocialItem[] = [
 
 export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
   const [isSocialsOpen, setIsSocialsOpen] = useState(false);
+  useScrollLock(isSocialsOpen);
 
   return (
     <>

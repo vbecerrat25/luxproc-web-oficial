@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { useScrollLock } from "../utils/scrollLock";
 import { 
   BookOpen, 
   ShieldCheck, 
@@ -20,6 +21,8 @@ interface LegalModalsProps {
 }
 
 export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
+  useScrollLock(Boolean(activeModal));
+
   // States for Libro de Reclamaciones
   const [docType, setDocType] = useState("DNI");
   const [docNum, setDocNum] = useState("");

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { useScrollLock } from "../utils/scrollLock";
 import {
   X,
   LayoutDashboard,
@@ -63,6 +64,8 @@ export default function MaintenanceSystemModal({ isOpen, onClose }: MaintenanceS
     filtro: false,
     fugas: false
   });
+
+  useScrollLock(isOpen);
 
   if (!isOpen) return null;
 
