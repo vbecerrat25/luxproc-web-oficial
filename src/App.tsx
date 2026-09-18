@@ -204,21 +204,21 @@ export default function App() {
         <div className="relative max-w-[1400px] mx-auto mt-12 pt-8 border-t border-slate-200/60 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-400 font-medium z-10">
           <p>© {new Date().getFullYear()} LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. Todos los derechos reservados. | RUC: 20504794637 | Domicilio Legal: La Libertad, Perú | Dominio Oficial: <a href="https://luxproc.com" className="text-blue-500 hover:underline font-mono" target="_blank" rel="noopener noreferrer">www.luxproc.com</a></p>
           <div className="flex items-center gap-4 text-xs">
-            <button 
-              type="button"
-              onClick={() => setActiveLegalModal("terminos")} 
+            <a 
+              href="/terms.html"
               className="hover:text-blue-500 hover:underline cursor-pointer transition-colors"
+              title="Ver Términos y Condiciones oficiales"
             >
               Términos y Condiciones
-            </button>
+            </a>
             <span className="text-slate-300 dark:text-slate-700">•</span>
-            <button 
-              type="button"
-              onClick={() => setActiveLegalModal("privacidad")} 
+            <a 
+              href="/privacy.html"
               className="hover:text-emerald-500 hover:underline cursor-pointer font-semibold text-slate-600 dark:text-slate-300 transition-colors"
+              title="Ver Política de Privacidad oficial estática"
             >
               Política de Privacidad
-            </button>
+            </a>
           </div>
         </div>
       </footer>

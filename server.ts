@@ -255,6 +255,43 @@ async function startServer() {
     res.json(contactMessages);
   });
 
+  // Dedicated Static Privacy Policy Endpoints (for Google OAuth & Meta App Review Verification)
+  app.get(["/privacy", "/privacy.html"], (req, res) => {
+    const distPath = path.join(process.cwd(), "dist", "privacy.html");
+    const publicPath = path.join(process.cwd(), "public", "privacy.html");
+    if (process.env.NODE_ENV === "production" && fs.existsSync(distPath)) {
+      return res.sendFile(distPath);
+    }
+    if (fs.existsSync(publicPath)) {
+      return res.sendFile(publicPath);
+    }
+    res.redirect("/");
+  });
+
+  app.get(["/politica-de-privacidad", "/politica-de-privacidad.html"], (req, res) => {
+    const distPath = path.join(process.cwd(), "dist", "politica-de-privacidad.html");
+    const publicPath = path.join(process.cwd(), "public", "politica-de-privacidad.html");
+    if (process.env.NODE_ENV === "production" && fs.existsSync(distPath)) {
+      return res.sendFile(distPath);
+    }
+    if (fs.existsSync(publicPath)) {
+      return res.sendFile(publicPath);
+    }
+    res.redirect("/privacy.html");
+  });
+
+  app.get(["/terms", "/terms.html", "/terminos-y-condiciones", "/terminos-y-condiciones.html"], (req, res) => {
+    const distPath = path.join(process.cwd(), "dist", "terms.html");
+    const publicPath = path.join(process.cwd(), "public", "terms.html");
+    if (process.env.NODE_ENV === "production" && fs.existsSync(distPath)) {
+      return res.sendFile(distPath);
+    }
+    if (fs.existsSync(publicPath)) {
+      return res.sendFile(publicPath);
+    }
+    res.redirect("/");
+  });
+
   // Vite Integration
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

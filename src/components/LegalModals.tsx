@@ -644,7 +644,7 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
                       Política de Privacidad
                     </h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Última actualización: 18 de Septiembre, 2026 • LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.
+                      Última actualización: 18 de Septiembre, 2026 • LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. • <a href="/privacy.html" target="_blank" rel="noopener" className="text-blue-500 underline font-medium">URL Pública Dedicada (/privacy.html)</a>
                     </p>
                   </div>
                 </div>
