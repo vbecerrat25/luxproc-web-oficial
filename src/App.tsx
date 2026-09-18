@@ -10,10 +10,13 @@ import Hero from "./components/Hero";
 import LogoMarquee from "./components/LogoMarquee";
 import BusinessInfo from "./components/BusinessInfo";
 import Solutions from "./components/Solutions";
+import CaseStudies from "./components/CaseStudies";
 import CalendarBooking from "./components/CalendarBooking";
 import ContactForm from "./components/ContactForm";
+import FaqModal from "./components/FaqModal";
+import BrochureModal from "./components/BrochureModal";
 import BrandLogo from "./components/BrandLogo";
-import { Cpu } from "lucide-react";
+import { Cpu, FileDown } from "lucide-react";
 import { LegalModals, RegulatoryBadges } from "./components/LegalModals";
 
 export default function App() {
@@ -23,7 +26,38 @@ export default function App() {
     }
     return false;
   });
-  const [activeLegalModal, setActiveLegalModal] = useState<"reclamaciones" | "arco" | "terminos" | null>(null);
+  const [activeLegalModal, setActiveLegalModal] = useState<"reclamaciones" | "arco" | "terminos" | "privacidad" | null>(null);
+  const [isBrochureOpen, setIsBrochureOpen] = useState<boolean>(false);
+  const [isFaqOpen, setIsFaqOpen] = useState<boolean>(false);
+  const [isCaseStudiesOpen, setIsCaseStudiesOpen] = useState<boolean>(false);
+
+  // Hash & URL query detection for legal modals (Google Verification support for /#privacidad)
+  useEffect(() => {
+    const checkHash = () => {
+      const hash = window.location.hash.toLowerCase();
+      const search = window.location.search.toLowerCase();
+      if (hash === "#privacidad" || hash === "#politica-de-privacidad" || search.includes("modal=privacidad")) {
+        setActiveLegalModal("privacidad");
+      } else if (hash === "#terminos" || hash === "#terminos-y-condiciones" || search.includes("modal=terminos")) {
+        setActiveLegalModal("terminos");
+      } else if (hash === "#libro-de-reclamaciones" || hash === "#reclamaciones") {
+        setActiveLegalModal("reclamaciones");
+      } else if (hash === "#arco") {
+        setActiveLegalModal("arco");
+      }
+    };
+    checkHash();
+    window.addEventListener("hashchange", checkHash);
+    const handleOpenPrivacidad = () => setActiveLegalModal("privacidad");
+    const handleOpenTerminos = () => setActiveLegalModal("terminos");
+    window.addEventListener("open-privacidad-modal", handleOpenPrivacidad);
+    window.addEventListener("open-terminos-modal", handleOpenTerminos);
+    return () => {
+      window.removeEventListener("hashchange", checkHash);
+      window.removeEventListener("open-privacidad-modal", handleOpenPrivacidad);
+      window.removeEventListener("open-terminos-modal", handleOpenTerminos);
+    };
+  }, []);
 
   // Listen to system prefers-color-scheme settings dynamically
   useEffect(() => {
@@ -47,6 +81,23 @@ export default function App() {
     }
   }, [isDarkMode]);
 
+  // Global event listeners for opening corporate brochure, FAQ & Casos de Éxito
+  useEffect(() => {
+    const handleOpenBrochure = () => setIsBrochureOpen(true);
+    const handleOpenFaq = () => setIsFaqOpen(true);
+    const handleOpenCasos = () => setIsCaseStudiesOpen(true);
+    window.addEventListener("open-brochure-modal", handleOpenBrochure);
+    window.addEventListener("open-faq-modal", handleOpenFaq);
+    window.addEventListener("open-faq-fullview", handleOpenFaq);
+    window.addEventListener("open-casos-fullview", handleOpenCasos);
+    return () => {
+      window.removeEventListener("open-brochure-modal", handleOpenBrochure);
+      window.removeEventListener("open-faq-modal", handleOpenFaq);
+      window.removeEventListener("open-faq-fullview", handleOpenFaq);
+      window.removeEventListener("open-casos-fullview", handleOpenCasos);
+    };
+  }, []);
+
   return (
     <div className={isDarkMode ? "dark bg-slate-950 min-h-screen text-slate-100 transition-colors duration-300 relative overflow-x-hidden" : "bg-slate-50 min-h-screen text-slate-800 transition-colors duration-300 relative overflow-x-hidden"}>
       
@@ -54,7 +105,13 @@ export default function App() {
       <InteractiveBackground isDarkMode={isDarkMode} />
 
       {/* 2. Structured Sticky Navbar */}
-      <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+      <Navbar 
+        isDarkMode={isDarkMode} 
+        setIsDarkMode={setIsDarkMode} 
+        onOpenBrochure={() => setIsBrochureOpen(true)}
+        onOpenFaq={() => setIsFaqOpen(true)}
+        onOpenCasos={() => setIsCaseStudiesOpen(true)}
+      />
 
       {/* 3. Hero Section with stats counters */}
       <Hero />
@@ -65,7 +122,7 @@ export default function App() {
       {/* 5. Bento Grid - Mission, Vision, What We Do (Quiénes Somos) */}
       <BusinessInfo />
 
-      {/* 6. Advanced Interactive Solutions Configuration Segment (CRM/ERP Showcase) */}
+      {/* 6. Advanced Interactive Solutions Configuration Segment (ERP, Maintenance Cloud, E-Diagnosis) */}
       <Solutions />
 
       {/* 7. Realtime schedule calendar booking wizard */}
@@ -93,15 +150,36 @@ export default function App() {
             <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm md:max-w-md leading-relaxed">
               Líderes en ingeniería física y digital integrada. Desarrollamos ERPs, CRMs avanzados, arquitecturas web escalables y lideramos proyectos de innovación científica (I+D+i) para orquestar la eficiencia del mañana.
             </p>
+
+            <div className="flex flex-wrap gap-2 pt-1">
+              <button
+                onClick={() => setIsBrochureOpen(true)}
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 dark:text-blue-400 text-xs font-bold transition-all cursor-pointer border border-blue-500/20"
+              >
+                <FileDown className="w-4 h-4" />
+                <span>Dossier / Brochure 2026</span>
+              </button>
+            </div>
           </div>
 
           <div className="md:col-span-2 space-y-3 text-xs">
             <h4 className="font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 text-[10px]">Ecosistemas</h4>
             <div className="space-y-1.5 flex flex-col text-slate-500 dark:text-slate-400">
               <a href="#soluciones" className="hover:text-blue-500 transition-colors">Plataformas ERP</a>
-              <a href="#soluciones" className="hover:text-blue-500 transition-colors">Sistemas CRM</a>
-              <a href="#soluciones" className="hover:text-blue-500 transition-colors">Proyectos de I+D+i</a>
-              <a href="#soluciones" className="hover:text-blue-500 transition-colors">Instalaciones Eléctricas</a>
+              <a href="#soluciones" className="hover:text-blue-500 transition-colors">Maintenance Cloud</a>
+              <a href="#soluciones" className="hover:text-blue-500 transition-colors">Peritaje Eléctrico CNE</a>
+              <button 
+                onClick={() => setIsCaseStudiesOpen(true)} 
+                className="text-left hover:text-blue-500 transition-colors cursor-pointer"
+              >
+                Casos de Éxito
+              </button>
+              <button 
+                onClick={() => setIsFaqOpen(true)} 
+                className="text-left hover:text-blue-500 transition-colors cursor-pointer"
+              >
+                Preguntas Frecuentes
+              </button>
             </div>
           </div>
 
@@ -111,7 +189,7 @@ export default function App() {
               Ecosistema orquestado mediante OAuth seguro e integrado de manera nativa con Google Calendar API y Google Meet API.
             </p>
             <div className="pt-2 text-[10px] text-slate-400 font-mono flex items-center justify-center sm:justify-start gap-1">
-              <Cpu className="w-3 h-3 text-blue-500" /> Server Build v1.4.1 (Stable)
+              <Cpu className="w-3 h-3 text-blue-500" /> Server Build v1.5.0 (Production)
             </div>
           </div>
 
@@ -124,12 +202,48 @@ export default function App() {
 
         {/* Legal copyrights details bar */}
         <div className="relative max-w-[1400px] mx-auto mt-12 pt-8 border-t border-slate-200/60 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-400 font-medium z-10">
-          <p>© {new Date().getFullYear()} LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. Todos los derechos reservados. | Dominio Oficial: <a href="http://www.luxproc.com" className="text-blue-500 hover:underline font-mono" target="_blank" rel="noopener noreferrer">www.luxproc.com</a></p>
+          <p>© {new Date().getFullYear()} LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. Todos los derechos reservados. | RUC: 20504794637 | Domicilio Legal: La Libertad, Perú | Dominio Oficial: <a href="https://luxproc.com" className="text-blue-500 hover:underline font-mono" target="_blank" rel="noopener noreferrer">www.luxproc.com</a></p>
+          <div className="flex items-center gap-4 text-xs">
+            <button 
+              type="button"
+              onClick={() => setActiveLegalModal("terminos")} 
+              className="hover:text-blue-500 hover:underline cursor-pointer transition-colors"
+            >
+              Términos y Condiciones
+            </button>
+            <span className="text-slate-300 dark:text-slate-700">•</span>
+            <button 
+              type="button"
+              onClick={() => setActiveLegalModal("privacidad")} 
+              className="hover:text-emerald-500 hover:underline cursor-pointer font-semibold text-slate-600 dark:text-slate-300 transition-colors"
+            >
+              Política de Privacidad
+            </button>
+          </div>
         </div>
       </footer>
 
       {/* Interactive Regulatory compliance modals */}
       <LegalModals activeModal={activeLegalModal} onClose={() => setActiveLegalModal(null)} />
+
+      {/* Official Corporate Brochure Modal & Printable PDF */}
+      <BrochureModal 
+        isOpen={isBrochureOpen} 
+        onClose={() => setIsBrochureOpen(false)} 
+        isDarkMode={isDarkMode} 
+      />
+
+      {/* Technical FAQ Modal Window */}
+      <FaqModal 
+        isOpen={isFaqOpen} 
+        onClose={() => setIsFaqOpen(false)} 
+      />
+
+      {/* Fullscreen Case Studies Showcase Window */}
+      <CaseStudies 
+        isOpen={isCaseStudiesOpen} 
+        onClose={() => setIsCaseStudiesOpen(false)} 
+      />
 
     </div>
   );

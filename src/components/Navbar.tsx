@@ -8,16 +8,20 @@ import {
   Terminal, 
   Layers, 
   Calendar, 
-  Sparkles,
-  Workflow,
-  X,
-  Share2,
-  Download
+  Sparkles, 
+  Workflow, 
+  X, 
+  Share2, 
+  Download,
+  FileDown
 } from "lucide-react";
 
 interface NavbarProps {
   isDarkMode: boolean;
   setIsDarkMode: (val: boolean) => void;
+  onOpenBrochure?: () => void;
+  onOpenFaq?: () => void;
+  onOpenCasos?: () => void;
 }
 
 interface SocialItem {
@@ -34,7 +38,7 @@ interface SocialItem {
 const SOCIAL_NETWORKS: SocialItem[] = [
   {
     name: "LinkedIn",
-    description: "Conexiones corporativas de LUXPROC S.A.C., anuncios de proyectos de ingeniería I+D+i, ofertas de empleo tecnológico, y publicaciones del Ing. Víctor Becerra.",
+    description: "Conexiones corporativas de LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C., anuncios de proyectos de ingeniería I+D+i, ofertas de empleo tecnológico, y publicaciones del Ing. Víctor Becerra.",
     color: "text-[#0077B5]",
     bgColor: "bg-[#0077B5]/10",
     borderColor: "border-[#0077B5]/20 hover:border-[#0077B5]/50",
@@ -104,9 +108,25 @@ const SOCIAL_NETWORKS: SocialItem[] = [
   }
 ];
 
-export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
+export default function Navbar({ isDarkMode, setIsDarkMode, onOpenBrochure, onOpenFaq, onOpenCasos }: NavbarProps) {
   const [isSocialsOpen, setIsSocialsOpen] = useState(false);
   useScrollLock(isSocialsOpen);
+
+  const handleFaqClick = () => {
+    if (onOpenFaq) {
+      onOpenFaq();
+    } else {
+      window.dispatchEvent(new CustomEvent("open-faq-modal"));
+    }
+  };
+
+  const handleCasosClick = () => {
+    if (onOpenCasos) {
+      onOpenCasos();
+    } else {
+      window.dispatchEvent(new CustomEvent("open-casos-fullview"));
+    }
+  };
 
   return (
     <>
@@ -128,14 +148,14 @@ export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
           </a>
 
           {/* Desktop Anchor Navigation links */}
-          <nav className="hidden md:flex items-center gap-7">
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-7">
             <button
               onClick={() => {
                 window.dispatchEvent(new CustomEvent("open-nosotros-fullview"));
               }}
               className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
             >
-              Quiénes Somos
+              Nosotros
             </button>
             <a
               href="#soluciones"
@@ -147,38 +167,81 @@ export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
               Soluciones
             </a>
             <button
+              onClick={handleCasosClick}
+              className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
+            >
+              Casos de Éxito
+            </button>
+            <button
+              onClick={handleFaqClick}
+              className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
+            >
+              FAQ
+            </button>
+            <button
               onClick={() => setIsSocialsOpen(true)}
               className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
             >
-              Nuestras Redes
-            </button>
-            <button
-              onClick={() => {
-                window.dispatchEvent(new CustomEvent("open-nosotros-fullview"));
-              }}
-              className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
-            >
-              Nosotros
+              Redes
             </button>
           </nav>
 
           {/* Controls - Light/Dark toggle + Call to action */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             
+            {/* Brochure PDF Download Button */}
+            <button
+              onClick={() => {
+                if (onOpenBrochure) {
+                  onOpenBrochure();
+                } else {
+                  window.dispatchEvent(new CustomEvent("open-brochure-modal"));
+                }
+              }}
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors text-xs font-bold text-slate-700 dark:text-slate-200 cursor-pointer border border-slate-200/80 dark:border-slate-700"
+              title="Descargar Brochure Corporativo 2026 (PDF)"
+            >
+              <FileDown className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+              <span>Brochure PDF</span>
+            </button>
+
+            {/* Mobile Brochure icon button */}
+            <button
+              onClick={() => {
+                if (onOpenBrochure) {
+                  onOpenBrochure();
+                } else {
+                  window.dispatchEvent(new CustomEvent("open-brochure-modal"));
+                }
+              }}
+              className="sm:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-all cursor-pointer relative"
+              title="Descargar Brochure"
+            >
+              <FileDown className="w-4.5 h-4.5 text-blue-600 dark:text-blue-400" />
+            </button>
+
             {/* Mobile Nosotros button */}
             <button
               onClick={() => {
                 window.dispatchEvent(new CustomEvent("open-nosotros-fullview"));
               }}
-              className="md:hidden px-3 py-1.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider hover:bg-blue-500/20 transition-all cursor-pointer"
+              className="lg:hidden px-2 py-1.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[11px] font-bold uppercase tracking-wider hover:bg-blue-500/20 transition-all cursor-pointer"
             >
               Nosotros
+            </button>
+
+            {/* Mobile Casos button */}
+            <button
+              onClick={handleCasosClick}
+              className="lg:hidden px-2 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold uppercase tracking-wider hover:bg-emerald-500/20 transition-all cursor-pointer"
+            >
+              Casos
             </button>
 
             {/* Mobile/All screens networks shortcut */}
             <button
               onClick={() => setIsSocialsOpen(true)}
-              className="md:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-all cursor-pointer relative"
+              className="lg:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-all cursor-pointer relative"
               title="Redes Sociales"
             >
               <Share2 className="w-4.5 h-4.5" />
@@ -201,7 +264,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
 
             <a
               href="#calendario"
-              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-550 transition-colors text-xs font-bold text-white shadow-sm shadow-blue-500/10 cursor-pointer"
+              className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-550 transition-colors text-xs font-bold text-white shadow-sm shadow-blue-500/10 cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5" />
               Agendar Ahora
@@ -240,7 +303,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
                     Nuestras Redes Sociales
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Conéctate con el equipo de LUXPROC S.A.C. y descubre nuestra ingeniería.
+                    Conéctate con el equipo de LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. y descubre nuestra ingeniería.
                   </p>
                 </div>
                 <button
@@ -285,7 +348,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode }: NavbarProps) {
               {/* Footer inside modal */}
               <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/60 text-center">
                 <p className="text-[10px] text-slate-400 font-medium">
-                  Sigue a LUXPROC S.A.C. • Consultoría de Ingeniería de Precisión & Software de Alto Rendimiento
+                  Sigue a LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. • Consultoría de Ingeniería de Precisión & Software de Alto Rendimiento
                 </p>
               </div>
             </motion.div>

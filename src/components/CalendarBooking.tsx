@@ -550,7 +550,7 @@ export default function CalendarBooking() {
     const meetId = booking.meetUrl.replace("https://meet.google.com/", "");
     const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//LUXPROC S.A.C.//Booking Systems//ES
+PRODID:-//LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.//Booking Systems//ES
 BEGIN:VEVENT
 UID:${booking.id}@luxproc.io
 DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").split(".")[0]}Z

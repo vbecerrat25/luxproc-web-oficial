@@ -1123,11 +1123,11 @@ export default function Solutions() {
                         rel="noopener noreferrer"
                         className={`w-full py-3 px-4 rounded-xl ${sec.btnColor || "bg-orange-600 hover:bg-orange-700"} text-white font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-[0.98] cursor-pointer`}
                       >
-                        {sec.ctaText || "Ver Demo del Sector"} <ExternalLink className="w-3.5 h-3.5" />
+                        {sec.ctaText || "Ingresar a la Plataforma"} <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     ) : (
                       <button className="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-not-allowed">
-                        Ver Demo del Sector <ExternalLink className="w-3.5 h-3.5" />
+                        Ingresar a la Plataforma <ExternalLink className="w-3.5 h-3.5" />
                       </button>
                     )}
                   </div>
@@ -1342,7 +1342,7 @@ export default function Solutions() {
                       ]
                     },
                     externalUrl: "https://maintenancecloud-1109.ai.studio",
-                    ctaText: "Ver Demo de Dashboard Industrial"
+                    ctaText: "Acceder a LUXPROC Maintenance Cloud"
                   },
                   {
                     id: "web-e-diagnosis",
@@ -1428,18 +1428,18 @@ export default function Solutions() {
                         rel="noopener noreferrer"
                         className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-[0.98] cursor-pointer min-h-[44px]"
                       >
-                        {sec.ctaText || "Ver Demo de Arquitectura Web"} <ExternalLink className="w-3.5 h-3.5" />
+                        {sec.ctaText || "Ingresar a la Plataforma"} <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     ) : (sec as any).isInteractiveModal ? (
                       <button
                         onClick={(sec as any).modalTrigger}
                         className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md hover:shadow-lg active:scale-[0.98] cursor-pointer min-h-[44px]"
                       >
-                        Ver Demo de Dashboard Industrial <ExternalLink className="w-3.5 h-3.5" />
+                        Acceder a LUXPROC Maintenance Cloud <ExternalLink className="w-3.5 h-3.5" />
                       </button>
                     ) : (
                       <button className="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-not-allowed min-h-[44px]">
-                        Ver Demo de Arquitectura Web <ExternalLink className="w-3.5 h-3.5" />
+                        Ingresar a la Plataforma <ExternalLink className="w-3.5 h-3.5" />
                       </button>
                     )}
                   </div>

@@ -10,10 +10,11 @@ import {
   CheckCircle2, 
   User, 
   FileText, 
-  AlertCircle 
+  AlertCircle,
+  Lock
 } from "lucide-react";
 
-type ModalType = "reclamaciones" | "arco" | "terminos" | null;
+type ModalType = "reclamaciones" | "arco" | "terminos" | "privacidad" | null;
 
 interface LegalModalsProps {
   activeModal: ModalType;
@@ -137,7 +138,7 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
                           Libro de Reclamaciones Virtual
                         </h3>
                         <p className="text-xs text-slate-500 dark:text-slate-400">
-                          LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. • RUC: 20609341103 • Conforme a la Ley N° 29571 Código de Protección y Defensa del Consumidor.
+                          LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. • RUC: 20504794637 • Conforme a la Ley N° 29571 Código de Protección y Defensa del Consumidor.
                         </p>
                       </div>
                     </div>
@@ -399,7 +400,7 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
                           Ejercicio de Derechos ARCO
                         </h3>
                         <p className="text-xs text-slate-500 dark:text-slate-400">
-                          LUXPROC S.A.C. • Ley N° 29733 de Protección de Datos Personales en el Perú.
+                          LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. • Ley N° 29733 de Protección de Datos Personales en el Perú.
                         </p>
                       </div>
                     </div>
@@ -531,7 +532,7 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
                         Solicitud de Derechos ARCO Registrada
                       </h3>
                       <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                        Su solicitud ha sido enviada al Oficial de Cumplimiento de Datos Personales de LUXPROC S.A.C.
+                        Su solicitud ha sido enviada al Oficial de Cumplimiento de Datos Personales de LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.
                       </p>
                     </div>
 
@@ -578,19 +579,19 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
                       Términos y Condiciones Generales
                     </h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Última actualización: 30 de Junio, 2026 • LUXPROC S.A.C.
+                      Última actualización: 30 de Junio, 2026 • LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.
                     </p>
                   </div>
                 </div>
 
                 <div className="max-h-[50vh] overflow-y-auto pr-2 space-y-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
                   <p>
-                    Bienvenido a la plataforma oficial de LUXPROC S.A.C. Los siguientes términos y condiciones regulan el uso de nuestro sitio web, plataformas de software ERP/CRM, servicios de ingeniería y control de hardware. Al interactuar con nuestro ecosistema, usted acepta expresamente las cláusulas descritas a continuación.
+                    Bienvenido a la plataforma oficial de LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. Los siguientes términos y condiciones regulan el uso de nuestro sitio web, plataformas de software ERP/CRM, servicios de ingeniería y control de hardware. Al interactuar con nuestro ecosistema, usted acepta expresamente las cláusulas descritas a continuación.
                   </p>
 
                   <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">1. Licenciamiento y Uso del Software</h4>
                   <p>
-                    LUXPROC S.A.C. otorga licencias de uso de software a medida y plataformas web según las estipulaciones contractuales acordadas de manera independiente para cada proyecto comercial. Queda terminantemente prohibida la ingeniería inversa, distribución no autorizada o explotación mercantil sin consentimiento expreso firmado por Carmen Terán Vda. de Becerra o representante facultado de la empresa.
+                    LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. otorga licencias de uso de software a medida y plataformas web según las estipulaciones contractuales acordadas de manera independiente para cada proyecto comercial. Queda terminantemente prohibida la ingeniería inversa, distribución no autorizada o explotación mercantil sin consentimiento expreso firmado por Carmen Terán Vda. de Becerra o representante facultado de la empresa.
                   </p>
 
                   <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">2. Integraciones de Terceros e APIs</h4>
@@ -600,7 +601,7 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
 
                   <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">3. Garantías de Hardware y Telecomunicaciones</h4>
                   <p>
-                    Todo hardware, circuito integrado PCB, firmware embebido o instalación telemétrica provista por LUXPROC S.A.C. cumple con las normas de seguridad nacionales e internacionales. Los contratos de Nivel de Servicio (SLA) determinan el alcance del soporte predictivo, preventivo y reactivo de los equipos físicos ante anomalías de alimentación eléctrica, ruido electromagnético o factores ambientales externos.
+                    Todo hardware, circuito integrado PCB, firmware embebido o instalación telemétrica provista por LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. cumple con las normas de seguridad nacionales e internacionales. Los contratos de Nivel de Servicio (SLA) determinan el alcance del soporte predictivo, preventivo y reactivo de los equipos físicos ante anomalías de alimentación eléctrica, ruido electromagnético o factores ambientales externos.
                   </p>
 
                   <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">4. Propiedad Intelectual</h4>
@@ -615,7 +616,7 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
 
                   <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">6. Ley Aplicable</h4>
                   <p>
-                    Para toda controversia o interpretación de las cláusulas de navegación y uso del software, las partes se someten a la legislación aplicable de la República del Perú y a la jurisdicción de los tribunales correspondientes de la provincia de Lima.
+                    Para toda controversia o interpretación de las cláusulas de navegación y uso del software, las partes se someten a la legislación aplicable de la República del Perú y a la jurisdicción de los tribunales correspondientes de La Libertad, Perú.
                   </p>
                 </div>
 
@@ -626,6 +627,150 @@ export function LegalModals({ activeModal, onClose }: LegalModalsProps) {
                     className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-bold text-xs shadow transition-all cursor-pointer"
                   >
                     He leído y Acepto los Términos
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* POLÍTICA DE PRIVACIDAD */}
+            {activeModal === "privacidad" && (
+              <div className="space-y-5">
+                <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+                  <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                    <ShieldCheck className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-extrabold text-slate-800 dark:text-white uppercase tracking-tight">
+                      Política de Privacidad
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      Última actualización: 18 de Septiembre, 2026 • LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="max-h-[52vh] overflow-y-auto pr-2 space-y-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                  
+                  {/* Banner Destacado Obligatorio para Verificación de Google */}
+                  <div className="p-4 rounded-xl bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 space-y-3">
+                    <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-300 font-extrabold text-xs uppercase tracking-wider">
+                      <Lock className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      <span>Compromiso de Privacidad y Requisitos de Google OAuth</span>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+                      <div className="bg-white/80 dark:bg-slate-900/80 p-3 rounded-lg border border-emerald-500/15 space-y-1">
+                        <span className="text-[10px] font-extrabold uppercase text-emerald-600 dark:text-emerald-400 block">
+                          1. Qué datos recopilas
+                        </span>
+                        <p className="text-[11px] text-slate-700 dark:text-slate-200 leading-relaxed font-semibold">
+                          Únicamente los datos básicos de perfil proporcionados al iniciar sesión con Google (como tu nombre y correo electrónico).
+                        </p>
+                      </div>
+
+                      <div className="bg-white/80 dark:bg-slate-900/80 p-3 rounded-lg border border-emerald-500/15 space-y-1">
+                        <span className="text-[10px] font-extrabold uppercase text-emerald-600 dark:text-emerald-400 block">
+                          2. Para qué los usas
+                        </span>
+                        <p className="text-[11px] text-slate-700 dark:text-slate-200 leading-relaxed font-semibold">
+                          Para gestionar el acceso seguro a las plataformas web y ecosistemas de LUXPROC.
+                        </p>
+                      </div>
+
+                      <div className="bg-white/80 dark:bg-slate-900/80 p-3 rounded-lg border border-emerald-500/15 space-y-1">
+                        <span className="text-[10px] font-extrabold uppercase text-emerald-600 dark:text-emerald-400 block">
+                          3. Protección de datos
+                        </span>
+                        <p className="text-[11px] text-slate-700 dark:text-slate-200 leading-relaxed font-semibold">
+                          No compartes información con terceros y cumples con las normativas de privacidad.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">
+                    1. Identificación del Responsable del Tratamiento
+                  </h4>
+                  <p>
+                    El responsable del tratamiento de los datos personales es <strong>LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.</strong> (en adelante, "LUXPROC"), con RUC N° 20504794637, domicilio legal en La Libertad, Perú y dominio web oficial registrado: <a href="https://luxproc.com" className="text-blue-500 underline font-mono">https://luxproc.com</a>.
+                  </p>
+
+                  <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">
+                    2. Datos Recopilados y Origen de la Información
+                  </h4>
+                  <p>
+                    Cuando usted decide iniciar sesión mediante el servicio de autenticación de Google en <strong>luxproc.com</strong>, recopilamos <strong>únicamente los datos básicos de perfil</strong> autorizados explícitamente por usted en la pantalla de consentimiento de Google:
+                  </p>
+                  <ul className="list-disc pl-5 space-y-1 text-slate-600 dark:text-slate-300">
+                    <li><strong>Nombre y Apellido:</strong> Para personalizar su perfil y dirigir las comunicaciones técnicas.</li>
+                    <li><strong>Dirección de Correo Electrónico:</strong> Para identificar su cuenta unívocamente, enviar confirmaciones de reuniones técnicas de ingeniería y notificaciones de servicio.</li>
+                    <li><strong>Imagen de Perfil Pública (Avatar):</strong> Proporcionada por su cuenta de Google para propósitos estéticos en la barra de usuario.</li>
+                  </ul>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 italic">
+                    * En ningún momento LUXPROC accede, almacena ni solicita su contraseña de Google o credenciales privadas de acceso. La autenticación se realiza de manera segura mediante tokens criptográficos delegados directamente por los servidores de Google.
+                  </p>
+
+                  <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">
+                    3. Finalidad del Uso de los Datos
+                  </h4>
+                  <p>
+                    Los datos recopilados se utilizan con los siguientes propósitos exclusivos:
+                  </p>
+                  <ul className="list-disc pl-5 space-y-1 text-slate-600 dark:text-slate-300">
+                    <li>Gestionar el acceso seguro y autenticado a las plataformas web y ecosistemas de LUXPROC.</li>
+                    <li>Agendar y sincronizar sesiones técnicas de auditoría de software, peritajes eléctricos o consultoría mediante Google Calendar y Google Meet.</li>
+                    <li>Prevenir el fraude, accesos no autorizados y garantizar la integridad de las sesiones de usuario en nuestro entorno tecnológico.</li>
+                  </ul>
+
+                  <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">
+                    4. No Divulgación ni Transferencia a Terceros
+                  </h4>
+                  <p>
+                    En LUXPROC mantenemos una política de tolerancia cero respecto a la comercialización de datos. <strong>No compartimos, transferimos, cedemos, alquilamos ni vendemos su información personal a terceros</strong> bajo ninguna circunstancia, ni la utilizamos con propósitos de publicidad programática externa o perfilamiento comercial no solicitado.
+                  </p>
+
+                  <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">
+                    5. Cumplimiento de la Política de Datos de Usuario de Google API
+                  </h4>
+                  <p>
+                    El uso que hace LUXPROC de la información recibida a través de las API de Google se apega de manera rigurosa a la <strong>Política de Datos de Usuario de los Servicios de las API de Google</strong>, incluidos los estrictos requisitos de Uso Limitado. Los datos obtenidos a través de los alcances de Google nunca son transferidos a modelos de inteligencia artificial de terceros ni transferidos con fines distintos a la funcionalidad directa que usted solicita.
+                  </p>
+
+                  <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">
+                    6. Seguridad, Encriptación y Almacenamiento
+                  </h4>
+                  <p>
+                    Implementamos medidas de seguridad técnicas, organizativas y físicas para proteger sus datos personales contra accesos no autorizados, alteración, divulgación o destrucción. Todas las transmisiones de datos entre su navegador y nuestros servidores se realizan bajo cifrado SSL/TLS 1.3 de grado bancario (HTTPS seguro en <strong>luxproc.com</strong>).
+                  </p>
+
+                  <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">
+                    7. Derechos ARCO y Revocación del Consentimiento
+                  </h4>
+                  <p>
+                    De acuerdo con la <strong>Ley N° 29733 (Ley de Protección de Datos Personales de la República del Perú)</strong>, usted tiene derecho a ejercer en cualquier momento sus derechos de Acceso, Rectificación, Cancelación y Oposición (ARCO).
+                  </p>
+
+                  <h4 className="font-extrabold text-slate-800 dark:text-white text-xs uppercase mt-3">
+                    8. Canales de Contacto Oficial para Privacidad
+                  </h4>
+                  <p>
+                    Para consultas, solicitud de eliminación inmediata de registros o dudas sobre este documento, puede comunicarse directamente con nuestro equipo de seguridad de datos:
+                  </p>
+                  <div className="bg-slate-100 dark:bg-slate-800/80 p-3 rounded-xl font-mono text-[11px] space-y-1 text-slate-700 dark:text-slate-300">
+                    <p>• Correo institucional: <a href="mailto:luxproc.11@gmail.com" className="text-blue-500 hover:underline">luxproc.11@gmail.com</a> / <a href="mailto:contacto@luxproc.com" className="text-blue-500 hover:underline">contacto@luxproc.com</a></p>
+                    <p>• Razón Social: LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.</p>
+                    <p>• Dominio verificado: luxproc.com</p>
+                  </div>
+
+                </div>
+
+                <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={handleClose}
+                    className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-bold text-xs shadow transition-all cursor-pointer"
+                  >
+                    Entendido / Cerrar
                   </button>
                 </div>
               </div>
@@ -701,6 +846,26 @@ export function RegulatoryBadges({ onOpenModal }: RegulatoryBadgesProps) {
           </h5>
           <span className="text-[9px] text-slate-400 block font-semibold leading-tight">
             Cláusulas de navegación y garantías
+          </span>
+        </div>
+      </motion.button>
+
+      {/* 4. Política de Privacidad (Debajo de Términos y Condiciones) */}
+      <motion.button
+        type="button"
+        whileHover={{ x: 3, scale: 1.01 }}
+        onClick={() => onOpenModal("privacidad")}
+        className="w-full flex items-center gap-3 p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-sm text-left hover:border-emerald-500/40 hover:shadow transition-all duration-200 cursor-pointer select-none group"
+      >
+        <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex-shrink-0 group-hover:scale-110 transition-transform">
+          <ShieldCheck className="w-4 h-4" />
+        </div>
+        <div className="space-y-0.5">
+          <h5 className="text-[10px] uppercase tracking-wider font-extrabold text-slate-800 dark:text-slate-100 leading-none">
+            Política de Privacidad
+          </h5>
+          <span className="text-[9px] text-slate-400 block font-semibold leading-tight">
+            Datos Google, seguridad y transparencia
           </span>
         </div>
       </motion.button>

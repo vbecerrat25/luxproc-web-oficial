@@ -10,8 +10,11 @@ import {
 } from "firebase/auth";
 import firebaseConfig from "../firebase-applet-config.json";
 
-// Initialize Firebase App
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase App with custom authDomain luxproc.com
+const app = initializeApp({
+  ...firebaseConfig,
+  authDomain: "luxproc.com"
+});
 const auth = getAuth(app);
 
 // Enable persistence so the session is kept across refreshes
