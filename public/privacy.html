@@ -3,22 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Política de Privacidad | LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.</title>
-  <meta name="description" content="Política de Privacidad oficial de LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. - Cumplimiento normativo, protección de datos y políticas de Google API Services." />
-  <link rel="icon" type="image/png" href="/favicon-32x32.png?v=5" />
+  <title>Política de Privacidad y Protección de Datos | LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.</title>
+  <meta name="description" content="Política de Privacidad exhaustiva de LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. Detalle de recopilación, almacenamiento, retención, seguridad, derechos de usuario y cumplimiento con Google API Services User Data Policy." />
+  <link rel="icon" type="image/png" href="/favicon-32x32.png?v=7" />
   <style>
     :root {
       --primary: #2563eb;
       --primary-dark: #1d4ed8;
+      --slate-950: #020617;
       --slate-900: #0f172a;
       --slate-800: #1e293b;
       --slate-700: #334155;
       --slate-600: #475569;
       --slate-500: #64748b;
+      --slate-200: #e2e8f0;
       --slate-100: #f1f5f9;
       --slate-50: #f8fafc;
       --emerald-600: #059669;
+      --emerald-700: #047857;
       --emerald-50: #ecfdf5;
+      --emerald-100: #d1fae5;
       --emerald-200: #a7f3d0;
       --border: #e2e8f0;
     }
@@ -28,23 +32,25 @@
       padding: 0;
     }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       color: var(--slate-700);
       background-color: var(--slate-50);
-      line-height: 1.65;
+      line-height: 1.7;
       font-size: 15px;
       padding: 0;
+      -webkit-font-smoothing: antialiased;
     }
     header {
       background-color: #ffffff;
       border-bottom: 1px solid var(--border);
-      padding: 18px 24px;
+      padding: 16px 24px;
       position: sticky;
       top: 0;
       z-index: 50;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
     }
     .header-container {
-      max-width: 960px;
+      max-width: 1000px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -71,7 +77,7 @@
       font-size: 11px;
       color: var(--slate-500);
       font-weight: 600;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
     }
     .back-link {
       font-size: 13px;
@@ -89,18 +95,18 @@
       color: var(--primary-dark);
     }
     main {
-      max-width: 960px;
-      margin: 32px auto 60px auto;
+      max-width: 1000px;
+      margin: 36px auto 60px auto;
       padding: 0 20px;
     }
     .paper-card {
       background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 40px;
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+      padding: 48px;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
     }
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
       .paper-card {
         padding: 24px 18px;
       }
@@ -109,7 +115,7 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 24px;
       padding-bottom: 20px;
       border-bottom: 1px solid var(--border);
@@ -130,118 +136,207 @@
     }
     .badge-green {
       background: var(--emerald-50);
-      color: var(--emerald-600);
+      color: var(--emerald-700);
       border: 1px solid var(--emerald-200);
     }
     .date-badge {
-      font-size: 12px;
+      font-size: 12.5px;
       color: var(--slate-500);
+      margin-left: auto;
     }
     h1 {
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 800;
       color: var(--slate-900);
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
+      letter-spacing: -0.025em;
+      margin-bottom: 12px;
+      line-height: 1.25;
     }
     .lead {
-      font-size: 15px;
+      font-size: 16px;
       color: var(--slate-600);
       margin-bottom: 28px;
-      line-height: 1.6;
+      line-height: 1.65;
     }
-    .compliance-banner {
-      background: var(--emerald-50);
-      border: 1px solid var(--emerald-200);
+    
+    /* Table of Contents */
+    .toc-box {
+      background: var(--slate-50);
+      border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 32px;
+      padding: 24px;
+      margin-bottom: 36px;
     }
-    .compliance-banner h2 {
+    .toc-title {
       font-size: 13px;
       font-weight: 800;
-      color: var(--emerald-600);
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      color: var(--slate-800);
       margin-bottom: 14px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .grid-3 {
+    .toc-list {
+      list-style: none;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 8px 24px;
     }
-    .banner-box {
+    .toc-list a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+    }
+    .toc-list a:hover {
+      text-decoration: underline;
+      color: var(--primary-dark);
+    }
+
+    /* Google Compliance Special Card */
+    .google-compliance-card {
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+      border: 2px solid var(--emerald-200);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 36px;
+    }
+    .google-compliance-card h2 {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--emerald-700);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .google-compliance-card p {
+      font-size: 14px;
+      color: var(--slate-800);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+    .quote-box {
       background: #ffffff;
-      border: 1px solid rgba(5, 150, 105, 0.2);
+      border-left: 4px solid var(--emerald-600);
+      padding: 16px 18px;
+      border-radius: 0 8px 8px 0;
+      font-size: 13.5px;
+      font-style: italic;
+      color: var(--slate-800);
+      margin: 12px 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .key-points-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .key-point {
+      background: #ffffff;
+      border: 1px solid rgba(5, 150, 105, 0.25);
       border-radius: 8px;
       padding: 14px;
     }
-    .banner-box-title {
-      font-size: 11px;
+    .key-point-title {
+      font-size: 12px;
       font-weight: 800;
       text-transform: uppercase;
-      color: var(--emerald-600);
-      margin-bottom: 6px;
+      color: var(--emerald-700);
+      margin-bottom: 4px;
     }
-    .banner-box-body {
-      font-size: 12px;
-      color: var(--slate-800);
-      font-weight: 500;
+    .key-point-desc {
+      font-size: 13px;
+      color: var(--slate-700);
       line-height: 1.5;
     }
+
     section {
-      margin-bottom: 28px;
+      margin-bottom: 34px;
+      scroll-margin-top: 80px;
     }
     h2.section-title {
-      font-size: 17px;
-      font-weight: 700;
+      font-size: 19px;
+      font-weight: 800;
       color: var(--slate-900);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--slate-100);
+      letter-spacing: -0.015em;
+    }
+    h3.sub-title {
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--slate-800);
+      margin: 16px 0 8px 0;
     }
     p {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       font-size: 14.5px;
       color: var(--slate-600);
+      line-height: 1.7;
     }
-    ul {
-      margin-left: 20px;
-      margin-bottom: 14px;
+    ul, ol {
+      margin-left: 22px;
+      margin-bottom: 16px;
     }
     li {
-      margin-bottom: 6px;
-      font-size: 14px;
+      margin-bottom: 8px;
+      font-size: 14.5px;
       color: var(--slate-600);
+      line-height: 1.6;
     }
     strong {
       color: var(--slate-800);
+    }
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 13.5px;
+    }
+    .info-table th, .info-table td {
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      text-align: left;
+    }
+    .info-table th {
+      background: var(--slate-100);
+      font-weight: 700;
+      color: var(--slate-800);
+    }
+    .info-table tr:nth-child(even) {
+      background: var(--slate-50);
     }
     .callout-box {
       background: var(--slate-100);
       border-left: 4px solid var(--primary);
       border-radius: 0 8px 8px 0;
       padding: 16px 20px;
-      margin: 16px 0;
-      font-size: 13.5px;
+      margin: 18px 0;
+      font-size: 14px;
+      color: var(--slate-800);
+      line-height: 1.6;
     }
     .contact-card {
-      background: var(--slate-50);
-      border: 1px solid var(--border);
+      background: var(--slate-900);
       border-radius: 12px;
-      padding: 20px;
-      margin-top: 16px;
-      font-family: monospace;
-      font-size: 13px;
+      padding: 24px;
+      margin-top: 18px;
+      font-size: 13.5px;
       line-height: 1.8;
-      color: var(--slate-800);
+      color: #f1f5f9;
+    }
+    .contact-card strong {
+      color: #ffffff;
     }
     .contact-card a {
-      color: var(--primary);
+      color: #60a5fa;
       text-decoration: none;
       font-weight: 600;
     }
@@ -250,15 +345,19 @@
     }
     footer {
       border-top: 1px solid var(--border);
-      padding: 30px 20px;
+      padding: 32px 20px;
       text-align: center;
-      font-size: 12px;
+      font-size: 12.5px;
       color: var(--slate-500);
+      background: #ffffff;
     }
     footer a {
       color: var(--primary);
       text-decoration: none;
       margin: 0 8px;
+    }
+    footer a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -273,7 +372,7 @@
           <div class="brand-text-sub">INNOVACIÓN Y TECNOLOGÍA S.A.C.</div>
         </div>
       </a>
-      <a href="/" class="back-link">← Volver al Sitio Web</a>
+      <a href="/" class="back-link">← Volver al Portal Oficial</a>
     </div>
   </header>
 
@@ -281,154 +380,310 @@
     <article class="paper-card">
       
       <div class="doc-meta">
-        <span class="badge badge-blue">Documento Público Oficial</span>
-        <span class="badge badge-green">Cumplimiento Google API</span>
+        <span class="badge badge-blue">Documento Legal Público</span>
+        <span class="badge badge-green">Google API Verification Ready</span>
         <span class="date-badge">Última actualización: 18 de Septiembre de 2026</span>
       </div>
 
-      <h1>Política de Privacidad y Tratamiento de Datos</h1>
+      <h1>Política de Privacidad y Tratamiento de Datos Personales</h1>
       <p class="lead">
-        En <strong>LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.</strong> nos comprometemos con la total transparencia, seguridad y privacidad de la información de nuestros usuarios y clientes empresariales. Esta política detalla de manera estática y pública nuestras prácticas de tratamiento de datos personales conforme a la <strong>Ley N° 29733</strong> de la República del Perú y los estándares internacionales de seguridad.
+        La presente Política de Privacidad describe de manera detallada y transparente cómo <strong>LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.</strong> (en adelante, <strong>"LUXPROC"</strong> o <strong>"la Aplicación"</strong>) recopila, utiliza, procesa, almacena, retiene, protege y elimina los datos personales de los usuarios al acceder a nuestro sitio web oficial (<a href="https://luxproc.com">https://luxproc.com</a>), a nuestras plataformas de software (ERP/CRM), y al interactuar con nuestras integraciones técnicas de APIs y servicios de terceros.
       </p>
 
-      <!-- Banner Específico de Cumplimiento para Google OAuth y Verificación de Aplicaciones -->
-      <div class="compliance-banner">
-        <h2>Compromiso de Privacidad y Requisitos de Google OAuth (Google API Services User Data Policy)</h2>
-        <div class="grid-3">
-          <div class="banner-box">
-            <div class="banner-box-title">1. Qué datos recopilamos</div>
-            <div class="banner-box-body">
-              Únicamente los datos básicos de perfil proporcionados al iniciar sesión mediante Google: nombre completo y dirección de correo electrónico institucional o personal.
-            </div>
+      <!-- Tabla de Contenidos -->
+      <nav class="toc-box">
+        <div class="toc-title">Índice General de Secciones</div>
+        <ol class="toc-list">
+          <li><a href="#sec-1">1. Identificación del Responsable</a></li>
+          <li><a href="#sec-2">2. Alcance y Aplicación</a></li>
+          <li><a href="#sec-3">3. Datos Personales Recopilados</a></li>
+          <li><a href="#sec-4">4. Cumplimiento Google API Services</a></li>
+          <li><a href="#sec-5">5. Finalidad del Tratamiento de Datos</a></li>
+          <li><a href="#sec-6">6. No Comercialización y Terceros</a></li>
+          <li><a href="#sec-7">7. Seguridad Técnica y Cifrado</a></li>
+          <li><a href="#sec-8">8. Retención y Conservación</a></li>
+          <li><a href="#sec-9">9. Eliminación y Revocación de Permisos</a></li>
+          <li><a href="#sec-10">10. Derechos de los Titulares (ARCO)</a></li>
+          <li><a href="#sec-11">11. Cookies y Tecnologías de Rastreo</a></li>
+          <li><a href="#sec-12">12. Privacidad de Menores de Edad</a></li>
+          <li><a href="#sec-13">13. Modificaciones de esta Política</a></li>
+          <li><a href="#sec-14">14. Contacto Oficial de Privacidad</a></li>
+        </ol>
+      </nav>
+
+      <!-- MÓDULO EXIGIDO POR GOOGLE API SERVICES USER DATA POLICY -->
+      <div class="google-compliance-card" id="sec-google">
+        <h2>Compromiso Exclusivo con la Política de Datos de Usuario de las API de Google</h2>
+        <p>
+          En estricto cumplimiento con la <strong>Google API Services User Data Policy</strong>, LUXPROC establece de manera inequívoca las siguientes garantías respecto a la información obtenida a través de las APIs de Google:
+        </p>
+        
+        <div class="quote-box">
+          <strong>Declaración Obligatoria de Uso Limitado (Limited Use Disclosure):</strong><br />
+          "El uso y la transferencia por parte de LUXPROC a cualquier otra aplicación de la información recibida de las API de Google se adherirán a la <strong>Política de Datos de Usuario de los Servicios de las API de Google (Google API Services User Data Policy)</strong>, incluidos los <strong>requisitos de Uso Limitado (Limited Use Requirements)</strong>."<br /><br />
+          <em style="color: #475569; font-size: 12.5px;">"LUXPROC's use and transfer of information received from Google APIs to any other app will adhere to the Google API Services User Data Policy, including the Limited Use requirements."</em>
+        </div>
+
+        <div class="key-points-grid">
+          <div class="key-point">
+            <div class="key-point-title">1. ¿Qué datos se solicitan?</div>
+            <div class="key-point-desc">Únicamente datos básicos de perfil (nombre, correo electrónico y foto de perfil) y, cuando el usuario expresamente lo autoriza, la gestión de eventos de calendario para agendar asesorías técnicas.</div>
           </div>
-          <div class="banner-box">
-            <div class="banner-box-title">2. Para qué los usamos</div>
-            <div class="banner-box-body">
-              Exclusivamente para gestionar el acceso seguro y autenticado a los portales de ingeniería de LUXPROC, agendar reuniones técnicas y enviar notificaciones operativas.
-            </div>
+          <div class="key-point">
+            <div class="key-point-title">2. ¿Para qué se utilizan?</div>
+            <div class="key-point-desc">Exclusivamente para autenticar al usuario dentro de la plataforma, coordinar citas de ingeniería y generar enlaces automáticos de videoconferencia técnica en Google Meet.</div>
           </div>
-          <div class="banner-box">
-            <div class="banner-box-title">3. Protección y Privacidad</div>
-            <div class="banner-box-body">
-              No compartimos, no vendemos ni transferimos datos a terceros bajo ninguna circunstancia. Cumplimos con los requisitos de Uso Limitado de Google.
-            </div>
+          <div class="key-point">
+            <div class="key-point-title">3. ¿Se comparten con terceros?</div>
+            <div class="key-point-desc"><strong>Bajo ninguna circunstancia.</strong> No vendemos, no alquilamos, no transferimos a intermediarios de publicidad ni utilizamos los datos de Google para entrenar modelos de Inteligencia Artificial (IA).</div>
           </div>
         </div>
       </div>
 
-      <section>
+      <!-- SECCIÓN 1 -->
+      <section id="sec-1">
         <h2 class="section-title">1. Identificación del Responsable del Tratamiento</h2>
         <p>
-          El responsable del tratamiento de los datos personales recopilados a través de este portal y sus servicios asociados es:
+          El responsable del tratamiento de los datos personales recopilados a través de esta aplicación y de su portal oficial es:
         </p>
         <ul>
           <li><strong>Razón Social:</strong> LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.</li>
-          <li><strong>RUC:</strong> 20504794637</li>
-          <li><strong>Domicilio Legal:</strong> Trujillo, La Libertad - República del Perú</li>
-          <li><strong>Portal Oficial:</strong> <a href="https://luxproc.com" target="_blank" rel="noopener">https://luxproc.com</a></li>
-          <li><strong>Correo de Contacto Oficial:</strong> <a href="mailto:luxproc.11@gmail.com">luxproc.11@gmail.com</a> / <a href="mailto:contacto@luxproc.com">contacto@luxproc.com</a></li>
+          <li><strong>R.U.C.:</strong> 20504794637</li>
+          <li><strong>Representación Legal:</strong> Carmen Terán Vda. de Becerra (CEO & Co-Fundadora)</li>
+          <li><strong>Apoyo en Desarrollo Tecnológico e Ingeniería:</strong> Ing. Víctor Fernando Becerra Terán (Colegiado CIP N° 278034)</li>
+          <li><strong>Dirección Legal:</strong> Trujillo, Región La Libertad, República del Perú</li>
+          <li><strong>Dominio Oficial Web:</strong> <a href="https://luxproc.com" target="_blank" rel="noopener">https://luxproc.com</a></li>
+          <li><strong>Correo Oficial de Cumplimiento:</strong> <a href="mailto:luxproc.11@gmail.com">luxproc.11@gmail.com</a> / <a href="mailto:contacto@luxproc.com">contacto@luxproc.com</a></li>
         </ul>
       </section>
 
-      <section>
-        <h2 class="section-title">2. Datos Recopilados y Procedencia</h2>
+      <!-- SECCIÓN 2 -->
+      <section id="sec-2">
+        <h2 class="section-title">2. Alcance y Aplicación</h2>
         <p>
-          Cuando el usuario interactúa con nuestra plataforma o decide autenticarse mediante Google OAuth, recopilamos únicamente los datos indispensables autorizados expresamente en la pantalla de consentimiento de Google:
+          Esta política se aplica a todos los usuarios, clientes, proveedores, consultores y visitantes que interactúan con:
         </p>
+        <ol>
+          <li>El sitio web accesible en <code>https://luxproc.com</code> y sus subdominios.</li>
+          <li>Las aplicaciones web y sistemas de gestión (ERP, CRM, dashboards industriales y portales de proyectos) desarrollados y operados por LUXPROC.</li>
+          <li>Los flujos de autenticación mediante OAuth 2.0 y servicios conectados de Google Workspace.</li>
+          <li>Los servicios profesionales de consultoría técnica y peritajes de ingeniería eléctrica con colegiatura CIP N° 278034.</li>
+        </ol>
+      </section>
+
+      <!-- SECCIÓN 3 -->
+      <section id="sec-3">
+        <h2 class="section-title">3. Datos Personales Recopilados por la Aplicación</h2>
+        <p>
+          LUXPROC aplica el principio de <strong>minimización de datos</strong>, recopilando únicamente la información estrictamente necesaria para brindar sus servicios:
+        </p>
+
+        <h3 class="sub-title">A. Datos proporcionados directamente por el usuario:</h3>
         <ul>
-          <li><strong>Nombre y Apellido:</strong> Utilizados exclusivamente para identificar al usuario en las sesiones técnicas y dirigir la correspondencia formal.</li>
-          <li><strong>Dirección de Correo Electrónico:</strong> Empleada como identificador único de cuenta, para confirmación de servicios, envío de expedientes y enlace de sesiones de videoconferencia (Google Meet).</li>
-          <li><strong>Foto de perfil pública (Avatar):</strong> Proporcionada de forma predeterminada por la cuenta de Google con fines de representación visual dentro del entorno web.</li>
+          <li><strong>Formularios de contacto y cotización:</strong> Nombre completo, dirección de correo electrónico corporativo o personal, número telefónico / WhatsApp, empresa u organización, y descripción del requerimiento técnico.</li>
+          <li><strong>Comunicaciones de soporte:</strong> Registros de consultas, requerimientos de peritajes o asistencia técnica remitidos a nuestros buzones de correo.</li>
         </ul>
+
+        <h3 class="sub-title">B. Datos obtenidos a través de la integración de Google OAuth:</h3>
+        <p>Cuando usted decide iniciar sesión con su cuenta de Google o autoriza el acceso a servicios de Google Workspace, nuestra aplicación puede acceder a los siguientes datos específicos, previa autorización explícita:</p>
+        
+        <table class="info-table">
+          <thead>
+            <tr>
+              <th>Dato / Alcance (Scope)</th>
+              <th>Propósito de Uso</th>
+              <th>¿Se Almacena?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Perfil Básico (User Profile)</strong><br /><code>.../auth/userinfo.profile</code></td>
+              <td>Identificar al usuario por su nombre y mostrar su avatar visual en la cabecera de la sesión de usuario.</td>
+              <td>Sí, en la sesión del usuario para su identificación operativa.</td>
+            </tr>
+            <tr>
+              <td><strong>Correo Electrónico</strong><br /><code>.../auth/userinfo.email</code></td>
+              <td>Identificador único de cuenta, confirmación de reuniones y envío de notificaciones técnicas.</td>
+              <td>Sí, vinculado al perfil de acceso seguro.</td>
+            </tr>
+            <tr>
+              <td><strong>Google Calendar (Opcional)</strong><br /><code>.../auth/calendar.events</code></td>
+              <td>Crear, sincronizar o actualizar eventos de reuniones técnicas y visitas de peritaje acordadas mutuamente entre el usuario y LUXPROC.</td>
+              <td>Solo el ID del evento creado para poder modificarlo o cancelarlo a solicitud del usuario. No se leen agendas personales.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 class="sub-title">C. Datos técnicos y de navegación recopilados automáticamente:</h3>
+        <ul>
+          <li><strong>Registros del servidor (Server Logs):</strong> Dirección IP de origen (con fines de prevención de ataques cibernéticos y rate limiting), tipo de navegador web, sistema operativo, páginas solicitadas dentro de la plataforma y fecha/hora de la solicitud.</li>
+        </ul>
+
         <div class="callout-box">
-          <strong>Aviso de seguridad sobre credenciales:</strong> LUXPROC jamás solicita, tiene acceso ni almacena contraseñas de cuentas de Google o de servicios de terceros. Toda autenticación se realiza de manera delegada y cifrada mediante tokens criptográficos estándar OAuth 2.0.
+          <strong>Garantía sobre contraseñas:</strong> LUXPROC <strong>NUNCA</strong> solicita, tiene acceso ni almacena contraseñas de su cuenta de Google. Todo el proceso de autorización se realiza de manera delegada mediante tokens criptográficos efímeros bajo el estándar internacional OAuth 2.0.
         </div>
       </section>
 
-      <section>
-        <h2 class="section-title">3. Finalidad del Uso de los Datos</h2>
+      <!-- SECCIÓN 4 -->
+      <section id="sec-4">
+        <h2 class="section-title">4. Cumplimiento Específico de las Políticas de Google API Services</h2>
         <p>
-          Los datos personales solicitados se tratan estrictamente para los siguientes fines legítimos:
+          Para satisfacer plenamente los requisitos de verificación de Google Cloud Console y la confianza del usuario, declaramos formalmente:
+        </p>
+        <ol>
+          <li><strong>Uso Estrictamente Limitado:</strong> Los datos obtenidos mediante las APIs de Google se utilizan exclusivamente para proporcionar o mejorar las funciones orientadas al usuario que son evidentes en la interfaz de usuario de LUXPROC (acceso seguro y agenda de reuniones).</li>
+          <li><strong>Prohibición de Transferencia a Terceros:</strong> No transferimos datos de usuarios de Google a terceros, a menos que sea necesario para cumplir con leyes aplicables o como parte de una fusión/adquisición con notificación previa al usuario.</li>
+          <li><strong>Prohibición de Publicidad:</strong> No utilizamos ni transferimos datos de usuarios de Google para servir anuncios publicitarios, incluidos anuncios dirigidos, personalizados o basados en intereses.</li>
+          <li><strong>Prohibición de Entrenamiento de Inteligencia Artificial:</strong> No permitimos que seres humanos lean los datos ni utilizamos los datos de usuarios de Google para entrenar modelos de aprendizaje automático (machine learning) o inteligencia artificial (IA) generalistas.</li>
+        </ol>
+      </section>
+
+      <!-- SECCIÓN 5 -->
+      <section id="sec-5">
+        <h2 class="section-title">5. Finalidad del Tratamiento de los Datos</h2>
+        <p>
+          Los datos personales recopilados se tratan única y exclusivamente para los siguientes fines legítimos:
         </p>
         <ul>
-          <li>Gestionar el acceso seguro a los módulos corporativos, cotizaciones de peritaje eléctrico (CIP N° 278034) y soluciones de software ERP/CRM.</li>
-          <li>Coordinar y calendarizar citas técnicas en Google Calendar y generar enlaces seguros de reunión en Google Meet.</li>
-          <li>Enviar reportes de soporte, seguimiento de requerimientos de ingeniería y expedientes técnicos autorizados.</li>
-          <li>Garantizar la seguridad operativa de la infraestructura, previniendo suplantaciones de identidad o accesos no autorizados.</li>
+          <li><strong>Autenticación y Control de Acceso:</strong> Validar la identidad de ingenieros, clientes y auditores autorizados para ingresar a las herramientas de software de LUXPROC.</li>
+          <li><strong>Coordinación y Prestación de Servicios:</strong> Calendarizar visitas técnicas, inspecciones periciales de ingeniería eléctrica (CIP N° 278034), y emitir presupuestos o contratos de licenciamiento de software.</li>
+          <li><strong>Generación de Enlaces de Videoconferencia:</strong> Facilitar reuniones virtuales a través de Google Meet para asesorías técnicas.</li>
+          <li><strong>Soporte al Cliente y Notificaciones:</strong> Atender requerimientos de soporte técnico, enviar acuses de recibo y notificar actualizaciones de seguridad críticas.</li>
+          <li><strong>Seguridad de la Información:</strong> Monitorear y prevenir accesos no autorizados, ataques de denegación de servicio (DDoS) o usos maliciosos de la plataforma.</li>
         </ul>
       </section>
 
-      <section>
-        <h2 class="section-title">4. No Comercialización ni Cesión a Terceros</h2>
+      <!-- SECCIÓN 6 -->
+      <section id="sec-6">
+        <h2 class="section-title">6. No Comercialización, Divulgación y Transferencia de Datos</h2>
         <p>
-          LUXPROC mantiene una política estricta de protección de datos:
+          LUXPROC mantiene un principio inquebrantable de confidencialidad comercial y técnica:
         </p>
         <ul>
-          <li><strong>No venta de datos:</strong> No vendemos, alquilamos ni comercializamos datos personales a anunciantes, brokers de datos ni plataformas publicitarias externas.</li>
-          <li><strong>No cesión a terceros:</strong> Los datos no se transfieren a empresas no vinculadas con la prestación técnica del servicio.</li>
-          <li><strong>No entrenamiento de modelos externos:</strong> Los datos de usuario y el contenido de las integraciones de Google no se emplean para entrenar modelos generalistas de inteligencia artificial de terceros.</li>
+          <li><strong>No venta de datos personales:</strong> LUXPROC no vende, no arrienda, no monetiza ni comercializa datos personales ni listas de correos a anunciantes, agregadores de datos o empresas de telemarketing.</li>
+          <li><strong>Proveedores de Infraestructura Tecnológica de Confianza:</strong> Para operar nuestra plataforma, empleamos exclusivamente proveedores de nube de primer nivel mundial (como Google Cloud Platform / Firebase) que cuentan con certificaciones internacionales de seguridad (ISO 27001, SOC 1/2/3) y actúan únicamente en calidad de encargados de tratamiento bajo contratos de estricta confidencialidad.</li>
+          <li><strong>Requerimiento Judicial:</strong> Solo divulgaremos información ante órdenes judiciales expresas emitidas por autoridades competentes de la República del Perú en el marco de la ley.</li>
         </ul>
       </section>
 
-      <section>
-        <h2 class="section-title">5. Cumplimiento de la Política de Datos de Usuario de las API de Google</h2>
+      <!-- SECCIÓN 7 -->
+      <section id="sec-7">
+        <h2 class="section-title">7. Seguridad Técnica, Organizativa y Cifrado</h2>
         <p>
-          El uso de la información recibida a través de las APIs de Google por parte de LUXPROC cumple estrictamente con la <strong>Política de Datos de Usuario de los Servicios de API de Google (Google API Services User Data Policy)</strong>, incluidos los requisitos de <em>Uso Limitado (Limited Use Requirements)</em>:
+          La seguridad de su información es prioritaria. LUXPROC implementa medidas técnicas de nivel bancario e industrial:
+        </p>
+        <ul>
+          <li><strong>Cifrado en Tránsito (HTTPS):</strong> Todas las comunicaciones entre su navegador y nuestros servidores se transmiten cifradas mediante el protocolo <strong>TLS 1.3 / SSL</strong> con certificados validados sobre el dominio <code>luxproc.com</code>.</li>
+          <li><strong>Cifrado en Reposo:</strong> Las bases de datos y registros persistentes se almacenan con cifrado estándar <strong>AES de 256 bits</strong>.</li>
+          <li><strong>Principio de Menor Privilegio (PoLP):</strong> El acceso a los entornos de producción está estrictamente restringido mediante autenticación multifactor (MFA) y credenciales de acceso revocables únicamente para el personal técnico designado.</li>
+          <li><strong>Auditorías Periódicas:</strong> Realizamos revisiones periódicas de dependencias y pruebas de vulnerabilidad en nuestro código fuente.</li>
+        </ul>
+      </section>
+
+      <!-- SECCIÓN 8 -->
+      <section id="sec-8">
+        <h2 class="section-title">8. Retención y Conservación de los Datos</h2>
+        <p>
+          Conservamos sus datos personales únicamente durante el tiempo estrictamente necesario para cumplir los fines descritos en esta política:
+        </p>
+        <ul>
+          <li><strong>Cuentas Activas:</strong> La información de perfil se conserva mientras la cuenta del usuario se mantenga activa o mientras exista una relación contractual vigente.</li>
+          <li><strong>Datos de Sesión y Tokens de API:</strong> Los tokens de acceso de OAuth se refrescan dinámicamente y expiran conforme a los estándares de seguridad de Google. Si el usuario cierra su sesión, el token de acceso es eliminado del almacenamiento local.</li>
+          <li><strong>Registros Técnicos de Seguridad:</strong> Los logs de servidores se conservan por un periodo máximo de 90 días con fines exclusivos de auditoría de seguridad y mitigación de amenazas cibernéticas, tras lo cual son depurados automáticamente.</li>
+        </ul>
+      </section>
+
+      <!-- SECCIÓN 9 -->
+      <section id="sec-9">
+        <h2 class="section-title">9. Eliminación de Datos y Revocación de Permisos</h2>
+        <p>
+          Usted tiene el control absoluto sobre sus datos y puede suspender o eliminar el acceso en cualquier momento a través de cualquiera de los siguientes métodos:
+        </p>
+        
+        <h3 class="sub-title">Método 1: Revocación Directa desde su Cuenta de Google</h3>
+        <p>
+          Usted puede desconectar la aplicación LUXPROC y revocar todos los permisos otorgados en cualquier momento, de forma instantánea y sin necesidad de contactarnos:
+        </p>
+        <ol>
+          <li>Ingrese a la configuración de seguridad de su cuenta de Google en: <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener"><strong>https://myaccount.google.com/permissions</strong></a>.</li>
+          <li>Ubique la aplicación <strong>"LUXPROC"</strong> o <strong>"LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C."</strong> en la lista de aplicaciones con acceso a su cuenta.</li>
+          <li>Haga clic en <strong>"Quitar acceso"</strong> o <strong>"Revocar permisos"</strong>. Google invalidará inmediatamente todos los tokens y LUXPROC no podrá acceder a ningún dato adicional.</li>
+        </ol>
+
+        <h3 class="sub-title">Método 2: Solicitud de Supresión Total de Datos a LUXPROC</h3>
+        <p>
+          Para solicitar el borrado completo de sus registros, correos o historial de nuestra base de datos, simplemente envíe un mensaje a:
         </p>
         <div class="callout-box">
-          "El uso y la transferencia a cualquier otra aplicación de la información recibida de las API de Google por parte de LUXPROC se adherirán a la Política de Datos de Usuario de los Servicios de las API de Google, incluidos los requisitos de Uso Limitado."
+          <strong>Correo de solicitud de borrado:</strong> <a href="mailto:luxproc.11@gmail.com">luxproc.11@gmail.com</a> con copia a <a href="mailto:contacto@luxproc.com">contacto@luxproc.com</a>.<br />
+          <strong>Asunto:</strong> Solicitud de Supresión de Datos Personales - [Su Nombre o Correo]<br />
+          <strong>Tiempo de respuesta garantizado:</strong> Nuestro equipo procesará y confirmará la eliminación definitiva de sus datos en un plazo máximo de <strong>48 horas hábiles</strong>.
         </div>
       </section>
 
-      <section>
-        <h2 class="section-title">6. Retención, Eliminación y Revocación de Acceso</h2>
+      <!-- SECCIÓN 10 -->
+      <section id="sec-10">
+        <h2 class="section-title">10. Derechos de los Titulares (Derechos ARCO y Normativa Internacional)</h2>
         <p>
-          Los datos personales se conservan únicamente durante el tiempo necesario para la prestación del servicio acordado o hasta que el usuario solicite su eliminación.
+          De conformidad con la <strong>Ley N° 29733 (Ley de Protección de Datos Personales de la República del Perú)</strong>, su Reglamento aprobado por D.S. 003-2013-JUS, y los principios del Reglamento General de Protección de Datos (RGPD / GDPR), usted puede ejercer en todo momento sus derechos:
         </p>
         <ul>
-          <li><strong>Revocación directa:</strong> El usuario puede revocar en cualquier momento el acceso concedido a la aplicación desde su propia cuenta de Google en: <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">https://myaccount.google.com/permissions</a>.</li>
-          <li><strong>Solicitud de borrado:</strong> Puede solicitar la supresión total de sus registros enviando un correo a <a href="mailto:luxproc.11@gmail.com">luxproc.11@gmail.com</a>, la cual se procesará en un plazo máximo de 48 horas hábiles.</li>
+          <li><strong>Derecho de Acceso:</strong> Solicitar información sobre qué datos personales suyos están siendo tratados por LUXPROC.</li>
+          <li><strong>Derecho de Rectificación / Actualización:</strong> Modificar o corregir datos personales inexactos, erróneos o incompletos.</li>
+          <li><strong>Derecho de Cancelación / Supresión:</strong> Exigir la eliminación de sus datos cuando ya no sean necesarios para las finalidades que motivaron su recopilación.</li>
+          <li><strong>Derecho de Oposición:</strong> Negarse al tratamiento de sus datos personales para determinados fines específicos.</li>
+          <li><strong>Derecho a la Portabilidad:</strong> Recibir sus datos en un formato digital estructurado y de uso común.</li>
+        </ul>
+        <p>
+          Para ejercer cualquiera de estos derechos, dirija su solicitud escrita a <a href="mailto:luxproc.11@gmail.com">luxproc.11@gmail.com</a> acreditando su identidad.
+        </p>
+      </section>
+
+      <!-- SECCIÓN 11 -->
+      <section id="sec-11">
+        <h2 class="section-title">11. Cookies y Tecnologías de Almacenamiento Local</h2>
+        <p>
+          Nuestro sitio web utiliza tecnologías de almacenamiento web estándar (cookies técnicas y <code>localStorage</code>) con fines exclusivamente operativos:
+        </p>
+        <ul>
+          <li><strong>Cookies Técnicas Esenciales:</strong> Necesarias para mantener la sesión de usuario activa y garantizar la navegación segura.</li>
+          <li><strong>Preferencias de Interfaz:</strong> Guardar su preferencia de modo oscuro/claro o idioma dentro de su navegador.</li>
+          <li><strong>No usamos cookies de rastreo publicitario:</strong> No instalamos cookies de seguimiento de terceros con propósitos de retargeting o perfilado publicitario intrusivo.</li>
         </ul>
       </section>
 
-      <section>
-        <h2 class="section-title">7. Seguridad y Cifrado</h2>
+      <!-- SECCIÓN 12 -->
+      <section id="sec-12">
+        <h2 class="section-title">12. Privacidad de Menores de Edad</h2>
         <p>
-          Implementamos protocolos de seguridad informática avanzados para resguardar la confidencialidad de la información:
+          Nuestros servicios están dirigidos exclusivamente a profesionales, empresas, estudiantes de ingeniería e instituciones comerciales. No recopilamos conscientemente información personal de menores de 18 años. Si detectamos que un menor de edad nos ha suministrado información sin el consentimiento de sus padres o tutores, procederemos a su eliminación inmediata de nuestros sistemas.
         </p>
-        <ul>
-          <li>Cifrado SSL/TLS 1.3 de extremo a extremo en todas las comunicaciones web HTTPS bajo el dominio verificado <code>luxproc.com</code>.</li>
-          <li>Protección de bases de datos mediante controles de acceso restringido y políticas estrictas de menor privilegio (Least Privilege Access).</li>
-          <li>Monitoreo continuo de incidentes de seguridad y respaldos automatizados.</li>
-        </ul>
       </section>
 
-      <section>
-        <h2 class="section-title">8. Derechos ARCO (Ley N° 29733 del Perú)</h2>
+      <!-- SECCIÓN 13 -->
+      <section id="sec-13">
+        <h2 class="section-title">13. Modificaciones y Actualizaciones de esta Política</h2>
         <p>
-          Conforme a la Ley de Protección de Datos Personales del Perú (Ley N° 29733) y su Reglamento, usted puede ejercer en cualquier momento sus derechos de:
+          LUXPROC se reserva el derecho de actualizar esta Política de Privacidad periódicamente para reflejar cambios legales, tecnológicos o en la funcionalidad de nuestros servicios. La fecha de la última modificación siempre se indicará al inicio del documento. Le recomendamos revisar esta página periódicamente.
         </p>
-        <ul>
-          <li><strong>Acceso:</strong> Conocer qué información personal mantenemos en nuestros registros.</li>
-          <li><strong>Rectificación:</strong> Solicitar la corrección de datos inexactos o incompletos.</li>
-          <li><strong>Cancelación:</strong> Solicitar la supresión o eliminación de sus datos de nuestras bases.</li>
-          <li><strong>Oposición:</strong> Oponerse al tratamiento de sus datos para fines específicos.</li>
-        </ul>
       </section>
 
-      <section>
-        <h2 class="section-title">9. Información de Contacto y Representación Legal</h2>
+      <!-- SECCIÓN 14 -->
+      <section id="sec-14">
+        <h2 class="section-title">14. Contacto Oficial de Privacidad y Representación Legal</h2>
         <p>
-          Para cualquier consulta legal, ejercicio de derechos de privacidad o aclaración de esta política:
+          Si tiene preguntas, inquietudes, observaciones o requiere asistencia sobre el tratamiento de sus datos personales o sobre el cumplimiento de las políticas de Google API, por favor comuníquese formalmente con nosotros:
         </p>
+        
         <div class="contact-card">
-          <div><strong>EMPRESA:</strong> LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.</div>
-          <div><strong>R.U.C.:</strong> 20504794637</div>
-          <div><strong>REPRESENTACIÓN LEGAL:</strong> Carmen Terán Vda. de Becerra (CEO & Co-Fundadora)</div>
-          <div><strong>DOMINIO OFICIAL:</strong> <a href="https://luxproc.com">https://luxproc.com</a></div>
-          <div><strong>URL DEDICADA DE PRIVACIDAD:</strong> <a href="https://luxproc.com/privacy.html">https://luxproc.com/privacy.html</a></div>
-          <div><strong>CORREO DE PRIVACIDAD:</strong> <a href="mailto:luxproc.11@gmail.com">luxproc.11@gmail.com</a> / <a href="mailto:contacto@luxproc.com">contacto@luxproc.com</a></div>
-          <div><strong>SEDE:</strong> Trujillo, Región La Libertad, Perú</div>
+          <div><strong>EMPRESA TITULAR:</strong> LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.</div>
+          <div><strong>NÚMERO DE R.U.C.:</strong> 20504794637</div>
+          <div><strong>REPRESENTANTE LEGAL:</strong> Carmen Terán Vda. de Becerra (CEO & Co-Fundadora)</div>
+          <div><strong>APOYO EN DESARROLLO TECNOLÓGICO E INGENIERÍA:</strong> Ing. Víctor Fernando Becerra Terán (Colegiado CIP N° 278034 - Ing. Mecánica y Eléctrica)</div>
+          <div><strong>DOMICILIO LEGAL:</strong> Trujillo, Departamento de La Libertad, República del Perú</div>
+          <div><strong>CORREO ELECTRÓNICO OFICIAL:</strong> <a href="mailto:luxproc.11@gmail.com">luxproc.11@gmail.com</a> / <a href="mailto:contacto@luxproc.com">contacto@luxproc.com</a></div>
+          <div><strong>SITIO WEB OFICIAL:</strong> <a href="https://luxproc.com" target="_blank" rel="noopener">https://luxproc.com</a></div>
+          <div><strong>ENLACE DIRECTO DE PRIVACIDAD:</strong> <a href="https://luxproc.com/privacy.html">https://luxproc.com/privacy.html</a></div>
         </div>
       </section>
 
@@ -437,10 +692,11 @@
 
   <footer>
     <div>© 2026 LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. • R.U.C. 20504794637. Todos los derechos reservados.</div>
-    <div style="margin-top: 8px;">
-      <a href="/">Inicio</a> • 
+    <div style="margin-top: 10px;">
+      <a href="/">Portal Principal</a> • 
       <a href="/privacy.html">Política de Privacidad</a> • 
-      <a href="mailto:contacto@luxproc.com">Contacto</a>
+      <a href="/terms.html">Condiciones del Servicio</a> • 
+      <a href="mailto:contacto@luxproc.com">Soporte Técnico</a>
     </div>
   </footer>
 
