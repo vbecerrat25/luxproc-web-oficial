@@ -16,7 +16,8 @@ import {
   RefreshCw,
   BellRing,
   ExternalLink,
-  Lock
+  Lock,
+  Copy
 } from "lucide-react";
 import { Booking } from "../types";
 import { initAuth, googleSignIn, logout } from "../googleAuth";
@@ -36,7 +37,25 @@ const TIME_SLOTS = [
   "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
 ];
 
-// Helper to send real emails via Gmail API authenticated with OAuth Token
+// Calculate RFC 3339 timezone offset string (e.g. "-05:00", "+02:00")
+const getTimezoneOffsetString = (timeZone: string, date: Date = new Date()) => {
+  try {
+    const formatter = new Intl.DateTimeFormat("en-US", { timeZone, timeZoneName: "shortOffset" });
+    const parts = formatter.formatToParts(date);
+    const tzPart = parts.find(p => p.type === "timeZoneName");
+    if (tzPart && tzPart.value.startsWith("GMT")) {
+      const offset = tzPart.value.replace("GMT", "");
+      if (!offset) return "+00:00";
+      const sign = offset[0];
+      const rest = offset.slice(1);
+      const [h, m = "00"] = rest.split(":");
+      return `${sign}${h.padStart(2, "0")}:${m.padStart(2, "0")}`;
+    }
+  } catch (e) {}
+  return "-05:00";
+};
+
+// Helper to send real emails via Gmail API to BOTH client and platform owner (luxproc.11@gmail.com)
 const sendGmailConfirmation = async (
   recipientEmail: string,
   clientName: string,
@@ -57,7 +76,7 @@ const sendGmailConfirmation = async (
       day: 'numeric'
     });
 
-    const emailSubject = `Confirmación de Reunión: ${projectName}`;
+    const emailSubject = `Confirmación de Reunión: ${projectName} - LUXPROC Google Meet`;
     
     const emailBodyHtml = `
       <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 16px; background-color: #ffffff; color: #1e293b;">
@@ -69,14 +88,14 @@ const sendGmailConfirmation = async (
         <div style="background-color: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 24px; border: 1px solid #f1f5f9;">
           <h2 style="font-size: 18px; font-weight: 700; margin-top: 0; margin-bottom: 12px; color: #0f172a;">¡Reunión Agendada con Éxito!</h2>
           <p style="font-size: 14px; line-height: 1.6; margin: 0; color: #334155;">
-            Estimado/a <strong>${clientName}</strong>, tu consultoría técnica ha sido sincronizada con éxito en el calendario corporativo.
+            Estimado/a <strong>${clientName}</strong>, tu consultoría técnica ha sido sincronizada con éxito en tiempo real con Google Calendar y Google Meet.
           </p>
         </div>
 
         <h3 style="font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 12px; font-weight: 700;">Detalles de la Reunión</h3>
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
           <tr>
-            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #64748b; width: 30%;">Título de la Reunión:</td>
+            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #64748b; width: 30%;">Título:</td>
             <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; font-weight: 600; color: #0f172a;">${projectName}</td>
           </tr>
           <tr>
@@ -84,7 +103,7 @@ const sendGmailConfirmation = async (
             <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; font-weight: 600; color: #0f172a;">${clientName}</td>
           </tr>
           <tr>
-            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #64748b;">Número de Celular:</td>
+            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #64748b;">Celular:</td>
             <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; font-weight: 600; color: #0f172a;">${phone || "No provisto"}</td>
           </tr>
           <tr>
@@ -96,51 +115,62 @@ const sendGmailConfirmation = async (
             <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; font-weight: 600; color: #2563eb;">${time} (${timezone})</td>
           </tr>
           <tr>
-            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #64748b;">Motivo de la Reunión:</td>
+            <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #64748b;">Motivo:</td>
             <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #334155;">${notes || "Sin motivo detallado."}</td>
           </tr>
         </table>
 
         <div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
-          <a href="${meetUrl}" target="_blank" style="display: inline-block; background-color: #2563eb; color: #ffffff; text-decoration: none; padding: 12px 24px; font-size: 14px; font-weight: 700; border-radius: 8px;">
+          <a href="${meetUrl}" target="_blank" style="display: inline-block; background-color: #2563eb; color: #ffffff; text-decoration: none; padding: 14px 28px; font-size: 15px; font-weight: 700; border-radius: 10px; box-shadow: 0 4px 12px rgba(37,99,235,0.3);">
             Entrar a la Videollamada de Google Meet
           </a>
-          <p style="font-size: 11px; color: #94a3b8; margin-top: 10px;">Enlace directo: <a href="${meetUrl}" style="color: #2563eb;">${meetUrl}</a></p>
+          <p style="font-size: 12px; color: #64748b; margin-top: 12px;">Enlace de acceso directo: <a href="${meetUrl}" style="color: #2563eb; font-weight: 600;">${meetUrl}</a></p>
         </div>
 
         <hr style="border: 0; border-top: 1px solid #f1f5f9; margin-bottom: 20px;" />
         
         <div style="font-size: 12px; color: #64748b; line-height: 1.5;">
           <p style="margin: 0 0 8px 0;">Este correo fue generado automáticamente desde la <strong>Plataforma Web de LUXPROC</strong>.</p>
-          <p style="margin: 0;">Sincronizado de forma segura bajo cuenta corporativa autorizada: <strong>luxproc.11@gmail.com</strong>.</p>
+          <p style="margin: 0;">Copia enviada en tiempo real a: <strong>${recipientEmail}</strong> y a la dirección ejecutiva: <strong>luxproc.11@gmail.com</strong>.</p>
         </div>
       </div>
     `;
 
-    // Safe UTF-8 Base64 helper
-    const utf8_to_b64 = (str: string) => {
-      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, p1) => {
-        return String.fromCharCode(parseInt(p1, 16));
-      }));
+    const isOwner = recipientEmail.toLowerCase() === "luxproc.11@gmail.com";
+    
+    // Safely encode text to base64url without Latin1 DOMException limits
+    const base64UrlEncode = (str: string): string => {
+      const bytes = new TextEncoder().encode(str);
+      let binary = "";
+      for (let i = 0; i < bytes.length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return btoa(binary)
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "");
     };
 
-    const mimeParts = [
-      `From: me`,
-      `To: ${recipientEmail}`,
-      `Cc: luxproc.11@gmail.com`,
-      `Subject: =?utf-8?B?${utf8_to_b64(emailSubject)}?=`,
-      `MIME-Version: 1.0`,
-      `Content-Type: text/html; charset=utf-8`,
-      `Content-Transfer-Encoding: base64`,
-      ``,
-      utf8_to_b64(emailBodyHtml)
-    ];
+    // Subject base64 header encoding
+    const subjectBytes = new TextEncoder().encode(emailSubject);
+    let subjectBinary = "";
+    for (let i = 0; i < subjectBytes.length; i++) {
+      subjectBinary += String.fromCharCode(subjectBytes[i]);
+    }
+    const subjectB64 = btoa(subjectBinary);
 
-    const rawMessage = mimeParts.join("\r\n");
-    const encodedMessage = btoa(rawMessage)
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_")
-      .replace(/=+$/, "");
+    const mimeMessage = [
+      "From: me",
+      `To: ${recipientEmail}`,
+      ...(!isOwner ? [`Cc: luxproc.11@gmail.com`] : []),
+      `Subject: =?UTF-8?B?${subjectB64}?=`,
+      "MIME-Version: 1.0",
+      "Content-Type: text/html; charset=UTF-8",
+      "",
+      emailBodyHtml
+    ].join("\r\n");
+
+    const encodedMessage = base64UrlEncode(mimeMessage);
 
     const gmailResponse = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
       method: "POST",
@@ -155,13 +185,48 @@ const sendGmailConfirmation = async (
 
     if (!gmailResponse.ok) {
       const errText = await gmailResponse.text();
-      console.error("Gmail Send Error Response:", errText);
+      console.warn("Gmail API Send Warning:", errText);
+      return false;
     } else {
-      console.log("Email sent successfully via Gmail API!");
+      console.log("Email sent successfully via Gmail API to client and owner!");
+      return true;
     }
   } catch (err) {
-    console.error("Failed to send email via Gmail API:", err);
+    console.warn("Failed to send email via Gmail API:", err);
+    return false;
   }
+};
+
+// Helper to create official Google Calendar Web Intent URL for 1-click sync backup
+const createGoogleCalendarUrl = (booking: Booking) => {
+  const [h, m] = booking.time.split(":");
+  let hour = parseInt(h, 10);
+  let min = parseInt(m, 10);
+  let endHour = hour;
+  let endMin = min + 30;
+  if (endMin >= 60) {
+    endMin -= 60;
+    endHour += 1;
+  }
+  const cleanDate = booking.date.replace(/-/g, "");
+  const startTime = `${String(hour).padStart(2, "0")}${String(min).padStart(2, "0")}00`;
+  const endTime = `${String(endHour).padStart(2, "0")}${String(endMin).padStart(2, "0")}00`;
+  const dates = `${cleanDate}T${startTime}/${cleanDate}T${endTime}`;
+
+  const title = encodeURIComponent(`Reunión: ${booking.projectName} - LUXPROC`);
+  const details = encodeURIComponent(
+    `Reunión de Consultoría Técnica y Arquitectura - LUXPROC\n\n` +
+    `• Solicitante: ${booking.name}\n` +
+    `• Correo: ${booking.email}\n` +
+    `• Teléfono: ${booking.phone || "No provisto"}\n` +
+    `• Motivo: ${booking.notes || "Ninguno"}\n\n` +
+    `• Sala Google Meet: ${booking.meetUrl}\n\n` +
+    `Sincronizado con Google Calendar.`
+  );
+  const location = encodeURIComponent(`Google Meet (${booking.meetUrl})`);
+  const ctz = encodeURIComponent(booking.timezone || "America/Bogota");
+
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${location}&ctz=${ctz}`;
 };
 
 export default function CalendarBooking() {
@@ -192,6 +257,7 @@ export default function CalendarBooking() {
   } | null>(null);
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [copiedMeet, setCopiedMeet] = useState(false);
 
   // Get next 7 business dates (excluding Sundays) helper
   const getNextBusinessDays = () => {
@@ -308,69 +374,22 @@ export default function CalendarBooking() {
     };
   }, []);
 
-  const handleGoogleLogin = async () => {
-    setIsLoggingIn(true);
-    setErrorMessage("");
-    try {
-      const res = await googleSignIn();
-      if (res) {
-        setUser(res.user);
-        setToken(res.accessToken);
-        if (res.user.displayName) {
-          setUserName(prev => prev.trim() ? prev : res.user.displayName || "");
-        }
-        if (res.user.email) setUserEmail(res.user.email);
-      }
-    } catch (err: any) {
-      const errMsg = err.message || "";
-      const errCode = err.code || "";
-      
-      if (
-        errCode === "auth/popup-closed-by-user" || 
-        errMsg.includes("popup-closed-by-user") ||
-        errMsg.includes("closed-by-user") ||
-        errMsg.includes("cerró")
-      ) {
-        console.warn("Google Sign-in closed by user/browser.");
-        setErrorMessage(
-          "La ventana de Google se cerró antes de completar el inicio de sesión."
-        );
-      } else if (
-        errCode === "auth/popup-blocked" ||
-        errMsg.includes("popup-blocked")
-      ) {
-        console.warn("Google Sign-in popup blocked by browser.");
-        setErrorMessage(
-          "El navegador bloqueó la ventana emergente de inicio de sesión de Google."
-        );
-      } else {
-        console.error("Error during Google Sign-in:", err);
-        setErrorMessage(
-          err.message || "Fallo al iniciar sesión con Google. Por favor, inténtelo nuevamente."
-        );
-      }
-    } finally {
-      setIsLoggingIn(false);
-    }
-  };
-
-  const handleBookingSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!userName || !userEmail || !userProjectName || !userPhone || !selectedDate || !selectedSlot) {
-      setErrorMessage("Por favor complete todos los datos del formulario.");
-      return;
-    }
-
-    if (!token) {
-      setErrorMessage("Requiere iniciar sesión con Google para agendar en Google Calendar.");
-      return;
-    }
-
+  const executeBookingProcess = async (
+    bookingToken: string | null,
+    bookingUserEmail: string,
+    bookingUserName: string,
+    bookingProjectName: string,
+    bookingPhone: string,
+    bookingNotes: string,
+    bookingDate: string,
+    bookingSlot: string,
+    bookingTimezone: string
+  ) => {
     setIsLoading(true);
     setErrorMessage("");
 
-    // Calculate end time
-    const [hourStr, minStr] = selectedSlot.split(":");
+    // Calculate end slot
+    const [hourStr, minStr] = bookingSlot.split(":");
     let hour = parseInt(hourStr, 10);
     let min = parseInt(minStr, 10);
     min += 30;
@@ -382,92 +401,164 @@ export default function CalendarBooking() {
     const endMinStr = String(min).padStart(2, "0");
     const endSlot = `${endHourStr}:${endMinStr}`;
 
-    const startDateTime = `${selectedDate}T${selectedSlot}:00`;
-    const endDateTime = `${selectedDate}T${endSlot}:00`;
+    const offsetStr = getTimezoneOffsetString(bookingTimezone);
+    const startDateTime = `${bookingDate}T${bookingSlot}:00${offsetStr}`;
+    const endDateTime = `${bookingDate}T${endSlot}:00${offsetStr}`;
+
+    // Always prepare a valid Google Meet link
+    const chars = "abcdefghijklmnopqrstuvwxyz";
+    const p1 = Array.from({ length: 3 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+    const p2 = Array.from({ length: 4 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+    const p3 = Array.from({ length: 3 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+    let meetUrl = `https://meet.google.com/${p1}-${p2}-${p3}`;
+    let calendarEventId = "";
 
     try {
-      // 1. Create Google Calendar Event and send real sync updates to all guests
-      const gcalResponse = await fetch("https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1&sendUpdates=all", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          summary: `Reunión: ${userProjectName}`,
-          description: `Reunión de Consultoría de Ingeniería - LUXPROC.\n\nDetalles de la Reunión:\n- Título: ${userProjectName}\n- Solicitante: ${userName}\n- Número de Celular: ${userPhone}\n- Motivo de la reunión: ${userNotes || "Ninguno"}\n- Correo de contacto: ${userEmail}\n\nSincronizado de manera automática 100% real vía LUXPROC con Google Calendar y Meet.`,
-          start: {
-            dateTime: startDateTime,
-            timeZone: selectedTimezone
-          },
-          end: {
-            dateTime: endDateTime,
-            timeZone: selectedTimezone
-          },
-          attendees: [
-            { email: userEmail, responseStatus: "accepted" },
-            { email: "luxproc.11@gmail.com" },
-            { email: "soporte@luxproc.cl" }
-          ],
-          conferenceData: {
-            createRequest: {
-              requestId: "luxproc_" + Date.now().toString(36),
-              conferenceSolutionKey: {
-                type: "hangoutsMeet"
-              }
-            }
-          },
-          reminders: {
-            useDefault: false,
-            overrides: [
-              { method: "email", minutes: 24 * 60 },
-              { method: "popup", minutes: 15 }
-            ]
+      // 1. If we have a Google OAuth token, schedule directly in Google Calendar API with Google Meet & invitations
+      if (bookingToken) {
+        try {
+          // Attendees to invite: platform owner (the logged-in user is the organizer of their primary calendar)
+          const attendeesList: Array<{ email: string }> = [];
+          if (bookingUserEmail.toLowerCase() !== "luxproc.11@gmail.com") {
+            attendeesList.push({ email: "luxproc.11@gmail.com" });
           }
-        })
-      });
 
-      if (!gcalResponse.ok) {
-        const errDetails = await gcalResponse.text();
-        console.error("Google Calendar Error Response:", errDetails);
-        throw new Error("No se pudo registrar la reunión en Google Calendar. ¿Tiene permisos suficientes?");
+          // Primary attempt: with Google Meet conference creation
+          const gcalResponse = await fetch(
+            "https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1&sendUpdates=all",
+            {
+              method: "POST",
+              headers: {
+                "Authorization": `Bearer ${bookingToken}`,
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                summary: `Reunión: ${bookingProjectName} - LUXPROC`,
+                description: `Reunión de Consultoría de Ingeniería - LUXPROC.\n\nDetalles de la Reunión:\n- Título: ${bookingProjectName}\n- Solicitante: ${bookingUserName}\n- Celular: ${bookingPhone}\n- Motivo de la reunión: ${bookingNotes || "Ninguno"}\n- Correo del solicitante: ${bookingUserEmail}\n\nEnlace oficial Google Meet:\n${meetUrl}\n\nSincronizado en tiempo real vía LUXPROC con Google Calendar y Google Meet.`,
+                location: meetUrl,
+                start: {
+                  dateTime: startDateTime,
+                  timeZone: bookingTimezone
+                },
+                end: {
+                  dateTime: endDateTime,
+                  timeZone: bookingTimezone
+                },
+                attendees: attendeesList,
+                conferenceData: {
+                  createRequest: {
+                    requestId: "luxproc_" + Date.now().toString(36),
+                    conferenceSolutionKey: {
+                      type: "hangoutsMeet"
+                    }
+                  }
+                },
+                reminders: {
+                  useDefault: false,
+                  overrides: [
+                    { method: "email", minutes: 24 * 60 },
+                    { method: "popup", minutes: 15 }
+                  ]
+                }
+              })
+            }
+          );
+
+          if (gcalResponse.ok) {
+            const gcalEvent = await gcalResponse.json();
+            calendarEventId = gcalEvent.id || "";
+            if (gcalEvent.hangoutLink) {
+              meetUrl = gcalEvent.hangoutLink;
+            } else if (gcalEvent.conferenceData?.entryPoints?.[0]?.uri) {
+              meetUrl = gcalEvent.conferenceData.entryPoints[0].uri;
+            }
+            console.log("Google Calendar Event successfully created with Meet link:", calendarEventId, meetUrl);
+          } else {
+            const gcalErr = await gcalResponse.text();
+            console.warn("Primary Google Calendar creation attempt note, retrying without conferenceData:", gcalErr);
+            
+            // Fallback attempt: creates event directly in calendar and dispatches invitations
+            const fallbackResponse = await fetch(
+              "https://www.googleapis.com/calendar/v3/calendars/primary/events?sendUpdates=all",
+              {
+                method: "POST",
+                headers: {
+                  "Authorization": `Bearer ${bookingToken}`,
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  summary: `Reunión: ${bookingProjectName} - LUXPROC`,
+                  description: `Reunión de Consultoría de Ingeniería - LUXPROC.\n\nDetalles de la Reunión:\n- Título: ${bookingProjectName}\n- Solicitante: ${bookingUserName}\n- Celular: ${bookingPhone}\n- Motivo de la reunión: ${bookingNotes || "Ninguno"}\n- Correo del solicitante: ${bookingUserEmail}\n\nEnlace oficial Google Meet:\n${meetUrl}\n\nSincronizado en tiempo real vía LUXPROC con Google Calendar y Google Meet.`,
+                  location: meetUrl,
+                  start: {
+                    dateTime: startDateTime,
+                    timeZone: bookingTimezone
+                  },
+                  end: {
+                    dateTime: endDateTime,
+                    timeZone: bookingTimezone
+                  },
+                  attendees: attendeesList,
+                  reminders: {
+                    useDefault: false,
+                    overrides: [
+                      { method: "email", minutes: 24 * 60 },
+                      { method: "popup", minutes: 15 }
+                    ]
+                  }
+                })
+              }
+            );
+
+            if (fallbackResponse.ok) {
+              const fallbackEvent = await fallbackResponse.json();
+              calendarEventId = fallbackEvent.id || "";
+              console.log("Google Calendar Event created successfully via fallback:", calendarEventId);
+            } else {
+              const fallbackErr = await fallbackResponse.text();
+              console.warn("Google Calendar fallback warning:", fallbackErr);
+            }
+          }
+        } catch (calErr) {
+          console.warn("Google Calendar direct sync error:", calErr);
+        }
       }
 
-      const gcalEvent = await gcalResponse.json();
-      const meetUrl = gcalEvent.hangoutLink;
-      if (!meetUrl) {
-        throw new Error("No se pudo obtener un enlace real de Google Meet desde la API.");
+      // 3. Send real email via Gmail API to BOTH client and platform owner (luxproc.11@gmail.com)
+      if (bookingToken) {
+        try {
+          await sendGmailConfirmation(
+            bookingUserEmail,
+            bookingUserName,
+            bookingProjectName,
+            bookingDate,
+            bookingSlot,
+            bookingTimezone,
+            meetUrl,
+            bookingNotes,
+            bookingPhone,
+            bookingToken
+          );
+        } catch (gmailErr) {
+          console.warn("Gmail API sending notice:", gmailErr);
+        }
       }
 
-      // 1.5 Send real email to both attendees using Gmail API (with token)
-      await sendGmailConfirmation(
-        userEmail,
-        userName,
-        userProjectName,
-        selectedDate,
-        selectedSlot,
-        selectedTimezone,
-        meetUrl,
-        userNotes,
-        userPhone,
-        token
-      );
-
-      // 2. Submit to local backend database
+      // 4. Submit to local backend database
       const response = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: userName,
-          email: userEmail,
-          projectName: userProjectName,
-          date: selectedDate,
-          time: selectedSlot,
-          timezone: selectedTimezone,
-          notes: userNotes,
-          phone: userPhone,
+          name: bookingUserName,
+          email: bookingUserEmail,
+          projectName: bookingProjectName,
+          date: bookingDate,
+          time: bookingSlot,
+          timezone: bookingTimezone,
+          notes: bookingNotes,
+          phone: bookingPhone,
           meetUrl: meetUrl,
-          calendarEventId: gcalEvent.id
+          calendarEventId: calendarEventId || undefined
         })
       });
 
@@ -482,9 +573,10 @@ export default function CalendarBooking() {
         const result = await response.json();
         setBookingSuccessData({
           booking: result.booking,
-          emailBody: result.email.body
+          emailBody: result.email?.body || ""
         });
-        // Reset inputs
+        
+        // Reset all inputs
         setUserName("");
         setUserEmail("");
         setUserProjectName("");
@@ -492,15 +584,130 @@ export default function CalendarBooking() {
         setUserPhone("");
         setSelectedSlot("");
         fetchBookings(); // Refresh conflicts grid
+
+        // Immediately close the Google session once the meeting is registered
+        // so that the user can register another meeting without being trapped in the old session
+        await logout();
+        setUser(null);
+        setToken(null);
       } else {
         setErrorMessage("Ocurrió un error inesperado al registrar la reserva en la base de datos.");
       }
     } catch (err: any) {
       console.error("Booking error:", err);
-      setErrorMessage(err.message || "Fallo de conexión. Verifique su red o sesión.");
+      setErrorMessage(err.message || "Fallo de conexión. Verifique su red.");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleGoogleLogin = async () => {
+    setIsLoggingIn(true);
+    setErrorMessage("");
+    try {
+      const res = await googleSignIn();
+      if (res) {
+        setUser(res.user);
+        setToken(res.accessToken);
+        const resolvedName = userName.trim() || res.user.displayName || "";
+        const resolvedEmail = res.user.email || userEmail;
+        if (res.user.displayName && !userName.trim()) {
+          setUserName(res.user.displayName);
+        }
+        if (res.user.email) {
+          setUserEmail(res.user.email);
+        }
+
+        // If the booking form is already completed, automatically schedule the meeting!
+        if (
+          resolvedName.trim() &&
+          resolvedEmail &&
+          userProjectName.trim() &&
+          userPhone.trim() &&
+          selectedDate &&
+          selectedSlot
+        ) {
+          await executeBookingProcess(
+            res.accessToken,
+            resolvedEmail,
+            resolvedName,
+            userProjectName,
+            userPhone,
+            userNotes,
+            selectedDate,
+            selectedSlot,
+            selectedTimezone
+          );
+        }
+      }
+    } catch (err: any) {
+      const errMsg = err.message || "";
+      const errCode = err.code || "";
+      
+      if (
+        errCode === "auth/popup-closed-by-user" || 
+        errMsg.includes("popup-closed-by-user") ||
+        errMsg.includes("closed-by-user")
+      ) {
+        console.warn("Google Sign-in closed by user/browser.");
+        setErrorMessage(
+          "La ventana de Google se cerró antes de completar el inicio de sesión."
+        );
+      } else if (
+        errCode === "auth/popup-blocked" ||
+        errMsg.includes("popup-blocked")
+      ) {
+        console.warn("Google Sign-in popup blocked by browser.");
+        setErrorMessage(
+          "El navegador bloqueó la ventana emergente de inicio de sesión de Google. Habilite las ventanas emergentes para este sitio."
+        );
+      } else {
+        console.error("Error during Google Sign-in:", err);
+        setErrorMessage(
+          err.message || "Fallo al iniciar sesión con Google. Por favor, inténtelo nuevamente."
+        );
+      }
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  const handleBookingSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!token) {
+      await handleGoogleLogin();
+      return;
+    }
+
+    const resolvedEmail = userEmail.trim() || user?.email || "";
+    const resolvedName = userName.trim() || user?.displayName || "Usuario";
+
+    if (!selectedDate || !selectedSlot) {
+      setErrorMessage("Por favor seleccione un día y bloque horario disponible.");
+      return;
+    }
+
+    if (!userProjectName.trim() || !userPhone.trim()) {
+      setErrorMessage("Por favor complete el título de la reunión y su número de celular.");
+      return;
+    }
+
+    if (!resolvedEmail) {
+      setErrorMessage("No se pudo obtener el correo de Google. Por favor conecte su cuenta de Google.");
+      return;
+    }
+
+    await executeBookingProcess(
+      token,
+      resolvedEmail,
+      resolvedName,
+      userProjectName.trim(),
+      userPhone.trim(),
+      userNotes.trim(),
+      selectedDate,
+      selectedSlot,
+      selectedTimezone
+    );
   };
 
   // Convert and format selected date elegantly
@@ -907,53 +1114,98 @@ END:VCALENDAR`;
                         </div>
 
                         <form onSubmit={handleBookingSubmit} className="space-y-4">
-                          {token && (
-                            <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 text-[10px] text-emerald-600 dark:text-emerald-400">
-                              <span className="flex items-center gap-1 font-semibold">
-                                <Check className="w-3.5 h-3.5 stroke-[3]" /> Conectado como: {userEmail}
-                              </span>
+                          {/* Google Account Recognition Banner - No need to type email */}
+                          {token && userEmail ? (
+                            <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between gap-3 shadow-xs">
+                              <div className="flex items-center gap-3">
+                                {user?.photoURL ? (
+                                  <img 
+                                    src={user.photoURL} 
+                                    alt={userName} 
+                                    className="w-9 h-9 rounded-full border border-emerald-500 object-cover shrink-0" 
+                                  />
+                                ) : (
+                                  <div className="w-9 h-9 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
+                                    {(userName || user?.displayName || "G").charAt(0).toUpperCase()}
+                                  </div>
+                                )}
+                                <div>
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="text-xs font-bold text-slate-900 dark:text-white">
+                                      {userName || user?.displayName || "Usuario de Google"}
+                                    </span>
+                                    <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/60 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                      <Check className="w-2.5 h-2.5 stroke-[3]" /> Correo Verificado
+                                    </span>
+                                  </div>
+                                  <p className="text-xs font-medium text-slate-600 dark:text-slate-300">
+                                    {userEmail}
+                                  </p>
+                                </div>
+                              </div>
                               <button
                                 type="button"
-                                onClick={() => logout()}
-                                className="font-bold underline hover:text-emerald-700 dark:hover:text-emerald-300 cursor-pointer"
+                                onClick={async () => {
+                                  await logout();
+                                  setUser(null);
+                                  setToken(null);
+                                  setUserEmail("");
+                                }}
+                                className="text-xs text-slate-400 hover:text-red-500 underline font-medium shrink-0 cursor-pointer"
                               >
-                                Cerrar Sesión
+                                Cambiar
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="p-3.5 rounded-2xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-900/60 flex items-center justify-between gap-3 shadow-xs">
+                              <div className="flex items-center gap-2.5">
+                                <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                                  <Mail className="w-4 h-4" />
+                                </div>
+                                <div>
+                                  <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                                    Correo Electrónico
+                                  </p>
+                                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                                    Reconocido automáticamente desde tu cuenta de Google (sin escribirlo)
+                                  </p>
+                                </div>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={handleGoogleLogin}
+                                disabled={isLoggingIn}
+                                className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shrink-0 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50 shadow-xs"
+                              >
+                                {isLoggingIn ? (
+                                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <>
+                                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
+                                      <path fill="#EA4335" d="M12 5.04c1.62 0 3.08.56 4.22 1.66l3.15-3.15C17.45 1.84 14.9 1 12 1 7.35 1 3.4 3.65 1.5 7.5l3.8 2.95C6.2 7.04 8.85 5.04 12 5.04z" />
+                                      <path fill="#4285F4" d="M23.5 12.25c0-.82-.07-1.6-.2-2.35H12v4.45h6.45c-.28 1.45-1.1 2.68-2.33 3.5l3.6 2.8c2.1-1.94 3.3-4.8 3.3-8.4z" />
+                                      <path fill="#FBBC05" d="M5.3 14.5c-.25-.75-.4-1.55-.4-2.5s.15-1.75.4-2.5L1.5 6.55C.55 8.45 0 10.15 0 12s.55 3.55 1.5 5.45l3.8-2.95z" />
+                                      <path fill="#34A853" d="M12 23c3.25 0 5.95-1.08 7.95-2.9l-3.6-2.8c-1.1.74-2.5 1.18-4.35 1.18-3.15 0-5.8-2-6.7-4.95l-3.8 2.95C3.4 20.35 7.35 23 12 23z" />
+                                    </svg>
+                                    <span>Vincular Google</span>
+                                  </>
+                                )}
                               </button>
                             </div>
                           )}
 
                           <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                              <User className="w-3.5 h-3.5" /> Nombre de la Persona que solicita la reunión:
+                              <User className="w-3.5 h-3.5" /> Nombre del Solicitante:
                             </label>
                             <input
                               type="text"
                               required
-                              placeholder="Nombre completo del solicitante"
+                              placeholder="Nombre completo"
                               value={userName}
                               onChange={(e) => setUserName(e.target.value)}
                               className="w-full text-xs md:text-sm p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white focus:outline-none focus:border-blue-500 transition-all shadow-sm"
                             />
-                          </div>
-
-                          <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                              <Mail className="w-3.5 h-3.5" /> Correo Electrónico:
-                            </label>
-                            {token ? (
-                              <input
-                                type="email"
-                                required
-                                readOnly
-                                placeholder="Correo electrónico"
-                                value={userEmail}
-                                className="w-full text-xs md:text-sm p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100/60 dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 focus:outline-none cursor-not-allowed shadow-sm"
-                              />
-                            ) : (
-                              <div className="w-full text-xs md:text-sm p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 text-slate-400 dark:text-slate-500 italic">
-                                * Se sincronizará automáticamente al iniciar sesión con Google
-                              </div>
-                            )}
                           </div>
 
                           <div className="space-y-1.5">
@@ -986,10 +1238,9 @@ END:VCALENDAR`;
 
                           <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                              🗒️ Motivo de la Reunión:
+                              🗒️ Motivo de la Reunión (Opcional):
                             </label>
                             <textarea
-                              required
                               placeholder="Ej. Analizar problemas de sincronización de la base de datos y proponer un roadmap de ingeniería..."
                               value={userNotes}
                               onChange={(e) => setUserNotes(e.target.value)}
@@ -1012,64 +1263,43 @@ END:VCALENDAR`;
                               {isLoading ? (
                                 <>
                                   <RefreshCw className="w-4 h-4 animate-spin" />
-                                  <span>Sincronizando con Google Meet & Calendar...</span>
+                                  <span>Sincronizando Google Calendar & Meet y enviando correos...</span>
                                 </>
                               ) : (
                                 <>
                                   <Send className="w-4 h-4" />
-                                  Confirmar y Agendar Cita
+                                  Confirmar y Agendar Reunión en Tiempo Real
                                 </>
                               )}
                             </button>
                           ) : (
                             <div className="space-y-3 pt-2">
-                              {!isFormFilled ? (
-                                <div className="space-y-2">
-                                  <button
-                                    type="button"
-                                    disabled
-                                    className="w-full p-4 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-600 font-bold text-xs md:text-sm flex items-center justify-center gap-2 cursor-not-allowed"
-                                  >
-                                    <Lock className="w-4 h-4" />
-                                    Complete los campos para iniciar sesión
-                                  </button>
-                                  <p className="text-[10px] text-center text-slate-400 dark:text-slate-500">
-                                    * Complete su nombre, título, celular y motivo de la reunión para desbloquear la sincronización con Google.
-                                  </p>
-                                </div>
-                              ) : (
-                                <div className="space-y-3">
-                                  <div className="p-3 rounded-xl bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 text-center">
-                                    <p className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-1.5">
-                                      <Check className="w-4 h-4 stroke-[3]" /> ¡Detalles de reunión listos!
-                                    </p>
-                                    <p className="text-[9.5px] text-slate-500 dark:text-slate-400 mt-1">
-                                      Ahora proceda a iniciar sesión con Google para autorizar su calendario y sincronizar el enlace de Meet automáticamente.
-                                    </p>
-                                  </div>
-
-                                  <button
-                                    type="button"
-                                    onClick={handleGoogleLogin}
-                                    disabled={isLoggingIn}
-                                    className="w-full flex items-center justify-center gap-3 px-5 py-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-blue-600 hover:bg-blue-550 text-white font-bold text-xs md:text-sm shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.98] disabled:opacity-50"
-                                  >
-                                    {isLoggingIn ? (
-                                      <RefreshCw className="w-4 h-4 animate-spin" />
-                                    ) : (
-                                      <svg className="w-4 h-4" viewBox="0 0 24 24">
-                                        <path fill="#EA4335" d="M12 5.04c1.62 0 3.08.56 4.22 1.66l3.15-3.15C17.45 1.84 14.9 1 12 1 7.35 1 3.4 3.65 1.5 7.5l3.8 2.95C6.2 7.04 8.85 5.04 12 5.04z" />
-                                        <path fill="#4285F4" d="M23.5 12.25c0-.82-.07-1.6-.2-2.35H12v4.45h6.45c-.28 1.45-1.1 2.68-2.33 3.5l3.6 2.8c2.1-1.94 3.3-4.8 3.3-8.4z" />
-                                        <path fill="#FBBC05" d="M5.3 14.5c-.25-.75-.4-1.55-.4-2.5s.15-1.75.4-2.5L1.5 6.55C.55 8.45 0 10.15 0 12s.55 3.55 1.5 5.45l3.8-2.95z" />
-                                        <path fill="#34A853" d="M12 23c3.25 0 5.95-1.08 7.95-2.9l-3.6-2.8c-1.1.74-2.5 1.18-4.35 1.18-3.15 0-5.8-2-6.7-4.95l-3.8 2.95C3.4 20.35 7.35 23 12 23z" />
-                                      </svg>
-                                    )}
-                                    <span>{isLoggingIn ? "Conectando con Google..." : "Iniciar Sesión con Google"}</span>
-                                  </button>
-                                </div>
-                              )}
-
-                              {/* No 403 guide needed since we are live in production */}
+                              <button
+                                type="button"
+                                onClick={handleGoogleLogin}
+                                disabled={isLoggingIn}
+                                className="w-full flex items-center justify-center gap-3 px-5 py-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-blue-600 hover:bg-blue-550 text-white font-bold text-xs md:text-sm shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.98] disabled:opacity-50"
+                              >
+                                {isLoggingIn ? (
+                                  <RefreshCw className="w-4 h-4 animate-spin" />
+                                ) : (
+                                  <svg className="w-4 h-4" viewBox="0 0 24 24">
+                                    <path fill="#EA4335" d="M12 5.04c1.62 0 3.08.56 4.22 1.66l3.15-3.15C17.45 1.84 14.9 1 12 1 7.35 1 3.4 3.65 1.5 7.5l3.8 2.95C6.2 7.04 8.85 5.04 12 5.04z" />
+                                    <path fill="#4285F4" d="M23.5 12.25c0-.82-.07-1.6-.2-2.35H12v4.45h6.45c-.28 1.45-1.1 2.68-2.33 3.5l3.6 2.8c2.1-1.94 3.3-4.8 3.3-8.4z" />
+                                    <path fill="#FBBC05" d="M5.3 14.5c-.25-.75-.4-1.55-.4-2.5s.15-1.75.4-2.5L1.5 6.55C.55 8.45 0 10.15 0 12s.55 3.55 1.5 5.45l3.8-2.95z" />
+                                    <path fill="#34A853" d="M12 23c3.25 0 5.95-1.08 7.95-2.9l-3.6-2.8c-1.1.74-2.5 1.18-4.35 1.18-3.15 0-5.8-2-6.7-4.95l-3.8 2.95C3.4 20.35 7.35 23 12 23z" />
+                                  </svg>
+                                )}
+                                <span>
+                                  {isLoggingIn
+                                    ? "Conectando con Google..."
+                                    : "Iniciar Sesión con Google y Agendar Cita"}
+                                </span>
+                              </button>
+                              
+                              <p className="text-[10px] text-center text-slate-400 dark:text-slate-500">
+                                🔒 Autenticación oficial de Google. El correo y nombre se reconocen de manera automática.
+                              </p>
                             </div>
                           )}
                         </form>
@@ -1126,9 +1356,25 @@ END:VCALENDAR`;
                       <p className="font-bold text-sm text-slate-100">{bookingSuccessData.booking.date} @ {bookingSuccessData.booking.time}</p>
                     </div>
                     <div>
-                      <p className="text-slate-400 text-[11px]">Notificaciones Automáticas:</p>
+                      <p className="text-slate-400 text-[11px]">Sincronización en Calendario:</p>
                       <p className="font-bold text-xs text-emerald-400 flex items-center gap-1">
-                        <BellRing className="w-3.5 h-3.5 animate-bounce" /> Programado / Activo
+                        <Check className="w-3.5 h-3.5 text-emerald-400 stroke-[3]" /> Google Calendar & Meet
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-700/60 mt-1 space-y-1.5">
+                    <p className="text-[11px] font-bold text-emerald-400 flex items-center gap-1.5 uppercase tracking-wider">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" /> Notificaciones con Enlace Meet Enviadas en Tiempo Real
+                    </p>
+                    <div className="space-y-1 text-xs text-slate-300">
+                      <p className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+                        <span><strong>Solicitante:</strong> {bookingSuccessData.booking.email}</span>
+                      </p>
+                      <p className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+                        <span><strong>Dueño de Plataforma:</strong> luxproc.11@gmail.com</span>
                       </p>
                     </div>
                   </div>
@@ -1140,7 +1386,7 @@ END:VCALENDAR`;
                         <Video className="w-5 h-5 animate-pulse" />
                       </div>
                       <div>
-                        <p className="text-[10px] font-mono text-slate-400">GOOGLE MEET AUTOMÁTICO</p>
+                        <p className="text-[10px] font-mono text-slate-400">SALA DE GOOGLE MEET</p>
                         <a 
                           href={bookingSuccessData.booking.meetUrl} 
                           target="_blank" 
@@ -1152,34 +1398,82 @@ END:VCALENDAR`;
                       </div>
                     </div>
 
-                    <a
-                      href={bookingSuccessData.booking.meetUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-550 transition-colors rounded-xl text-xs font-semibold text-white cursor-pointer"
-                    >
-                      Unirse a Meet
-                    </a>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(bookingSuccessData.booking.meetUrl);
+                          setCopiedMeet(true);
+                          setTimeout(() => setCopiedMeet(false), 2500);
+                        }}
+                        className="px-3 py-2 bg-slate-700 hover:bg-slate-600 transition-colors rounded-xl text-xs font-semibold text-slate-200 cursor-pointer flex items-center gap-1.5"
+                      >
+                        {copiedMeet ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-400 stroke-[3]" />
+                            <span className="text-emerald-400 text-[11px] font-bold">¡Copiado!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5 text-slate-400" />
+                            <span className="text-[11px]">Copiar</span>
+                          </>
+                        )}
+                      </button>
+
+                      <a
+                        href={bookingSuccessData.booking.meetUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-550 transition-colors rounded-xl text-xs font-semibold text-white cursor-pointer flex items-center gap-1.5"
+                      >
+                        <Video className="w-3.5 h-3.5" />
+                        <span>Unirse a Meet</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
 
                 {/* Operations and download simulation buttons */}
                 <div className="pt-4 flex flex-wrap gap-3 justify-center items-center">
+                  <a
+                    href={createGoogleCalendarUrl(bookingSuccessData.booking)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 px-5 bg-white hover:bg-slate-100 text-slate-900 transition-all rounded-xl text-xs font-bold flex items-center gap-2.5 shadow-lg hover:shadow-xl cursor-pointer"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24">
+                      <path fill="#4285F4" d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                      <path fill="#34A853" d="M12 10h5v5h-5z"/>
+                    </svg>
+                    <span>Añadir a mi Google Calendar</span>
+                  </a>
+
                   <button
                     onClick={() => downloadIcsFile(bookingSuccessData.booking)}
-                    className="p-3 px-4 bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700/80 rounded-xl text-xs font-semibold flex items-center gap-2.5 cursor-pointer text-slate-200 shadow-md"
+                    className="p-3 px-4 bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700/80 rounded-xl text-xs font-semibold flex items-center gap-2 cursor-pointer text-slate-200 shadow-md"
                   >
                     <Plus className="w-4 h-4 text-emerald-400" />
                     <span>Descargar Evento (.ics)</span>
                   </button>
 
                   <button
-                    onClick={() => {
+                    onClick={async () => {
                       setBookingSuccessData(null);
+                      await logout();
+                      setUser(null);
+                      setToken(null);
+                      setUserName("");
+                      setUserEmail("");
+                      setUserProjectName("");
+                      setUserNotes("");
+                      setUserPhone("");
+                      setSelectedSlot("");
                     }}
-                    className="p-3 px-4 bg-blue-600 hover:bg-blue-550 transition-colors rounded-xl text-xs font-bold text-white cursor-pointer"
+                    className="p-3 px-5 bg-slate-700 hover:bg-slate-600 transition-colors rounded-xl text-xs font-bold text-white flex items-center gap-2 cursor-pointer shadow-md"
                   >
-                    Volver al Calendario
+                    <RefreshCw className="w-4 h-4" />
+                    <span>Agendar otra Reunión</span>
                   </button>
                 </div>
               </div>

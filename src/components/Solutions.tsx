@@ -36,7 +36,9 @@ import {
   CreditCard,
   Smartphone,
   Gauge,
-  Workflow
+  Workflow,
+  Boxes,
+  ShoppingBag
 } from "lucide-react";
 
 // Types for the CRM and ERP modules
@@ -56,11 +58,12 @@ export default function Solutions() {
   const [selectedSolution, setSelectedSolution] = useState<any | null>(null);
   const [isERPFulviewOpen, setIsERPFulviewOpen] = useState(false);
   const [isWebFullviewOpen, setIsWebFullviewOpen] = useState(false);
+  const [isCRMFullviewOpen, setIsCRMFullviewOpen] = useState(false);
   const [isSolutionsFullviewOpen, setIsSolutionsFullviewOpen] = useState(false);
   const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
 
   // Lock background window scroll when any modal or fullview is open so that ONLY 1 scrollbar exists
-  const isAnyFullviewOpen = isERPFulviewOpen || isWebFullviewOpen || isSolutionsFullviewOpen || Boolean(selectedSolution) || isMaintenanceModalOpen;
+  const isAnyFullviewOpen = isERPFulviewOpen || isWebFullviewOpen || isCRMFullviewOpen || isSolutionsFullviewOpen || Boolean(selectedSolution) || isMaintenanceModalOpen;
   useScrollLock(isAnyFullviewOpen);
 
   // Listen for reset-to-home and custom fullview triggers
@@ -68,6 +71,7 @@ export default function Solutions() {
     const handleReset = () => {
       setIsERPFulviewOpen(false);
       setIsWebFullviewOpen(false);
+      setIsCRMFullviewOpen(false);
       setIsSolutionsFullviewOpen(false);
       setSelectedSolution(null);
       setIsMaintenanceModalOpen(false);
@@ -77,18 +81,29 @@ export default function Solutions() {
       setIsSolutionsFullviewOpen(true);
       setIsERPFulviewOpen(false);
       setIsWebFullviewOpen(false);
+      setIsCRMFullviewOpen(false);
       setSelectedSolution(null);
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
     const handleOpenWeb = () => {
       setIsWebFullviewOpen(true);
       setIsERPFulviewOpen(false);
+      setIsCRMFullviewOpen(false);
       setIsSolutionsFullviewOpen(false);
       setSelectedSolution(null);
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
     const handleOpenERP = () => {
       setIsERPFulviewOpen(true);
+      setIsWebFullviewOpen(false);
+      setIsCRMFullviewOpen(false);
+      setIsSolutionsFullviewOpen(false);
+      setSelectedSolution(null);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    const handleOpenCRM = () => {
+      setIsCRMFullviewOpen(true);
+      setIsERPFulviewOpen(false);
       setIsWebFullviewOpen(false);
       setIsSolutionsFullviewOpen(false);
       setSelectedSolution(null);
@@ -99,12 +114,14 @@ export default function Solutions() {
     window.addEventListener("open-solutions-fullview", handleOpenSolutions);
     window.addEventListener("open-web-fullview", handleOpenWeb);
     window.addEventListener("open-erp-fullview", handleOpenERP);
+    window.addEventListener("open-crm-fullview", handleOpenCRM);
 
     return () => {
       window.removeEventListener("reset-to-home", handleReset);
       window.removeEventListener("open-solutions-fullview", handleOpenSolutions);
       window.removeEventListener("open-web-fullview", handleOpenWeb);
       window.removeEventListener("open-erp-fullview", handleOpenERP);
+      window.removeEventListener("open-crm-fullview", handleOpenCRM);
     };
   }, []);
 
@@ -614,6 +631,9 @@ export default function Solutions() {
                   } else if (sol.id === "web") {
                     setIsWebFullviewOpen(true);
                     window.scrollTo({ top: 0, behavior: "smooth" });
+                  } else if (sol.id === "crm") {
+                    setIsCRMFullviewOpen(true);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
                   } else {
                     setSelectedSolution(sol);
                   }
@@ -1058,7 +1078,7 @@ export default function Solutions() {
                       "Control de Producción, Operadores, Ventas e Indicadores KPI",
                       "Generador de QR, Código de Barras e Impresión de Reportes PDF"
                     ],
-                    externalUrl: "https://shoes-leather-erp-platform.ai.studio",
+                    externalUrl: "https://erp.calza.luxproc.com",
                     ctaText: "Ir a Luxproc Shoe & Leather ERP"
                   }
                 ].map((sec) => (
@@ -1161,6 +1181,253 @@ export default function Solutions() {
                   <button
                     onClick={() => {
                       setIsERPFulviewOpen(false);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className="py-3.5 px-8 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/10 transition-all active:scale-[0.98] cursor-pointer"
+                  >
+                    Volver a Inicio
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* CRM Full-page View */}
+      <AnimatePresence>
+        {isCRMFullviewOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ type: "spring", stiffness: 260, damping: 28 }}
+            className="fixed inset-0 z-50 bg-slate-50 dark:bg-slate-950 overflow-y-auto overflow-x-hidden text-left"
+          >
+            {/* Background elements */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-0 left-1/4 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-blue-500/5 dark:bg-blue-600/5 rounded-full blur-3xl" />
+              <div className="absolute bottom-1/4 right-1/4 w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-indigo-500/5 dark:bg-indigo-600/5 rounded-full blur-3xl" />
+            </div>
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 relative w-full overflow-x-hidden">
+              
+              {/* Floating Header */}
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-8 sm:mb-12 pb-5 border-b border-slate-200 dark:border-slate-800 w-full">
+                <button
+                  onClick={() => setIsCRMFullviewOpen(false)}
+                  className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm transition-all hover:shadow-md cursor-pointer group"
+                >
+                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Volver al Inicio
+                </button>
+                <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 font-mono text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-400">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                    Plataforma: <span className="font-bold text-slate-800 dark:text-white">LUXPROC CRM Omnicanal</span>
+                  </span>
+                  <span className="hidden sm:inline text-slate-300 dark:text-slate-700">|</span>
+                  <span className="text-slate-500 dark:text-slate-400">Gestión Comercial & Sincronización de Stock</span>
+                </div>
+              </div>
+
+              {/* Main Banner Hero */}
+              <div className="mb-12 sm:mb-16 text-left max-w-4xl">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3 sm:mb-4">
+                  <Users className="w-3.5 h-3.5" />
+                  Ecosistema Comercial & Clientes
+                </div>
+                <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight break-words">
+                  Soluciones CRM a la <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">Medida</span>
+                </h1>
+                <p className="mt-4 sm:mt-6 text-sm sm:text-base md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+                  Acelera tus ventas, fideliza a tus clientes y automatiza embudos comerciales omnicanal con integración directa a tu catálogo de productos, inventario por almacén y pedidos en tiempo real.
+                </p>
+              </div>
+
+              {/* Content Grid: ¿Qué es? & ¿Por qué importa? */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
+                
+                {/* Section: ¿Qué es un CRM a la Medida y para qué sirve? */}
+                <div className="p-8 md:p-10 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-md">
+                  <div className="p-3 bg-blue-500/10 text-blue-600 dark:text-blue-400 w-fit rounded-2xl mb-6">
+                    <BookOpen className="w-6 h-6" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                    ¿Qué es un CRM a la Medida y para qué sirve?
+                  </h2>
+                  <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed space-y-4">
+                    Un <strong>CRM (Customer Relationship Management) a la medida</strong> es la plataforma tecnológica central diseñada para gestionar, optimizar y automatizar cada punto de contacto con clientes, distribuidores y prospectos.
+                    <br /><br />
+                    En lugar de depender de registros en papel, hojas de cálculo aisladas o chats dispersos de WhatsApp, un CRM a la medida unifica el historial de cotizaciones, pedidos pendientes, cuentas corrientes y preferencias de compra en un panel sincronizado con la disponibilidad de inventario real.
+                  </p>
+                </div>
+
+                {/* Section: ¿Por qué es Crucial / Importante? */}
+                <div className="p-8 md:p-10 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-md flex flex-col justify-between">
+                  <div>
+                    <div className="p-3 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 w-fit rounded-2xl mb-6">
+                      <TrendingUp className="w-6 h-6" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                      ¿Por qué es crucial para la retención y ventas?
+                    </h2>
+                    <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed mb-6">
+                      Las empresas con flujos comerciales manuales pierden hasta un 45% de oportunidades por falta de seguimiento a tiempo o quiebres de stock no comunicados. Un CRM personalizado elimina estas barreras:
+                    </p>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {[
+                        { title: "WhatsApp API & Omnicanal", desc: "Respuestas automáticas, cotizador y atención multiagente 24/7." },
+                        { title: "Sincronización de Stock", desc: "Validación de existencias en tiempo real al generar cada pedido." },
+                        { title: "Seguimiento y Recompra", desc: "Campañas automáticas y recordatorios periódicos por cliente." },
+                        { title: "Pipeline & Métricas KPI", desc: "Control en vivo de conversiones, ticket promedio y metas de asesores." }
+                      ].map((item, idx) => (
+                        <li key={idx} className="flex gap-2.5 items-start">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-1" />
+                          <div>
+                            <h4 className="text-xs font-bold text-slate-900 dark:text-white">{item.title}</h4>
+                            <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">{item.desc}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Title Sector: PLATAFORMAS CRM ESPECIALIZADAS POR SECTOR */}
+              <div className="text-center max-w-3xl mx-auto mb-12">
+                <span className="text-xs font-extrabold tracking-widest text-blue-600 dark:text-blue-400 uppercase font-mono">
+                  Sectores de Aplicación Directa
+                </span>
+                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-3">
+                  Ecosistemas CRM Diseñados para tu Industria
+                </h2>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mt-3 leading-relaxed">
+                  En LUXPROC desarrollamos plataformas CRM especializadas, optimizadas para el modelo comercial, inventario por curvas y logística de cada sector.
+                </p>
+              </div>
+
+              {/* Grid Sectores: CRM INVENTARIO CALZADO */}
+              <div className="max-w-2xl mx-auto mb-20">
+                {[
+                  {
+                    id: "crm-inventario-calzado",
+                    title: "CRM Inventario Calzado",
+                    sector: "Cuero, Calzado y Retail",
+                    desc: "Gestión integral de clientes mayoristas y minoristas con sincronización de inventario en tiempo real. Control de stock por curva de numeración (tallas 35-44), colores, pedidos pendientes, cotizador rápido y catálogo comercial interactivo.",
+                    icon: Boxes,
+                    color: "border-blue-500/40 hover:border-blue-500/80 bg-gradient-to-br from-blue-500/5 to-indigo-500/5 dark:from-blue-950/20 dark:to-slate-900",
+                    badgeColor: "bg-blue-500/20 text-blue-600 dark:text-blue-300 font-extrabold border border-blue-500/30",
+                    btnColor: "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500",
+                    features: [
+                      "Control de Clientes, Pedidos & Trazabilidad por Curva de Tallas y Colores",
+                      "Sincronización Directa de Inventario de Producto Terminado y Almacenes",
+                      "Generación Instantánea de Notas de Pedido, Cotizaciones y Reportes PDF"
+                    ],
+                    externalUrl: "https://crm.invent.calza.luxproc.com",
+                    ctaText: "Ir a CRM Inventario Calzado"
+                  }
+                ].map((sec) => (
+                  <div
+                    key={sec.id}
+                    className={`p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border ${sec.color} shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between`}
+                  >
+                    <div>
+                      {/* Badge and Icon */}
+                      <div className="flex items-center justify-between mb-6">
+                        <span className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${sec.badgeColor}`}>
+                          {sec.sector}
+                        </span>
+                        <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                          <sec.icon className="w-5 h-5" />
+                        </div>
+                      </div>
+
+                      {/* Title & Desc */}
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{sec.title}</h3>
+                      <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed mb-6">{sec.desc}</p>
+
+                      {/* Bullet Specs */}
+                      <div className="space-y-2 mb-6">
+                        {sec.features.map((feat, fIdx) => (
+                          <div key={fIdx} className="flex gap-2 items-center text-xs text-slate-600 dark:text-slate-400 font-medium">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+                            <span>{feat}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Visual Mockup Container */}
+                      <div className="relative border border-slate-200/60 dark:border-slate-800/80 rounded-2xl p-4 bg-slate-50 dark:bg-slate-950/50 mb-6 overflow-hidden min-h-[140px] flex flex-col justify-between text-left">
+                        <div className="absolute top-0 right-0 p-1 bg-blue-500/10 text-blue-500 rounded-bl-xl text-[9px] font-mono tracking-wider">
+                          MOCKUP DE PLATAFORMA
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex gap-1.5 items-center">
+                            <div className="w-2 h-2 rounded-full bg-red-400" />
+                            <div className="w-2 h-2 rounded-full bg-amber-400" />
+                            <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                            <span className="text-[9px] font-mono text-slate-400 dark:text-slate-500 ml-1">LUX_CRM://crm.invent.calza.luxproc.com</span>
+                          </div>
+                          <div className="h-1 bg-slate-200 dark:bg-slate-800 rounded w-1/3" />
+                          <div className="h-1 bg-slate-200 dark:bg-slate-800 rounded w-2/3" />
+                        </div>
+                        
+                        <div className="mt-4 pt-4 border-t border-dashed border-slate-200 dark:border-slate-800 text-center flex flex-col items-center justify-center">
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono tracking-wide">
+                            [Curva de Tallas 35-44 • Stock Multialmacén Sincronizado en Tiempo Real]
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {sec.externalUrl ? (
+                      <a
+                        href={sec.externalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`w-full py-3 px-4 rounded-xl ${sec.btnColor || "bg-blue-600 hover:bg-blue-700"} text-white font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-[0.98] cursor-pointer`}
+                      >
+                        {sec.ctaText || "Ingresar a la Plataforma"} <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    ) : (
+                      <button className="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-not-allowed">
+                        Ingresar a la Plataforma <ExternalLink className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* High-fidelity engineering consultation request */}
+              <div className="p-8 md:p-12 rounded-3xl bg-gradient-to-br from-slate-900 to-indigo-950 text-white text-center border border-indigo-500/20 shadow-xl relative overflow-hidden mb-16">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent pointer-events-none" />
+                <Sparkles className="w-10 h-10 text-amber-300 mx-auto mb-6 animate-pulse" />
+                <h3 className="text-2xl md:text-3xl font-extrabold mb-4 leading-tight">
+                  ¿Listo para crear un CRM adaptado a tus ventas?
+                </h3>
+                <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-8">
+                  El verdadero potencial se desbloquea con un software diseñado a la medida de tus procesos comerciales. Conversemos con nuestro equipo de ingenieros sobre tus flujos de clientes y stock hoy mismo.
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                  <a
+                    href="#calendario"
+                    onClick={() => {
+                      setIsCRMFullviewOpen(false);
+                      setTimeout(() => {
+                        const target = document.getElementById("calendario");
+                        if (target) target.scrollIntoView({ behavior: "smooth" });
+                      }, 100);
+                    }}
+                    className="py-3.5 px-8 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm transition-all shadow-md shadow-blue-500/20 active:scale-[0.98] cursor-pointer"
+                  >
+                    Cotizar CRM Personalizado
+                  </a>
+                  <button
+                    onClick={() => {
+                      setIsCRMFullviewOpen(false);
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
                     className="py-3.5 px-8 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/10 transition-all active:scale-[0.98] cursor-pointer"
@@ -1316,7 +1583,7 @@ export default function Solutions() {
                         { label: "FID (Interactivity):", val: "12ms" }
                       ]
                     },
-                    externalUrl: "https://diagnostico-de-madurez-digital.ai.studio",
+                    externalUrl: "https://diags.digital.luxproc.com/",
                     ctaText: "Comenzar Diagnóstico Digital"
                   },
                   {
@@ -1367,7 +1634,7 @@ export default function Solutions() {
                         { label: "Expediente Pericial:", val: "Dossier Oficial" }
                       ]
                     },
-                    externalUrl: "https://e-diagnosis-inteligente.ai.studio",
+                    externalUrl: "https://mapeo.energetico.luxproc.com",
                     ctaText: "Comenzar Diagnóstico Eléctrico"
                   }
                 ].map((sec) => (
@@ -1614,6 +1881,10 @@ export default function Solutions() {
                           window.scrollTo({ top: 0, behavior: "smooth" });
                         } else if (sol.id === "web") {
                           setIsWebFullviewOpen(true);
+                          setIsSolutionsFullviewOpen(false);
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                        } else if (sol.id === "crm") {
+                          setIsCRMFullviewOpen(true);
                           setIsSolutionsFullviewOpen(false);
                           window.scrollTo({ top: 0, behavior: "smooth" });
                         } else {

@@ -77,7 +77,7 @@ const CASE_STUDIES: CaseStudy[] = [
     author: "Ing. Carlos Mendoza",
     role: "Gerente de Operaciones y Planta",
     systemUsed: "Luxproc Shoe & Leather ERP",
-    systemUrl: "https://shoes-leather-erp-platform.ai.studio",
+    systemUrl: "https://erp.calza.luxproc.com",
     icon: Factory,
     accentGradient: "from-amber-500/10 via-amber-500/5 to-transparent border-amber-500/30",
     badgeBg: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
@@ -149,7 +149,7 @@ const CASE_STUDIES: CaseStudy[] = [
     author: "Lic. Patricia Saldaña",
     role: "Directora de Infraestructura y Operaciones",
     systemUsed: "LUXPROC E-DIAGNOSIS",
-    systemUrl: "https://e-diagnosis-inteligente.ai.studio",
+    systemUrl: "https://mapeo.energetico.luxproc.com",
     icon: Zap,
     accentGradient: "from-emerald-500/10 via-emerald-500/5 to-transparent border-emerald-500/30",
     badgeBg: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"

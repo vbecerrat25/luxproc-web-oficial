@@ -5,7 +5,7 @@ import {
   GoogleAuthProvider, 
   onAuthStateChanged, 
   User,
-  browserLocalPersistence,
+  inMemoryPersistence,
   setPersistence
 } from "firebase/auth";
 import firebaseConfig from "../firebase-applet-config.json";
@@ -17,44 +17,28 @@ const app = initializeApp({
 });
 const auth = getAuth(app);
 
-// Enable persistence so the session is kept across refreshes
-setPersistence(auth, browserLocalPersistence).catch((err) => {
+// Use inMemoryPersistence so the OAuth session is strictly single-use and does not linger
+setPersistence(auth, inMemoryPersistence).catch((err) => {
   console.error("Error setting persistence:", err);
 });
 
-// Configure Google Provider with Calendar and Profile scopes
+// Configure Google Provider with scopes required for calendar event sync and email delivery
 const provider = new GoogleAuthProvider();
-provider.addScope("https://www.googleapis.com/auth/calendar");
+provider.addScope("email");
+provider.addScope("profile");
+provider.addScope("openid");
 provider.addScope("https://www.googleapis.com/auth/calendar.events");
-provider.addScope("https://www.googleapis.com/auth/userinfo.email");
-provider.addScope("https://www.googleapis.com/auth/userinfo.profile");
 provider.addScope("https://www.googleapis.com/auth/gmail.send");
 
-// Force prompt so that user can choose account and consent is explicit
+// Use select_account to allow easy switching between accounts and ensure fresh sessions per meeting
 provider.setCustomParameters({
-  prompt: "consent",
-  access_type: "offline"
+  prompt: "select_account"
 });
 
 // Flag to indicate if we are in the middle of a sign-in flow.
 let isSigningIn = false;
 // Cache the access token in memory.
 let cachedAccessToken: string | null = null;
-
-// Track the last opened window reference to instantly detect closed popups
-let lastOpenedWindow: Window | null = null;
-try {
-  const originalWindowOpen = window.open;
-  window.open = function (url?: string | URL, target?: string, features?: string): Window | null {
-    const win = originalWindowOpen.call(window, url, target, features);
-    if (win) {
-      lastOpenedWindow = win;
-    }
-    return win;
-  };
-} catch (e) {
-  console.warn("Could not intercept window.open:", e);
-}
 
 // Listeners for auth state changes
 type AuthCallback = (user: User, token: string) => void;
@@ -76,10 +60,6 @@ export const initAuth = (
       if (cachedAccessToken) {
         successListeners.forEach(l => l(user, cachedAccessToken!));
       } else {
-        // Since onAuthStateChanged triggers on load, but doesn't contain the oauth token,
-        // we might need to re-trigger login if we don't have the cached token.
-        // However, we shouldn't force login automatically on load to avoid bad UX.
-        // We will signal that we need credentials if the token is not cached.
         failureListeners.forEach(l => l());
       }
     } else {
@@ -91,35 +71,21 @@ export const initAuth = (
 
 // Must be called from a button click or user interaction
 export const googleSignIn = async (): Promise<{ user: User; accessToken: string } | null> => {
-  let pollInterval: any;
   try {
     isSigningIn = true;
-    lastOpenedWindow = null; // Reset track reference
 
-    const signInPromise = signInWithPopup(auth, provider);
-
-    const detectClosedPromise = new Promise<never>((_, reject) => {
-      pollInterval = setInterval(() => {
-        if (lastOpenedWindow && lastOpenedWindow.closed) {
-          clearInterval(pollInterval);
-          const error = new Error("La ventana se cerró por el usuario.");
-          (error as any).code = "auth/popup-closed-by-user";
-          reject(error);
-        }
-      }, 200);
-    });
-
-    const result = await Promise.race([signInPromise, detectClosedPromise]);
+    const result = await signInWithPopup(auth, provider);
     if (!result) {
-      throw new Error("No se pudo iniciar sesión.");
+      throw new Error("No se pudo iniciar sesión con Google.");
     }
 
     const credential = GoogleAuthProvider.credentialFromResult(result);
-    if (!credential?.accessToken) {
-      throw new Error("No se pudo obtener el Token de Acceso desde Google Authentication.");
+    const token = credential?.accessToken || await result.user.getIdToken();
+    if (!token) {
+      throw new Error("No se pudo obtener la credencial de autenticación desde Google.");
     }
 
-    cachedAccessToken = credential.accessToken;
+    cachedAccessToken = token;
     
     // Notify any active listeners
     successListeners.forEach(l => l(result.user, cachedAccessToken!));
@@ -127,16 +93,13 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
     return { user: result.user, accessToken: cachedAccessToken };
   } catch (error: any) {
     const errCode = error?.code || "";
-    if (errCode === "auth/popup-closed-by-user" || error?.message?.includes("popup-closed-by-user") || error?.message?.includes("cerró")) {
-      console.warn("Google Sign-In popup closed or blocked:", error.message);
+    if (errCode === "auth/popup-closed-by-user") {
+      console.warn("Google Sign-In popup closed by user.");
     } else {
       console.error("Error durante Google Sign-In:", error);
     }
     throw error;
   } finally {
-    if (pollInterval) {
-      clearInterval(pollInterval);
-    }
     isSigningIn = false;
   }
 };

@@ -163,17 +163,31 @@ async function startServer() {
 
     bookings.push(newBooking);
 
-    // Create an automatic mock confirmation email
+    // Create an automatic confirmation email for the user
     const emailConfirm: EmailLog = {
       id: "e_" + Math.random().toString(36).substr(2, 9),
       bookingId: newBooking.id,
       recipient: email,
       subject: `Confirmación de Reunión: ${projectName} via Google Meet`,
-      body: `Estimado/a ${name},\n\nSu reservación para el proyecto "${projectName}" ha sido sincronizada con éxito en nuestro calendario corporativo de Google.\n\nDetalles del evento:\n- Fecha: ${date}\n- Hora: ${time} (${timezone})\n- Celular: ${phone || "No provisto"}\n- Enlace de Google Meet: ${meetUrl}\n\nSe enviará un correo recordatorio automático 15 minutos antes de la reunión.\n\nSaludos cordiales,\nSyncDevelopment Corp.`,
+      body: `Estimado/a ${name},\n\nSu reservación para el proyecto "${projectName}" ha sido sincronizada con éxito en tiempo real en nuestro calendario corporativo de Google.\n\nDetalles del evento:\n- Fecha: ${date}\n- Hora: ${time} (${timezone})\n- Celular: ${phone || "No provisto"}\n- Enlace de Google Meet: ${meetUrl}\n\nSe enviará un recordatorio automático antes de la reunión.\n\nSaludos cordiales,\nLUXPROC`,
       sentAt: new Date().toISOString(),
       type: "confirmation"
     };
     emailLogs.push(emailConfirm);
+
+    // Also register confirmation notification for the platform owner
+    if (email.toLowerCase() !== "luxproc.11@gmail.com") {
+      const ownerEmailConfirm: EmailLog = {
+        id: "e_" + Math.random().toString(36).substr(2, 9),
+        bookingId: newBooking.id,
+        recipient: "luxproc.11@gmail.com",
+        subject: `Nueva Reunión Agendada: ${projectName} (${name})`,
+        body: `Equipo LUXPROC,\n\nSe ha sincronizado una nueva cita en tiempo real.\n\nDetalles:\n- Solicitante: ${name} (${email})\n- Celular: ${phone || "No provisto"}\n- Fecha: ${date}\n- Hora: ${time} (${timezone})\n- Motivo: ${notes || "No especificado"}\n- Google Meet: ${meetUrl}\n\nSincronizado vía Google Calendar & Meet.`,
+        sentAt: new Date().toISOString(),
+        type: "confirmation"
+      };
+      emailLogs.push(ownerEmailConfirm);
+    }
 
     res.status(201).json({ booking: newBooking, email: emailConfirm });
   });

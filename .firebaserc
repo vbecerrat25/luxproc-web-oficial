@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "luxproc"
-  }
+  },
+  "targets": {
+    "luxproc": {
+      "hosting": {
+        "sitio-principal": [
+          "luxproc"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
