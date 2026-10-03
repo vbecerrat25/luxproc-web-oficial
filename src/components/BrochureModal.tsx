@@ -169,7 +169,7 @@ export default function BrochureModal({ isOpen, onClose, isDarkMode }: BrochureM
             {/* Header Document */}
             <div className="border-b-2 border-slate-900 dark:border-white pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <BrandLogo className="h-12 w-auto max-w-[240px] mb-2" isDarkMode={isDarkMode} />
+                <BrandLogo className="h-10 sm:h-12 w-auto max-w-[200px] mb-2" isDarkMode={isDarkMode} id="brochure-logo-fallback" />
                 <p className="font-mono text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                   R.U.C. 20504794637 • Trujillo / La Libertad - Perú
                 </p>

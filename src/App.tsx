@@ -144,7 +144,11 @@ export default function App() {
           
           <div className="md:col-span-4 space-y-4">
             <div className="flex flex-col sm:items-start items-center gap-3">
-              <BrandLogo className="h-28 sm:h-32 md:h-36 lg:h-40 w-auto max-w-[480px] lg:max-w-[520px]" isDarkMode={isDarkMode} />
+              <BrandLogo 
+                className="h-10 sm:h-12 w-auto max-w-[150px] sm:max-w-[200px] object-contain" 
+                isDarkMode={isDarkMode} 
+                id="logo-text-fallback" 
+              />
             </div>
             
             <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm md:max-w-md leading-relaxed">

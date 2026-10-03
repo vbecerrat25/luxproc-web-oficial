@@ -120,6 +120,32 @@ async function startServer() {
 
   app.use(express.json());
 
+  // High-priority static handler for all Favicons, Manifest and Brand Assets with public caching
+  app.use((req, res, next) => {
+    const p = req.path;
+    if (
+      p.startsWith("/favicon") ||
+      p.startsWith("/apple-touch-icon") ||
+      p.startsWith("/logo-") ||
+      p.endsWith(".ico") ||
+      p === "/site.webmanifest" ||
+      p === "/robots.txt"
+    ) {
+      const filename = path.basename(p);
+      const publicFile = path.join(process.cwd(), "public", filename);
+      if (fs.existsSync(publicFile)) {
+        res.setHeader("Cache-Control", "public, max-age=86400, immutable");
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        if (filename.endsWith(".ico")) res.setHeader("Content-Type", "image/x-icon");
+        else if (filename.endsWith(".png")) res.setHeader("Content-Type", "image/png");
+        else if (filename.endsWith(".webmanifest")) res.setHeader("Content-Type", "application/manifest+json");
+        else if (filename.endsWith(".txt")) res.setHeader("Content-Type", "text/plain");
+        return res.sendFile(publicFile);
+      }
+    }
+    next();
+  });
+
   // API - Get bookings
   app.get("/api/bookings", (req, res) => {
     res.json(bookings);

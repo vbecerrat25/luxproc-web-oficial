@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Allow: /favicon*
+Allow: /*.png$
+Allow: /*.ico$
+Allow: /*.svg$
+
+Sitemap: https://luxproc.com/sitemap.xml

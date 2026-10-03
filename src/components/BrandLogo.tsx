@@ -1,39 +1,58 @@
-import { useState } from "react";
-import logoDark from "../assets/logo-dark.png";
-import logoLight from "../assets/logo-light.png";
+import React, { useState } from "react";
 
 interface BrandLogoProps {
   className?: string;
   isDarkMode?: boolean;
+  id?: string;
 }
 
 export default function BrandLogo({
-  className = "h-11 md:h-12 w-auto",
+  className = "h-10 sm:h-12 w-auto max-w-[150px] sm:max-w-[200px] object-contain",
   isDarkMode = false,
+  id = "logo-text-fallback",
 }: BrandLogoProps) {
-  // En modo oscuro: las letras son 100% blancas (#FFFFFF), el isotipo gráfico mantiene sus colores originales idénticos.
-  // En modo claro: todo el logo y sus letras se mantienen exactamente con los colores originales.
-  const activeLogo = isDarkMode ? logoDark : logoLight;
-  const publicFallback = isDarkMode ? "/logo-dark.png" : "/logo-light.png";
-  const remoteFallback = "https://i.imgur.com/WWChkA9.png";
+  const [src, setSrc] = useState<string>("https://i.imgur.com/WWChkA9.png");
+  const [isFailed, setIsFailed] = useState<boolean>(false);
 
-  const [hasError, setHasError] = useState(false);
-  const [hasPublicError, setHasPublicError] = useState(false);
-
-  const imgSrc = hasPublicError ? remoteFallback : (hasError ? publicFallback : activeLogo);
+  const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    // 1. If external Imgur fails or is blocked by network/adblocker, immediately switch to local bundled official logo
+    if (src === "https://i.imgur.com/WWChkA9.png") {
+      setSrc("/logo-official.png");
+      return;
+    }
+    // 2. If local logo fails, try local favicon
+    if (src === "/logo-official.png") {
+      setSrc("/favicon.png");
+      return;
+    }
+    // 3. Only if all fail, hide img and reveal fallback element
+    e.currentTarget.style.display = "none";
+    setIsFailed(true);
+    const fallbackEl = document.getElementById(id);
+    if (fallbackEl) fallbackEl.style.display = "inline-flex";
+  };
 
   return (
     <div className="inline-flex items-center select-none group">
-      <img
-        src={imgSrc}
-        alt="LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C."
-        className={`${className} object-contain transition-all duration-300 group-hover:scale-[1.02]`}
-        onError={() => {
-          if (!hasError) setHasError(true);
-          else if (!hasPublicError) setHasPublicError(true);
-        }}
+      <img 
+        src={src} 
+        alt="LUXPROC" 
+        className={`${className} object-contain transition-transform duration-300 group-hover:scale-[1.02]`}
         referrerPolicy="no-referrer"
+        onError={handleError}
       />
+      <span 
+        id={id} 
+        style={{ display: isFailed ? "inline-flex" : "none" }}
+        className="font-black text-xl tracking-tight text-slate-900 dark:text-white items-center gap-2"
+      >
+        <img 
+          src="/favicon-32x32.png" 
+          alt="LUXPROC" 
+          className="w-7 h-7 object-contain inline-block" 
+        />
+        <span>LUXPROC</span>
+      </span>
     </div>
   );
 }

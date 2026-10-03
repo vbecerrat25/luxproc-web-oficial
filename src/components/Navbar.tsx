@@ -144,7 +144,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode, onOpenBrochure, onOp
               window.dispatchEvent(new CustomEvent("reset-to-home"));
             }}
           >
-            <BrandLogo className="h-12 sm:h-[50px] md:h-[56px] lg:h-[60px] w-auto max-w-[240px] md:max-w-[280px]" isDarkMode={isDarkMode} />
+            <BrandLogo className="h-10 sm:h-12 w-auto max-w-[150px] sm:max-w-[200px] object-contain" isDarkMode={isDarkMode} id="navbar-logo-fallback" />
           </a>
 
           {/* Desktop Anchor Navigation links */}
