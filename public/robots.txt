@@ -1,6 +1,17 @@
+User-agent: Google-Favicon
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
 User-agent: *
 Allow: /
 Allow: /favicon*
+Allow: /google-logo.png
+Allow: /apple-touch-icon.png
 Allow: /*.png$
 Allow: /*.ico$
 Allow: /*.svg$
