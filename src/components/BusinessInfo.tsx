@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useScrollLock, resetScrollLock } from "../utils/scrollLock";
 import { useLanguage } from "../utils/i18n";
+import { pushModalHistory } from "../utils/navigation";
 
 export default function BusinessInfo() {
   const { t } = useLanguage();
@@ -25,6 +26,7 @@ export default function BusinessInfo() {
   useEffect(() => {
     const handleOpen = () => {
       setIsOpen(true);
+      pushModalHistory("nosotros");
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
     const handleReset = () => {
@@ -34,10 +36,20 @@ export default function BusinessInfo() {
 
     window.addEventListener("open-nosotros-fullview", handleOpen);
     window.addEventListener("reset-to-home", handleReset);
+    window.addEventListener("close-all-modals", handleReset);
+
+    // Sync with mobile hardware or browser back button
+    const handlePopState = () => {
+      setIsOpen(false);
+      resetScrollLock();
+    };
+    window.addEventListener("popstate", handlePopState);
 
     return () => {
       window.removeEventListener("open-nosotros-fullview", handleOpen);
       window.removeEventListener("reset-to-home", handleReset);
+      window.removeEventListener("close-all-modals", handleReset);
+      window.removeEventListener("popstate", handlePopState);
     };
   }, []);
 
@@ -82,38 +94,20 @@ export default function BusinessInfo() {
     }
   };
 
-  const valoresData = [
-    {
-      title: "Confianza",
-      icon: ShieldCheck,
-      color: "from-blue-500 to-cyan-500",
-      text: "Cada solución entregada por LUXPROC debe ser predecible, segura y respaldada por un soporte real. La confianza se construye con cumplimiento sostenido en el tiempo, no con promesas puntuales, y se traduce visualmente en el uso del azul corporativo como color dominante del sistema."
-    },
-    {
-      title: "Innovación",
-      icon: Cpu,
-      color: "from-sky-400 to-blue-600",
-      text: "LUXPROC adopta de forma temprana pero responsable las tecnologías emergentes (inteligencia artificial, automatización, IoT) siempre subordinadas a la resolución de un problema real del cliente, nunca como ejercicio tecnológico por sí mismo."
-    },
-    {
-      title: "Excelencia técnica",
-      icon: Award,
-      color: "from-indigo-500 to-blue-500",
-      text: "El estándar de calidad de código, arquitectura de sistemas e infraestructura no se negocia por plazos ni presupuesto. La excelencia técnica es la base silenciosa que sostiene la reputación de confiabilidad de la marca."
-    },
-    {
-      title: "Cercanía y claridad",
-      icon: MessageSquareText,
-      color: "from-cyan-500 to-teal-500",
-      text: "A pesar de operar en un sector highly técnico, LUXPROC se comunica sin jerga innecesaria, explicando el valor de negocio de cada solución en términos que el cliente —sea o no especialista en tecnología— pueda comprender con claridad."
-    },
-    {
-      title: "Escalabilidad y flexibilidad",
-      icon: Layers,
-      color: "from-blue-600 to-indigo-600",
-      text: "Las soluciones se diseñan pensando en el crecimiento futuro del cliente, evitando arquitecturas rígidas que generen deuda técnica o dependencias insostenibles a mediano plazo."
-    }
+  const iconList = [ShieldCheck, Cpu, Award, MessageSquareText, Layers];
+  const colorList = [
+    "from-blue-500 to-cyan-500",
+    "from-sky-400 to-blue-600",
+    "from-indigo-500 to-blue-500",
+    "from-cyan-500 to-teal-500",
+    "from-blue-600 to-indigo-600"
   ];
+  const valoresData = (t.business.valuesList || []).map((val, idx) => ({
+    title: val.title,
+    text: val.text,
+    icon: iconList[idx] || ShieldCheck,
+    color: colorList[idx] || "from-blue-500 to-cyan-500"
+  }));
 
   return (
     <AnimatePresence>
@@ -136,7 +130,15 @@ export default function BusinessInfo() {
             {/* Top Navigation Bar */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-8 sm:mb-12 pb-5 border-b border-slate-200 dark:border-slate-800 w-full">
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false);
+                  resetScrollLock();
+                  if (window.history.state?.modalViewId === "nosotros") {
+                    window.history.back();
+                  } else if (window.location.hash === "#nosotros") {
+                    window.history.replaceState(null, "", window.location.pathname);
+                  }
+                }}
                 className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm transition-all hover:shadow-md cursor-pointer group"
               >
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t.business.backHome}

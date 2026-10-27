@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import MaintenanceSystemModal from "./MaintenanceSystemModal";
 import { useScrollLock, resetScrollLock } from "../utils/scrollLock";
+import { useLanguage } from "../utils/i18n";
+import { pushModalHistory, closeModalWithHistory } from "../utils/navigation";
 import { 
   Building, 
   Settings, 
@@ -55,6 +57,7 @@ interface Module {
 }
 
 export default function Solutions() {
+  const { t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<"CRM" | "ERP">("CRM");
   const [activeModules, setActiveModules] = useState<string[]>(["leads", "funnel", "intelligence"]);
   const [selectedSolution, setSelectedSolution] = useState<any | null>(null);
@@ -68,7 +71,7 @@ export default function Solutions() {
   const isAnyFullviewOpen = isERPFulviewOpen || isWebFullviewOpen || isCRMFullviewOpen || isSolutionsFullviewOpen || Boolean(selectedSolution) || isMaintenanceModalOpen;
   useScrollLock(isAnyFullviewOpen);
 
-  // Listen for reset-to-home and custom fullview triggers
+  // Listen for reset-to-home, popstate (mobile hardware/gesture back), and custom fullview triggers
   useEffect(() => {
     const handleReset = () => {
       setIsERPFulviewOpen(false);
@@ -79,40 +82,50 @@ export default function Solutions() {
       setIsMaintenanceModalOpen(false);
       resetScrollLock();
     };
+
     const handleOpenSolutions = () => {
       setIsSolutionsFullviewOpen(true);
       setIsERPFulviewOpen(false);
       setIsWebFullviewOpen(false);
       setIsCRMFullviewOpen(false);
       setSelectedSolution(null);
+      pushModalHistory("soluciones");
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
+
     const handleOpenWeb = () => {
       setIsWebFullviewOpen(true);
       setIsERPFulviewOpen(false);
       setIsCRMFullviewOpen(false);
       setIsSolutionsFullviewOpen(false);
       setSelectedSolution(null);
+      pushModalHistory("soluciones-web");
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
+
     const handleOpenERP = () => {
       setIsERPFulviewOpen(true);
       setIsWebFullviewOpen(false);
       setIsCRMFullviewOpen(false);
       setIsSolutionsFullviewOpen(false);
       setSelectedSolution(null);
+      pushModalHistory("soluciones-erp");
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
+
     const handleOpenCRM = () => {
       setIsCRMFullviewOpen(true);
       setIsERPFulviewOpen(false);
       setIsWebFullviewOpen(false);
       setIsSolutionsFullviewOpen(false);
       setSelectedSolution(null);
+      pushModalHistory("soluciones-crm");
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     window.addEventListener("reset-to-home", handleReset);
+    window.addEventListener("close-all-modals", handleReset);
+    window.addEventListener("popstate", handleReset);
     window.addEventListener("open-solutions-fullview", handleOpenSolutions);
     window.addEventListener("open-web-fullview", handleOpenWeb);
     window.addEventListener("open-erp-fullview", handleOpenERP);
@@ -120,6 +133,8 @@ export default function Solutions() {
 
     return () => {
       window.removeEventListener("reset-to-home", handleReset);
+      window.removeEventListener("close-all-modals", handleReset);
+      window.removeEventListener("popstate", handleReset);
       window.removeEventListener("open-solutions-fullview", handleOpenSolutions);
       window.removeEventListener("open-web-fullview", handleOpenWeb);
       window.removeEventListener("open-erp-fullview", handleOpenERP);
@@ -127,67 +142,67 @@ export default function Solutions() {
     };
   }, []);
 
-  // All core solutions list
+  // All core solutions list localized via t.solutions.items
   const CORE_SOLUTIONS = [
     {
       id: "crm",
-      title: "Soluciones CRM a la Medida",
-      description: "Sistemas avanzados de retención, automatización de embudos comerciales y fidelización de clientes con integraciones omnicanal.",
+      title: t.solutions.items.crm.title,
+      description: t.solutions.items.crm.description,
       icon: HeartHandshake,
       color: "from-blue-500 to-indigo-600",
-      badge: "Software",
-      details: "Sistemas CRM robustos diseñados desde cero o integrados con plataformas líderes. Automatizamos sus flujos de ventas y de soporte de extremo a extremo.",
-      features: ["WhatsApp API integrada & CRM Multiagente", "Módulo de Campañas automatizadas y segmentación", "Reportabilidad BI avanzada y analítica en tiempo real", "Modelos IA predictivos para scoring de leads"]
+      badge: t.solutions.items.crm.badge,
+      details: t.solutions.items.crm.details,
+      features: t.solutions.items.crm.features
     },
     {
       id: "erp",
-      title: "Ecosistemas ERP de Clase Mundial",
-      description: "Automatización total de inventarios, contabilidad, adquisiciones y logística integral, centralizando la toma de decisiones empresariales.",
+      title: t.solutions.items.erp.title,
+      description: t.solutions.items.erp.description,
       icon: Boxes,
       color: "from-purple-500 to-indigo-700",
-      badge: "Enterprise",
-      details: "Soporte completo para facturación electrónica, adquisiciones, control de inventario multialmacén y contabilidad integrada.",
-      features: ["Facturación Electrónica corporativa", "Gestión Multibodega y trazabilidad en tiempo real", "Control de Activos, Costos de Importación y Compras", "Contabilidad analítica y libros integrados"]
+      badge: t.solutions.items.erp.badge,
+      details: t.solutions.items.erp.details,
+      features: t.solutions.items.erp.features
     },
     {
       id: "web",
-      title: "Arquitectura Web Moderna",
-      description: "Plataformas web ultra-veloces SSR/ISR utilizando React, Next.js y Tailwind CSS, optimizadas nativamente para SEO (Motores de Búsqueda) y UX.",
+      title: t.solutions.items.web.title,
+      description: t.solutions.items.web.description,
       icon: Terminal,
       color: "from-emerald-500 to-teal-600",
-      badge: "Sistemas",
-      details: "Portales de alto rendimiento y arquitecturas web optimizadas para ofrecer la mejor velocidad de carga posible y un posicionamiento orgánico imbatible.",
-      features: ["Tiempo de carga récord (Core Web Vitals óptimos)", "Estructura optimizada para SEO y conversiones", "Pasarelas de Pago integradas con cifrado SSL", "Infraestructura Cloud autoadaptativa (Serverless)"]
+      badge: t.solutions.items.web.badge,
+      details: t.solutions.items.web.details,
+      features: t.solutions.items.web.features
     },
     {
       id: "electricidad",
-      title: "Instalaciones Eléctricas de Alta Potencia",
-      description: "Ingeniería eléctrica, automatizaciones de tableros industriales y cableado estructurado según normativas de seguridad internacionales.",
+      title: t.solutions.items.electricidad.title,
+      description: t.solutions.items.electricidad.description,
       icon: Zap,
       color: "from-amber-500 to-orange-600",
-      badge: "Hardware & Electricidad",
-      details: "Servicios certificados SEC para el tendido, estructurado y montaje de tableros de transferencia, control industrial PLC y automatizaciones generales.",
-      features: ["Planos e Ingeniería certificada por instaladores SEC", "Tableros con medición telemétrica IP integrada", "Sistemas de respaldo de energía y UPS industriales", "Optimización de factor de potencia y eficiencia de red"]
+      badge: t.solutions.items.electricidad.badge,
+      details: t.solutions.items.electricidad.details,
+      features: t.solutions.items.electricidad.features
     },
     {
       id: "hardware",
-      title: "Hardware y Software a Medida",
-      description: "Diseño de firmware, integración de sensores IoT, desarrollo de microcontroladores y programación integrada de bajo nivel.",
+      title: t.solutions.items.hardware.title,
+      description: t.solutions.items.hardware.description,
       icon: Cpu,
       color: "from-cyan-500 to-blue-600",
-      badge: "Integración Física",
-      details: "Ingeniería de hardware integrada con desarrollo de placas PCB personalizadas, conectividad IoT de largo alcance y telemetría de campo.",
-      features: ["Diseño de placas de circuito impreso PCB multicapa", "Firmware robusto basado en RTOS (Real-time OS)", "Conectividad inalámbrica avanzada (LoRaWAN, LTE-M)", "Monitoreo continuo con telemetría de sensores industriales"]
+      badge: t.solutions.items.hardware.badge,
+      details: t.solutions.items.hardware.details,
+      features: t.solutions.items.hardware.features
     },
     {
       id: "innovacion",
-      title: "Proyectos de Innovación (I+D+i)",
-      description: "Investigación, desarrollo tecnológico e innovación aplicada para generar soluciones de patentes que resuelvan cuellos de botella científicos.",
+      title: t.solutions.items.innovacion.title,
+      description: t.solutions.items.innovacion.description,
       icon: Lightbulb,
       color: "from-rose-500 to-pink-600",
-      badge: "Innovación Científica",
-      details: "Soporte completo en la estructuración de proyectos de I+D+i, formulación para financiamientos CORFO y prototipado físico/virtual avanzado.",
-      features: ["Diseño conceptual y viabilidad para patentes de invención", "Formulación de proyectos para fondos públicos y CORFO", "Simulación por computadora y prototipos virtuales (CAD/FEA)", "Análisis riguroso de pre-factibilidad técnica y científica"]
+      badge: t.solutions.items.innovacion.badge,
+      details: t.solutions.items.innovacion.details,
+      features: t.solutions.items.innovacion.features
     }
   ];
 
@@ -603,33 +618,36 @@ export default function Solutions() {
           <div 
             onClick={() => {
               setIsSolutionsFullviewOpen(true);
+              pushModalHistory("soluciones");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-4 cursor-pointer hover:bg-emerald-500/20 transition-all shadow-sm"
           >
             <Layers className="w-3.5 h-3.5" />
-            Nuestras Soluciones Corporativas
+            {t.solutions.headerBadge}
           </div>
           <h2 
             onClick={() => {
               setIsSolutionsFullviewOpen(true);
+              pushModalHistory("soluciones");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-800 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
           >
-            Ingeniería que trasciende límites
+            {t.solutions.headerTitle}
           </h2>
           <p className="mt-4 text-sm md:text-base text-slate-700 dark:text-slate-200 leading-relaxed">
-            Unificamos el espectro tecnológico completo. Desde la consultoría e implementación de software de planificación empresarial (ERP) y relaciones comerciales (CRM), hasta el diseño de hardware robusto y automatizaciones industriales (instalaciones eléctricas).
+            {t.solutions.headerDesc}
           </p>
           <button
             onClick={() => {
               setIsSolutionsFullviewOpen(true);
+              pushModalHistory("soluciones");
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition-all cursor-pointer shadow-md shadow-blue-500/20 active:scale-[0.98]"
           >
-            Ver Vista Completa de Soluciones <ArrowRight className="w-4 h-4" />
+            {t.solutions.viewAllBtn} <ArrowRight className="w-4 h-4" />
           </button>
         </div>
 
@@ -660,15 +678,19 @@ export default function Solutions() {
                 onClick={() => {
                   if (sol.id === "erp") {
                     setIsERPFulviewOpen(true);
+                    pushModalHistory("soluciones-erp");
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   } else if (sol.id === "web") {
                     setIsWebFullviewOpen(true);
+                    pushModalHistory("soluciones-web");
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   } else if (sol.id === "crm") {
                     setIsCRMFullviewOpen(true);
+                    pushModalHistory("soluciones-crm");
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   } else {
                     setSelectedSolution(sol);
+                    pushModalHistory("soluciones-detalle");
                   }
                 }}
                 className="group p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-blue-500/30 dark:hover:border-blue-500/30 transition-shadow transition-colors duration-300 flex flex-col justify-between cursor-pointer select-none"
@@ -691,7 +713,7 @@ export default function Solutions() {
                   </p>
                 </div>
                 <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 font-bold group-hover:gap-3 transition-all">
-                  Conocer más especificaciones <ArrowRight className="w-4 h-4" />
+                  {t.solutions.knowMore} <ArrowRight className="w-4 h-4" />
                 </div>
               </motion.div>
             );
@@ -708,13 +730,13 @@ export default function Solutions() {
             <div className="lg:col-span-5 space-y-6">
               <div className="space-y-2">
                 <span className="text-xs uppercase font-extrabold tracking-widest text-blue-600 dark:text-blue-400 font-mono">
-                  Sandbox de Configuración en Movimiento
+                  {t.solutions.sandbox.badge}
                 </span>
                 <h3 className="text-2xl md:text-3.5xl font-extrabold text-slate-800 dark:text-white leading-tight">
-                  Diseña tu Ecosistema CRM / ERP Interactivo
+                  {t.solutions.sandbox.title}
                 </h3>
                 <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                  Haz clic para alternar entre plataformas y activa o desactiva módulos para simular cómo interactúan las bases de datos de hardware y los tableros de clientes en tiempo real.
+                  {t.solutions.sandbox.desc}
                 </p>
               </div>
 
@@ -733,7 +755,7 @@ export default function Solutions() {
                       : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-300"
                   }`}
                 >
-                  Ecosistemas CRM
+                  {t.solutions.sandbox.tabCrm}
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -748,14 +770,14 @@ export default function Solutions() {
                       : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-300"
                   }`}
                 >
-                  Ecosistemas ERP
+                  {t.solutions.sandbox.tabErp}
                 </motion.button>
               </div>
 
               {/* Module choices checks with custom interactive colors */}
               <div className="space-y-4">
                 <p className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
-                  Módulos instalados en la arquitectura:
+                  {t.solutions.sandbox.modulesInstalled}
                 </p>
                 <div className="space-y-3">
                   {categoryModules.map((mod) => {
@@ -860,8 +882,8 @@ export default function Solutions() {
                     className="col-span-1 md:col-span-2 h-64 flex flex-col items-center justify-center text-center p-8 text-slate-500"
                   >
                     <BarChart3 className="w-12 h-12 text-slate-400 dark:text-slate-500 animate-pulse mb-3" />
-                    <p className="font-bold text-sm text-slate-700 dark:text-slate-200">Ningún módulo activo</p>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 max-w-xs mt-1">Activa alguno de los interruptores modulares de la izquierda para ver su comportamiento interactivo.</p>
+                    <p className="font-bold text-sm text-slate-700 dark:text-slate-200">{t.solutions.sandbox.noModulesTitle}</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 max-w-xs mt-1">{t.solutions.sandbox.noModulesDesc}</p>
                   </motion.div>
                 )}
               </div>
@@ -869,10 +891,10 @@ export default function Solutions() {
               {/* Floating control bar */}
               <div className="mt-6 pt-4 border-t border-slate-200/60 dark:border-slate-800/80 flex justify-between items-center text-[11px] font-mono text-slate-600 dark:text-slate-300">
                 <span className="flex items-center gap-1">
-                  Estado del Servidor: <span className="text-emerald-500">ACTIVO</span>
+                  {t.solutions.sandbox.serverStatus}
                 </span>
-                <span>Motor de BD: MariaDB Core</span>
-                <span>Latencia: ~8ms</span>
+                <span>{t.solutions.sandbox.dbEngine}</span>
+                <span>{t.solutions.sandbox.latency}</span>
               </div>
             </div>
           </div>
@@ -888,7 +910,7 @@ export default function Solutions() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setSelectedSolution(null)}
+              onClick={() => closeModalWithHistory(() => setSelectedSolution(null))}
               className="absolute inset-0 bg-slate-950/60 backdrop-blur-md"
             />
             
@@ -905,7 +927,7 @@ export default function Solutions() {
               
               {/* Close Button */}
               <button
-                onClick={() => setSelectedSolution(null)}
+                onClick={() => closeModalWithHistory(() => setSelectedSolution(null))}
                 className="absolute top-5 right-5 p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
@@ -955,7 +977,7 @@ export default function Solutions() {
                   <a
                     href="#contacto"
                     onClick={() => {
-                      setSelectedSolution(null);
+                      closeModalWithHistory(() => setSelectedSolution(null));
                       setTimeout(() => {
                         const targetElement = document.getElementById("contacto");
                         if (targetElement) {
@@ -968,7 +990,7 @@ export default function Solutions() {
                     <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" /> Solicitud Directa de Ingeniería
                   </a>
                   <button
-                    onClick={() => setSelectedSolution(null)}
+                    onClick={() => closeModalWithHistory(() => setSelectedSolution(null))}
                     className="py-3 px-5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs hover:bg-slate-200 dark:hover:bg-slate-750 active:scale-[0.98] transition-all cursor-pointer"
                   >
                     Cerrar
@@ -1001,18 +1023,18 @@ export default function Solutions() {
               {/* Floating Header */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-8 sm:mb-12 pb-5 border-b border-slate-200 dark:border-slate-800 w-full">
                 <button
-                  onClick={() => setIsERPFulviewOpen(false)}
+                  onClick={() => closeModalWithHistory(() => setIsERPFulviewOpen(false))}
                   className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm transition-all hover:shadow-md cursor-pointer group"
                 >
-                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Volver al Inicio
+                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t.solutions.fullviews.backHome}
                 </button>
                 <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 font-mono text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-400">
                   <span className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                    Plataforma: <span className="font-bold text-slate-800 dark:text-white">LUXPROC Cloud</span>
+                    {t.solutions.fullviews.platform}: <span className="font-bold text-slate-800 dark:text-white">{t.solutions.fullviews.erp.platformName}</span>
                   </span>
                   <span className="hidden sm:inline text-slate-300 dark:text-slate-700">|</span>
-                  <span className="text-slate-500 dark:text-slate-400">Ecosistema de Planificación Avanzado</span>
+                  <span className="text-slate-500 dark:text-slate-400">{t.solutions.fullviews.erp.platformSub}</span>
                 </div>
               </div>
 
@@ -1020,13 +1042,13 @@ export default function Solutions() {
               <div className="mb-12 sm:mb-16 text-left max-w-4xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-semibold uppercase tracking-wider mb-3 sm:mb-4">
                   <Boxes className="w-3.5 h-3.5" />
-                  Ecosistema ERP Empresarial
+                  {t.solutions.fullviews.erp.badge}
                 </div>
                 <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight break-words">
-                  Ecosistemas ERP de <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">Clase Mundial</span>
+                  {t.solutions.fullviews.erp.title}
                 </h1>
                 <p className="mt-4 sm:mt-6 text-sm sm:text-base md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
-                  El sistema nervioso digital para tu empresa. Centraliza, optimiza e integra cada departamento operativo en un único motor de toma de decisiones en tiempo real.
+                  {t.solutions.fullviews.erp.desc}
                 </p>
               </div>
 
@@ -1039,12 +1061,10 @@ export default function Solutions() {
                     <BookOpen className="w-6 h-6" />
                   </div>
                   <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-                    ¿Qué es un ERP y para qué sirve?
+                    {t.solutions.fullviews.erp.whatIsTitle}
                   </h2>
                   <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed space-y-4">
-                    Un <strong>ERP (Enterprise Resource Planning)</strong> es el sistema de planificación de recursos empresariales encargado de unificar los datos y procesos de todos los departamentos en un solo lugar. 
-                    <br /><br />
-                    En lugar de tener la información fragmentada (hojas de cálculo de inventario por un lado, facturas por otro, reportes de compras perdidos en correos), un ERP sirve como una <strong>base de datos integrada única</strong>. Esto permite que el área de ventas, finanzas, bodega y operaciones compartan la misma información al instante, automatizando tareas administrativas pesadas y eliminando la duplicidad de datos.
+                    {t.solutions.fullviews.erp.whatIsDesc}
                   </p>
                 </div>
 
@@ -1055,18 +1075,13 @@ export default function Solutions() {
                       <TrendingUp className="w-6 h-6" />
                     </div>
                     <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-                      ¿Por qué es crucial para la gestión moderna?
+                      {t.solutions.fullviews.erp.whyTitle}
                     </h2>
                     <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed mb-6">
-                      Las empresas que operan con sistemas desconectados sufren de cuellos de botella constantes, pérdidas de stock inexplicables, falta de visibilidad en márgenes y demoras regulatorias. Un ERP elimina estas barreras:
+                      {t.solutions.fullviews.erp.whyDesc}
                     </p>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {[
-                        { title: "Control Total de Inventarios", desc: "Trazabilidad completa multialmacén de insumos y productos listos." },
-                        { title: "SII de Chile Certificado", desc: "Facturación, guías de despacho y libros contables automatizados." },
-                        { title: "Flujo de Caja Preciso", desc: "Conciliación bancaria, cuentas por cobrar y pagos integrados al instante." },
-                        { title: "Márgenes en Tiempo Real", desc: "Conoce el costo de importación, margen bruto y neto por cada transacción." }
-                      ].map((item, idx) => (
+                      {t.solutions.fullviews.erp.whyPoints.map((item, idx) => (
                         <li key={idx} className="flex gap-2.5 items-start">
                           <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-1" />
                           <div>
@@ -1082,15 +1097,16 @@ export default function Solutions() {
               </div>
 
               {/* Title Sector: PLATAFORMAS ERP ESPECIALIZADAS POR SECTOR */}
+              {/* Title Sector: PLATAFORMAS ERP ESPECIALIZADAS POR SECTOR */}
               <div className="text-center max-w-3xl mx-auto mb-12">
                 <span className="text-xs font-extrabold tracking-widest text-blue-600 dark:text-blue-400 uppercase font-mono">
-                  Sectores de Aplicación Directa
+                  {t.solutions.fullviews.erp.sectorsTitleBadge}
                 </span>
                 <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-3">
-                  Ecosistemas ERP Diseñados para tu Industria
+                  {t.solutions.fullviews.erp.sectorsTitle}
                 </h2>
                 <p className="text-sm text-slate-600 dark:text-slate-400 mt-3 leading-relaxed">
-                  En LUXPROC desarrollamos plataformas ERP optimizadas para el modelo de negocio específico de cada rubro, listas para la carga de integraciones y visuales personalizadas.
+                  {t.solutions.fullviews.erp.sectorsDesc}
                 </p>
               </div>
 
@@ -1099,20 +1115,18 @@ export default function Solutions() {
                 {[
                   {
                     id: "shoe-leather",
-                    title: "Luxproc Shoe & Leather ERP",
-                    sector: "Cuero, Calzado y Textil",
-                    desc: "Control integral de inventario de materia prima (MP), control de producción, control de ventas, gestión de operadores, indicadores clave, órdenes de compra, generador de QR, código de barras e impresión de reportes PDF.",
+                    title: t.solutions.fullviews.erp.shoeLeather.title,
+                    sector: t.solutions.fullviews.erp.shoeLeather.sector,
+                    desc: t.solutions.fullviews.erp.shoeLeather.desc,
                     icon: Factory,
                     color: "border-amber-500/40 hover:border-amber-500/80 bg-gradient-to-br from-amber-500/5 to-orange-500/5 dark:from-amber-950/20 dark:to-slate-900",
                     badgeColor: "bg-amber-500/20 text-amber-600 dark:text-amber-300 font-extrabold border border-amber-500/30",
                     btnColor: "bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500",
-                    features: [
-                      "Control de Inventario Materia Prima (MP) & Órdenes de Compra",
-                      "Control de Producción, Operadores, Ventas e Indicadores KPI",
-                      "Generador de QR, Código de Barras e Impresión de Reportes PDF"
-                    ],
+                    features: t.solutions.fullviews.erp.shoeLeather.features,
                     externalUrl: "https://erp.calza.luxproc.com",
-                    ctaText: "Ir a Luxproc Shoe & Leather ERP"
+                    ctaText: t.solutions.fullviews.erp.shoeLeather.ctaText,
+                    mockupBadge: t.solutions.fullviews.erp.shoeLeather.mockupBadge,
+                    mockupPlaceholder: t.solutions.fullviews.erp.shoeLeather.mockupPlaceholder
                   }
                 ].map((sec) => (
                   <div
@@ -1147,7 +1161,7 @@ export default function Solutions() {
                       {/* Visual Mockup Container (Prepared for Customer Screenshots and links) */}
                       <div className="relative border border-slate-200/60 dark:border-slate-800/80 rounded-2xl p-4 bg-slate-50 dark:bg-slate-950/50 mb-6 overflow-hidden min-h-[140px] flex flex-col justify-between text-left">
                         <div className="absolute top-0 right-0 p-1 bg-blue-500/10 text-blue-500 rounded-bl-xl text-[9px] font-mono tracking-wider">
-                          MOCKUP DE PLATAFORMA
+                          {sec.mockupBadge}
                         </div>
                         <div className="space-y-2">
                           <div className="flex gap-1.5 items-center">
@@ -1163,7 +1177,7 @@ export default function Solutions() {
                         {/* Space for future images/links */}
                         <div className="mt-4 pt-4 border-t border-dashed border-slate-200 dark:border-slate-800 text-center flex flex-col items-center justify-center">
                           <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono tracking-wide">
-                            [Aquí cargarás imágenes e hipervínculos del ERP]
+                            {sec.mockupPlaceholder}
                           </span>
                         </div>
                       </div>
@@ -1176,11 +1190,11 @@ export default function Solutions() {
                         rel="noopener noreferrer"
                         className={`w-full py-3 px-4 rounded-xl ${sec.btnColor || "bg-orange-600 hover:bg-orange-700"} text-white font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-[0.98] cursor-pointer`}
                       >
-                        {sec.ctaText || "Ingresar a la Plataforma"} <ExternalLink className="w-3.5 h-3.5" />
+                        {sec.ctaText} <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     ) : (
                       <button className="w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-not-allowed">
-                        Ingresar a la Plataforma <ExternalLink className="w-3.5 h-3.5" />
+                        {sec.ctaText} <ExternalLink className="w-3.5 h-3.5" />
                       </button>
                     )}
                   </div>
@@ -1192,16 +1206,16 @@ export default function Solutions() {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent pointer-events-none" />
                 <Sparkles className="w-10 h-10 text-amber-300 mx-auto mb-6 animate-pulse" />
                 <h3 className="text-2xl md:text-3xl font-extrabold mb-4 leading-tight">
-                  ¿Listo para crear un ERP adaptado a tus necesidades?
+                  {t.solutions.fullviews.erp.bannerTitle}
                 </h3>
                 <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-8">
-                  El verdadero potencial se desbloquea con un software diseñado a la medida de tus procesos de negocio. Conversemos con nuestro equipo de ingenieros sobre tus flujos de trabajo hoy mismo.
+                  {t.solutions.fullviews.erp.bannerDesc}
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <a
                     href="#calendario"
                     onClick={() => {
-                      setIsERPFulviewOpen(false);
+                      closeModalWithHistory(() => setIsERPFulviewOpen(false));
                       setTimeout(() => {
                         const target = document.getElementById("calendario");
                         if (target) target.scrollIntoView({ behavior: "smooth" });
@@ -1209,16 +1223,16 @@ export default function Solutions() {
                     }}
                     className="py-3.5 px-8 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm transition-all shadow-md shadow-blue-500/20 active:scale-[0.98] cursor-pointer"
                   >
-                    Cotizar ERP Personalizado
+                    {t.solutions.fullviews.erp.bannerCta}
                   </a>
                   <button
                     onClick={() => {
-                      setIsERPFulviewOpen(false);
+                      closeModalWithHistory(() => setIsERPFulviewOpen(false));
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
                     className="py-3.5 px-8 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/10 transition-all active:scale-[0.98] cursor-pointer"
                   >
-                    Volver a Inicio
+                    {t.solutions.fullviews.backHome}
                   </button>
                 </div>
               </div>
@@ -1249,18 +1263,18 @@ export default function Solutions() {
               {/* Floating Header */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-8 sm:mb-12 pb-5 border-b border-slate-200 dark:border-slate-800 w-full">
                 <button
-                  onClick={() => setIsCRMFullviewOpen(false)}
+                  onClick={() => closeModalWithHistory(() => setIsCRMFullviewOpen(false))}
                   className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm transition-all hover:shadow-md cursor-pointer group"
                 >
-                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Volver al Inicio
+                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t.solutions.fullviews.backHome}
                 </button>
                 <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 font-mono text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-400">
                   <span className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                    Plataforma: <span className="font-bold text-slate-800 dark:text-white">LUXPROC CRM Omnicanal</span>
+                    {t.solutions.fullviews.platform}: <span className="font-bold text-slate-800 dark:text-white">{t.solutions.fullviews.crm.platformName}</span>
                   </span>
                   <span className="hidden sm:inline text-slate-300 dark:text-slate-700">|</span>
-                  <span className="text-slate-500 dark:text-slate-400">Gestión Comercial & Sincronización de Stock</span>
+                  <span className="text-slate-500 dark:text-slate-400">{t.solutions.fullviews.crm.platformSub}</span>
                 </div>
               </div>
 
@@ -1268,13 +1282,13 @@ export default function Solutions() {
               <div className="mb-12 sm:mb-16 text-left max-w-4xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3 sm:mb-4">
                   <HeartHandshake className="w-3.5 h-3.5" />
-                  Ecosistema Comercial & Clientes
+                  {t.solutions.fullviews.crm.badge}
                 </div>
                 <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight break-words">
-                  Soluciones CRM a la <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">Medida</span>
+                  {t.solutions.fullviews.crm.title}
                 </h1>
                 <p className="mt-4 sm:mt-6 text-sm sm:text-base md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
-                  Acelera tus ventas, fideliza a tus clientes y automatiza embudos comerciales omnicanal con integración directa a tu catálogo de productos, inventario por almacén y pedidos en tiempo real.
+                  {t.solutions.fullviews.crm.desc}
                 </p>
               </div>
 
@@ -1287,12 +1301,10 @@ export default function Solutions() {
                     <BookOpen className="w-6 h-6" />
                   </div>
                   <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-                    ¿Qué es un CRM a la Medida y para qué sirve?
+                    {t.solutions.fullviews.crm.whatIsTitle}
                   </h2>
                   <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed space-y-4">
-                    Un <strong>CRM (Customer Relationship Management) a la medida</strong> es la plataforma tecnológica central diseñada para gestionar, optimizar y automatizar cada punto de contacto con clientes, distribuidores y prospectos.
-                    <br /><br />
-                    En lugar de depender de registros en papel, hojas de cálculo aisladas o chats dispersos de WhatsApp, un CRM a la medida unifica el historial de cotizaciones, pedidos pendientes, cuentas corrientes y preferencias de compra en un panel sincronizado con la disponibilidad de inventario real.
+                    {t.solutions.fullviews.crm.whatIsDesc}
                   </p>
                 </div>
 
@@ -1303,18 +1315,13 @@ export default function Solutions() {
                       <TrendingUp className="w-6 h-6" />
                     </div>
                     <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-                      ¿Por qué es crucial para la retención y ventas?
+                      {t.solutions.fullviews.crm.whyTitle}
                     </h2>
                     <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed mb-6">
-                      Las empresas con flujos comerciales manuales pierden hasta un 45% de oportunidades por falta de seguimiento a tiempo o quiebres de stock no comunicados. Un CRM personalizado elimina estas barreras:
+                      {t.solutions.fullviews.crm.whyDesc}
                     </p>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {[
-                        { title: "WhatsApp API & Omnicanal", desc: "Respuestas automáticas, cotizador y atención multiagente 24/7." },
-                        { title: "Sincronización de Stock", desc: "Validación de existencias en tiempo real al generar cada pedido." },
-                        { title: "Seguimiento y Recompra", desc: "Campañas automáticas y recordatorios periódicos por cliente." },
-                        { title: "Pipeline & Métricas KPI", desc: "Control en vivo de conversiones, ticket promedio y metas de asesores." }
-                      ].map((item, idx) => (
+                      {t.solutions.fullviews.crm.whyPoints.map((item, idx) => (
                         <li key={idx} className="flex gap-2.5 items-start">
                           <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-1" />
                           <div>
@@ -1332,13 +1339,13 @@ export default function Solutions() {
               {/* Title Sector: PLATAFORMAS CRM ESPECIALIZADAS POR SECTOR */}
               <div className="text-center max-w-3xl mx-auto mb-12">
                 <span className="text-xs font-extrabold tracking-widest text-blue-600 dark:text-blue-400 uppercase font-mono">
-                  Sectores de Aplicación Directa
+                  {t.solutions.fullviews.crm.sectorsTitleBadge}
                 </span>
                 <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-3">
-                  Ecosistemas CRM Diseñados para tu Industria
+                  {t.solutions.fullviews.crm.sectorsTitle}
                 </h2>
                 <p className="text-sm text-slate-600 dark:text-slate-400 mt-3 leading-relaxed">
-                  En LUXPROC desarrollamos plataformas CRM especializadas, optimizadas para el modelo comercial, inventario por curvas y logística de cada sector.
+                  {t.solutions.fullviews.crm.sectorsDesc}
                 </p>
               </div>
 
@@ -1347,20 +1354,16 @@ export default function Solutions() {
                 {[
                   {
                     id: "crm-inventario-calzado",
-                    title: "CRM Inventario Calzado",
-                    sector: "Cuero, Calzado y Retail",
-                    desc: "Gestión integral de clientes mayoristas y minoristas con sincronización de inventario en tiempo real. Control de stock por curva de numeración (tallas 35-44), colores, pedidos pendientes, cotizador rápido y catálogo comercial interactivo.",
+                    title: t.solutions.fullviews.crm.shoeInventory.title,
+                    sector: t.solutions.fullviews.crm.shoeInventory.sector,
+                    desc: t.solutions.fullviews.crm.shoeInventory.desc,
                     icon: Boxes,
                     color: "border-blue-500/40 hover:border-blue-500/80 bg-gradient-to-br from-blue-500/5 to-indigo-500/5 dark:from-blue-950/20 dark:to-slate-900",
                     badgeColor: "bg-blue-500/20 text-blue-600 dark:text-blue-300 font-extrabold border border-blue-500/30",
                     btnColor: "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500",
-                    features: [
-                      "Control de Clientes, Pedidos & Trazabilidad por Curva de Tallas y Colores",
-                      "Sincronización Directa de Inventario de Producto Terminado y Almacenes",
-                      "Generación Instantánea de Notas de Pedido, Cotizaciones y Reportes PDF"
-                    ],
+                    features: t.solutions.fullviews.crm.shoeInventory.features,
                     externalUrl: "https://crm.invent.calza.luxproc.com",
-                    ctaText: "Ir a CRM Inventario Calzado"
+                    ctaText: t.solutions.fullviews.crm.shoeInventory.ctaText
                   }
                 ].map((sec) => (
                   <div
@@ -1395,7 +1398,7 @@ export default function Solutions() {
                       {/* Visual Mockup Container */}
                       <div className="relative border border-slate-200/60 dark:border-slate-800/80 rounded-2xl p-4 bg-slate-50 dark:bg-slate-950/50 mb-6 overflow-hidden min-h-[140px] flex flex-col justify-between text-left">
                         <div className="absolute top-0 right-0 p-1 bg-blue-500/10 text-blue-500 rounded-bl-xl text-[9px] font-mono tracking-wider">
-                          MOCKUP DE PLATAFORMA
+                          {t.solutions.fullviews.crm.shoeInventory.mockupBadge}
                         </div>
                         <div className="space-y-2">
                           <div className="flex gap-1.5 items-center">
@@ -1410,7 +1413,7 @@ export default function Solutions() {
                         
                         <div className="mt-4 pt-4 border-t border-dashed border-slate-200 dark:border-slate-800 text-center flex flex-col items-center justify-center">
                           <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono tracking-wide">
-                            [Curva de Tallas 35-44 • Stock Multialmacén Sincronizado en Tiempo Real]
+                            {t.solutions.fullviews.crm.shoeInventory.mockupPlaceholder}
                           </span>
                         </div>
                       </div>
@@ -1439,16 +1442,16 @@ export default function Solutions() {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent pointer-events-none" />
                 <Sparkles className="w-10 h-10 text-amber-300 mx-auto mb-6 animate-pulse" />
                 <h3 className="text-2xl md:text-3xl font-extrabold mb-4 leading-tight">
-                  ¿Listo para crear un CRM adaptado a tus ventas?
+                  {t.solutions.fullviews.crm.bannerTitle}
                 </h3>
                 <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-8">
-                  El verdadero potencial se desbloquea con un software diseñado a la medida de tus procesos comerciales. Conversemos con nuestro equipo de ingenieros sobre tus flujos de clientes y stock hoy mismo.
+                  {t.solutions.fullviews.crm.bannerDesc}
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <a
                     href="#calendario"
                     onClick={() => {
-                      setIsCRMFullviewOpen(false);
+                      closeModalWithHistory(() => setIsCRMFullviewOpen(false));
                       setTimeout(() => {
                         const target = document.getElementById("calendario");
                         if (target) target.scrollIntoView({ behavior: "smooth" });
@@ -1456,16 +1459,16 @@ export default function Solutions() {
                     }}
                     className="py-3.5 px-8 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm transition-all shadow-md shadow-blue-500/20 active:scale-[0.98] cursor-pointer"
                   >
-                    Cotizar CRM Personalizado
+                    {t.solutions.fullviews.crm.bannerCta}
                   </a>
                   <button
                     onClick={() => {
-                      setIsCRMFullviewOpen(false);
+                      closeModalWithHistory(() => setIsCRMFullviewOpen(false));
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
                     className="py-3.5 px-8 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/10 transition-all active:scale-[0.98] cursor-pointer"
                   >
-                    Volver a Inicio
+                    {t.solutions.fullviews.backHome}
                   </button>
                 </div>
               </div>
@@ -1496,18 +1499,18 @@ export default function Solutions() {
               {/* Floating Header */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-8 sm:mb-12 pb-5 border-b border-slate-200 dark:border-slate-800 w-full">
                 <button
-                  onClick={() => setIsWebFullviewOpen(false)}
+                  onClick={() => closeModalWithHistory(() => setIsWebFullviewOpen(false))}
                   className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-teal-600 dark:text-slate-300 dark:hover:text-teal-400 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm transition-all hover:shadow-md cursor-pointer group"
                 >
-                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Volver al Inicio
+                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t.solutions.fullviews.backHome}
                 </button>
                 <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 font-mono text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-400">
                   <span className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                    Motor Web: <span className="font-bold text-slate-800 dark:text-white">LUXPROC SSR/ISR</span>
+                    {t.solutions.fullviews.platform}: <span className="font-bold text-slate-800 dark:text-white">{t.solutions.fullviews.web.platformName}</span>
                   </span>
                   <span className="hidden sm:inline text-slate-300 dark:text-slate-700">|</span>
-                  <span className="text-slate-500 dark:text-slate-400">Arquitectura de Alto Rendimiento</span>
+                  <span className="text-slate-500 dark:text-slate-400">{t.solutions.fullviews.web.platformSub}</span>
                 </div>
               </div>
 
@@ -1515,13 +1518,13 @@ export default function Solutions() {
               <div className="mb-12 sm:mb-16 text-left max-w-4xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-3 sm:mb-4">
                   <Terminal className="w-3.5 h-3.5" />
-                  Arquitectura Web Moderna
+                  {t.solutions.fullviews.web.badge}
                 </div>
                 <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight break-words">
-                  Plataformas Web Ultra-Veloces & <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-teal-600 dark:from-emerald-400 dark:to-teal-400">SEO de Alto Rendimiento</span>
+                  {t.solutions.fullviews.web.title}
                 </h1>
                 <p className="mt-4 sm:mt-6 text-sm sm:text-base md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
-                  Construimos experiencias web avanzadas utilizando React, Next.js y Tailwind CSS. Optimizadas nativamente para ofrecer tiempos de carga récord, Core Web Vitals impecables y posicionamiento orgánico imbatible en motores de búsqueda.
+                  {t.solutions.fullviews.web.desc}
                 </p>
               </div>
 
@@ -1534,12 +1537,10 @@ export default function Solutions() {
                     <Code className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
                   <h2 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4">
-                    ¿Qué es la Arquitectura Web Moderna y para qué sirve?
+                    {t.solutions.fullviews.web.whatIsTitle}
                   </h2>
                   <p className="text-xs sm:text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-                    A diferencia de los sitios web tradicionales lentos y rígidos, una <strong>Arquitectura Web Moderna (SSR/ISR)</strong> procesa la información en la nube antes de enviarla al usuario, entregando páginas instantáneas pre-renderizadas.
-                    <br /><br />
-                    Sirve para ofrecer una experiencia de navegación fluida tipo app nativa, eliminar pantallas de carga congeladas y permitir que las plataformas comerciales procesen miles de usuarios en paralelo con integración directa a pasarelas de pago y sistemas CRM.
+                    {t.solutions.fullviews.web.whatIsDesc}
                   </p>
                 </div>
 
@@ -1550,18 +1551,13 @@ export default function Solutions() {
                       <Gauge className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
                     <h2 className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4">
-                      ¿Por qué es crucial para tu negocio digital?
+                      {t.solutions.fullviews.web.whyTitle}
                     </h2>
                     <p className="text-xs sm:text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed mb-5 sm:mb-6">
-                      Un sitio web lento pierde hasta el 53% de sus visitantes antes de cargar. Nuestra ingeniería web garantiza máximas conversiones y seguridad:
+                      {t.solutions.fullviews.web.whyDesc}
                     </p>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                      {[
-                        { title: "SEO Orgánico Prioritario", desc: "Código semántico limpio indexado instantáneamente por Google." },
-                        { title: "Core Web Vitals < 1.0s", desc: "Tiempos de respuesta súper-rápidos con distribución CDN global." },
-                        { title: "Cifrado SSL & Pagos", desc: "Pasarelas de pago integradas con estándares bancarios." },
-                        { title: "Infraestructura Serverless", desc: "Escalado automático que soporta picos masivos de tráfico sin caídas." }
-                      ].map((item, idx) => (
+                      {t.solutions.fullviews.web.whyPoints.map((item, idx) => (
                         <li key={idx} className="flex gap-2.5 items-start">
                           <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
                           <div>
@@ -1579,34 +1575,28 @@ export default function Solutions() {
               {/* Title Sector: PLATAFORMAS WEB ESPECIALIZADAS */}
               <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12 px-2">
                 <span className="text-[11px] sm:text-xs font-extrabold tracking-widest text-emerald-600 dark:text-emerald-400 uppercase font-mono">
-                  Ecosistemas Web Especializados
+                  {t.solutions.fullviews.web.sectorsTitleBadge}
                 </span>
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-2 sm:mt-3 leading-tight break-words">
-                  Soluciones Web Diseñadas para tu Propósito
+                  {t.solutions.fullviews.web.sectorsTitle}
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2 sm:mt-3 leading-relaxed">
-                  Desarrollamos soluciones web escalables adaptadas a cada necesidad operativa y comercial de tu organización.
+                  {t.solutions.fullviews.web.sectorsDesc}
                 </p>
               </div>
-
-
 
               {/* Grid 3 Web Platforms (Real, functional platforms) */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
                 {[
                   {
                     id: "web-diagnostico",
-                    title: "LUXPROC Diagnóstico de Madurez Digital",
-                    sector: "Evaluación Avanzada 2026",
-                    desc: "Auditoría interactiva en 20 dimensiones de negocio. Genera mapas de araña (Radar), análisis de semáforos, informe PDF y plan de mejora tecnológica.",
+                    title: t.solutions.fullviews.web.cards.digitalDiagnosis.title,
+                    sector: t.solutions.fullviews.web.cards.digitalDiagnosis.sector,
+                    desc: t.solutions.fullviews.web.cards.digitalDiagnosis.desc,
                     icon: BarChart3,
                     color: "border-blue-500/50 hover:border-blue-500/90 bg-gradient-to-br from-blue-500/5 to-teal-500/5 dark:from-blue-900/20 dark:to-slate-900",
                     badgeColor: "bg-blue-500/20 text-blue-600 dark:text-blue-300 font-extrabold border border-blue-500/30",
-                    features: [
-                      "Evaluación de 20 dimensiones críticas de negocio",
-                      "Gráfico Spider Radar & Matriz de Priorización Advisory",
-                      "Informe PDF descargable & Plan de Mejora en fases"
-                    ],
+                    features: t.solutions.fullviews.web.cards.digitalDiagnosis.features,
                     metrics: {
                       label: "CORE WEB VITALS",
                       score: "SCORES: 100%",
@@ -1617,21 +1607,17 @@ export default function Solutions() {
                       ]
                     },
                     externalUrl: "https://diags.digital.luxproc.com/",
-                    ctaText: "Comenzar Diagnóstico Digital"
+                    ctaText: t.solutions.fullviews.web.cards.digitalDiagnosis.ctaText
                   },
                   {
                     id: "web-mantenimiento",
-                    title: "LUXPROC Cloud Maintenance System",
-                    sector: "Mantenimiento Industrial & Confiabilidad",
-                    desc: "Gestión integral de activos industriales, KPIs OEE/MTBF/MTTR en tiempo real, mantenimiento preventivo/predictivo y control de repuestos ISO 9001/55001.",
+                    title: t.solutions.fullviews.web.cards.maintenanceCloud.title,
+                    sector: t.solutions.fullviews.web.cards.maintenanceCloud.sector,
+                    desc: t.solutions.fullviews.web.cards.maintenanceCloud.desc,
                     icon: Gauge,
                     color: "border-blue-500/50 hover:border-blue-500/90 bg-gradient-to-br from-blue-500/5 to-indigo-500/5 dark:from-blue-900/20 dark:to-slate-900",
                     badgeColor: "bg-blue-500/20 text-blue-600 dark:text-blue-300 font-extrabold border border-blue-500/30",
-                    features: [
-                      "Monitoreo en tiempo real de OEE (91%), MTBF y MTTR",
-                      "Gestión de OT's e Inspección Predictiva (Termografía/Vibración)",
-                      "Almacén de Repuestos Críticos & Control de Cambios ISO"
-                    ],
+                    features: t.solutions.fullviews.web.cards.maintenanceCloud.features,
                     metrics: {
                       label: "KPIs INDUSTRIALES",
                       score: "OEE: 91%",
@@ -1642,22 +1628,17 @@ export default function Solutions() {
                       ]
                     },
                     externalUrl: "https://maintenancecloud-1109.ai.studio",
-                    ctaText: "Acceder a LUXPROC Maintenance Cloud"
+                    ctaText: t.solutions.fullviews.web.cards.maintenanceCloud.ctaText
                   },
                   {
                     id: "web-e-diagnosis",
-                    title: "LUXPROC E-DIAGNOSIS",
-                    sector: "Auditoría & Peritaje Eléctrico",
-                    desc: "Plataforma profesional para realizar mediciones de corriente eléctrica, conexiones de luminarias y focos, diagnóstico de pozo a tierra y análisis técnico integral con documentación firmada por el ingeniero registrado con su código CIP, especialidad y departamento donde se encuentra (sin vinculación institucional con el CIP, SUNAT u OSE).",
+                    title: t.solutions.fullviews.web.cards.eDiagnosis.title,
+                    sector: t.solutions.fullviews.web.cards.eDiagnosis.sector,
+                    desc: t.solutions.fullviews.web.cards.eDiagnosis.desc,
                     icon: Zap,
                     color: "border-amber-500/50 hover:border-amber-500/90 bg-gradient-to-br from-amber-500/5 to-blue-500/5 dark:from-amber-900/20 dark:to-slate-900",
                     badgeColor: "bg-amber-500/20 text-amber-600 dark:text-amber-300 font-extrabold border border-amber-500/30",
-                    features: [
-                      "Mediciones de corriente eléctrica, cargas y caída de tensión (CNE)",
-                      "Conexiones de luminarias, focos y fotometría lux (RNE EM.010)",
-                      "Diagnóstico de pozo a tierra y resistencia PAT (≤25Ω / IEEE 142)",
-                      "Análisis técnico con informes y dossier firmado por el ingeniero registrado con su código CIP, especialidad y departamento donde se encuentra"
-                    ],
+                    features: t.solutions.fullviews.web.cards.eDiagnosis.features,
                     metrics: {
                       label: "PERITAJE CNE / RNE",
                       score: "CONFORME CNE / RNE",
@@ -1668,7 +1649,7 @@ export default function Solutions() {
                       ]
                     },
                     externalUrl: "https://mapeo.energetico.luxproc.com",
-                    ctaText: "Comenzar Diagnóstico Eléctrico"
+                    ctaText: t.solutions.fullviews.web.cards.eDiagnosis.ctaText
                   }
                 ].map((sec) => (
                   <div
@@ -1750,16 +1731,16 @@ export default function Solutions() {
               <div className="p-6 sm:p-8 md:p-12 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-slate-900 to-teal-950 text-white text-center border border-teal-500/20 shadow-xl relative overflow-hidden mb-12 sm:mb-16">
                 <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 text-amber-300 mx-auto mb-4 sm:mb-6 animate-pulse" />
                 <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold mb-3 sm:mb-4 leading-tight break-words">
-                  ¿Quieres una plataforma web con velocidad e impacto superior?
+                  {t.solutions.fullviews.web.bannerTitle}
                 </h3>
                 <p className="text-slate-300 max-w-2xl mx-auto text-xs sm:text-sm md:text-base leading-relaxed mb-6 sm:mb-8">
-                  Nuestros ingenieros en frontend y backend diseñan sistemas web listos para escalar tus ventas y automatizar procesos comerciales.
+                  {t.solutions.fullviews.web.bannerDesc}
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
                   <a
                     href="#calendario"
                     onClick={() => {
-                      setIsWebFullviewOpen(false);
+                      closeModalWithHistory(() => setIsWebFullviewOpen(false));
                       setTimeout(() => {
                         const target = document.getElementById("calendario");
                         if (target) target.scrollIntoView({ behavior: "smooth" });
@@ -1767,16 +1748,16 @@ export default function Solutions() {
                     }}
                     className="w-full sm:w-auto py-3 sm:py-3.5 px-6 sm:px-8 rounded-xl sm:rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-xs sm:text-sm transition-all shadow-md active:scale-[0.98] cursor-pointer min-h-[44px] flex items-center justify-center"
                   >
-                    Cotizar Arquitectura Web
+                    {t.solutions.fullviews.web.bannerCta}
                   </a>
                   <button
                     onClick={() => {
-                      setIsWebFullviewOpen(false);
+                      closeModalWithHistory(() => setIsWebFullviewOpen(false));
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
                     className="w-full sm:w-auto py-3 sm:py-3.5 px-6 sm:px-8 rounded-xl sm:rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs sm:text-sm border border-white/10 transition-all active:scale-[0.98] cursor-pointer min-h-[44px] flex items-center justify-center"
                   >
-                    Volver a Inicio
+                    {t.solutions.fullviews.backHome}
                   </button>
                 </div>
               </div>
@@ -1807,18 +1788,16 @@ export default function Solutions() {
               {/* Floating Header */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-8 sm:mb-12 pb-5 border-b border-slate-200 dark:border-slate-800 w-full">
                 <button
-                  onClick={() => setIsSolutionsFullviewOpen(false)}
+                  onClick={() => closeModalWithHistory(() => setIsSolutionsFullviewOpen(false))}
                   className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm transition-all hover:shadow-md cursor-pointer group"
                 >
-                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Volver al Inicio
+                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t.solutions.fullviews.backHome}
                 </button>
                 <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 font-mono text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-400">
                   <span className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                    Ingeniería LUXPROC: <span className="font-bold text-slate-800 dark:text-white">Física & Digital</span>
+                    LUXPROC: <span className="font-bold text-slate-800 dark:text-white">{t.solutions.fullviews.solutionsDirectory.holisticBadge}</span>
                   </span>
-                  <span className="hidden sm:inline text-slate-300 dark:text-slate-700">|</span>
-                  <span className="text-slate-500 dark:text-slate-400">Soluciones Integradas de Alto Impacto</span>
                 </div>
               </div>
 
@@ -1826,13 +1805,13 @@ export default function Solutions() {
               <div className="mb-12 sm:mb-16 text-left max-w-4xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3 sm:mb-4">
                   <Layers className="w-3.5 h-3.5" />
-                  Nuestras Soluciones Corporativas
+                  {t.solutions.fullviews.solutionsDirectory.badge}
                 </div>
                 <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight break-words">
-                  Ingeniería que <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400">Trasciende Límites</span>
+                  {t.solutions.fullviews.solutionsDirectory.title}
                 </h1>
                 <p className="mt-4 sm:mt-6 text-sm sm:text-base md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
-                  Unificamos el espectro tecnológico completo. Desde la consultoría e implementación de software de planificación empresarial (ERP) y relaciones comerciales (CRM), hasta el diseño de hardware robusto, proyectos de innovación científica (I+D+i) y automatizaciones industriales (instalaciones eléctricas).
+                  {t.solutions.fullviews.solutionsDirectory.desc}
                 </p>
               </div>
 
@@ -1845,12 +1824,12 @@ export default function Solutions() {
                     <Workflow className="w-6 h-6" />
                   </div>
                   <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-                    Ingeniería Física y Digital bajo el Mismo Techo
+                    {t.solutions.fullviews.solutionsDirectory.holisticTitle}
                   </h2>
                   <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-                    La mayoría de las empresas se ven obligadas a coordinar con múltiples proveedores desconectados: una empresa para el software, otra para las instalaciones eléctricas y otra para el desarrollo web o hardware.
+                    {t.solutions.fullviews.solutionsDirectory.holisticDesc1}
                     <br /><br />
-                    En LUXPROC rompemos este paradigma. Nuestra visión unificada permite que la telemetría de tus sensores de planta alimente directamente tu ERP en la nube, mientras tu CRM canaliza la atención al cliente sin fricciones.
+                    {t.solutions.fullviews.solutionsDirectory.holisticDesc2}
                   </p>
                 </div>
 
@@ -1861,18 +1840,13 @@ export default function Solutions() {
                       <Sparkles className="w-6 h-6" />
                     </div>
                     <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-                      ¿Por qué elegir un ecosistema integral?
+                      {t.solutions.fullviews.solutionsDirectory.benefitsTitle}
                     </h2>
                     <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed mb-6">
-                      Elimina intermediarios e incompatibilidades. Ofrecemos garantías técnicas de extremo a extremo:
+                      {t.solutions.fullviews.solutionsDirectory.benefitsDesc}
                     </p>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {[
-                        { title: "Sincronización Total", desc: "Comunicación fluida entre hardware, tableros y software." },
-                        { title: "Responsabilidad Única", desc: "Soporte centralizado sin culpar a terceros." },
-                        { title: "Optimizaciones de Costo", desc: "Arquitectura modular que aprovecha componentes ya instalados." },
-                        { title: "I+D+i para Patentes", desc: "Desarrollos a la medida protegidos intelectualmente." }
-                      ].map((item, idx) => (
+                      {t.solutions.fullviews.solutionsDirectory.benefitsList.map((item, idx) => (
                         <li key={idx} className="flex gap-2.5 items-start">
                           <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-1" />
                           <div>
@@ -1890,13 +1864,13 @@ export default function Solutions() {
               {/* Title Sector: MATRIZ DE LOS 6 PILARES DE INGENIERÍA */}
               <div className="text-center max-w-3xl mx-auto mb-12">
                 <span className="text-xs font-extrabold tracking-widest text-blue-600 dark:text-blue-400 uppercase font-mono">
-                  Portafolio Integral de Soluciones
+                  {t.solutions.fullviews.solutionsDirectory.pillarsBadge}
                 </span>
                 <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-3">
-                  Los 6 Pilares de Ingeniería LUXPROC
+                  {t.solutions.fullviews.solutionsDirectory.pillarsTitle}
                 </h2>
                 <p className="text-sm text-slate-600 dark:text-slate-400 mt-3 leading-relaxed">
-                  Haz clic en cualquiera de nuestras soluciones para abrir sus especificaciones técnicas completas.
+                  {t.solutions.fullviews.solutionsDirectory.pillarsDesc}
                 </p>
               </div>
 
@@ -1911,17 +1885,21 @@ export default function Solutions() {
                         if (sol.id === "erp") {
                           setIsERPFulviewOpen(true);
                           setIsSolutionsFullviewOpen(false);
+                          pushModalHistory("soluciones-erp");
                           window.scrollTo({ top: 0, behavior: "smooth" });
                         } else if (sol.id === "web") {
                           setIsWebFullviewOpen(true);
                           setIsSolutionsFullviewOpen(false);
+                          pushModalHistory("soluciones-web");
                           window.scrollTo({ top: 0, behavior: "smooth" });
                         } else if (sol.id === "crm") {
                           setIsCRMFullviewOpen(true);
                           setIsSolutionsFullviewOpen(false);
+                          pushModalHistory("soluciones-crm");
                           window.scrollTo({ top: 0, behavior: "smooth" });
                         } else {
                           setSelectedSolution(sol);
+                          pushModalHistory("soluciones-detalle");
                         }
                       }}
                       className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-blue-500/40 transition-all flex flex-col justify-between cursor-pointer group"
@@ -1941,7 +1919,7 @@ export default function Solutions() {
                         </p>
                       </div>
                       <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 font-bold group-hover:gap-3 transition-all">
-                        Abrir detalles completos <ArrowRight className="w-4 h-4" />
+                        {t.solutions.fullviews.solutionsDirectory.viewDetail} <ArrowRight className="w-4 h-4" />
                       </div>
                     </div>
                   );
@@ -1952,16 +1930,16 @@ export default function Solutions() {
               <div className="p-8 md:p-12 rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white text-center border border-indigo-500/20 shadow-xl relative overflow-hidden mb-16">
                 <Sparkles className="w-10 h-10 text-amber-300 mx-auto mb-6 animate-pulse" />
                 <h3 className="text-2xl md:text-3xl font-extrabold mb-4 leading-tight">
-                  ¿Tienes un reto de ingeniería o un proyecto complejo?
+                  {t.solutions.fullviews.solutionsDirectory.bannerTitle}
                 </h3>
                 <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-8">
-                  Nuestros ingenieros analizan tu infraestructura actual y formulan la mejor estrategia de integración física y digital.
+                  {t.solutions.fullviews.solutionsDirectory.bannerDesc}
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <a
                     href="#calendario"
                     onClick={() => {
-                      setIsSolutionsFullviewOpen(false);
+                      closeModalWithHistory(() => setIsSolutionsFullviewOpen(false));
                       setTimeout(() => {
                         const target = document.getElementById("calendario");
                         if (target) target.scrollIntoView({ behavior: "smooth" });
@@ -1969,16 +1947,16 @@ export default function Solutions() {
                     }}
                     className="py-3.5 px-8 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm transition-all shadow-md active:scale-[0.98] cursor-pointer"
                   >
-                    Agendar Consultoría de Ingeniería
+                    {t.solutions.fullviews.solutionsDirectory.bannerCta}
                   </a>
                   <button
                     onClick={() => {
-                      setIsSolutionsFullviewOpen(false);
+                      closeModalWithHistory(() => setIsSolutionsFullviewOpen(false));
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
                     className="py-3.5 px-8 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/10 transition-all active:scale-[0.98] cursor-pointer"
                   >
-                    Volver a Inicio
+                    {t.solutions.fullviews.backHome}
                   </button>
                 </div>
               </div>

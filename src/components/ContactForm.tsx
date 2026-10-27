@@ -1,8 +1,10 @@
 import React from "react";
 import { motion } from "motion/react";
-import { ShieldCheck } from "lucide-react";
+import { useLanguage } from "../utils/i18n";
 
 export default function ContactForm() {
+  const { t } = useLanguage();
+
   return (
     <section id="contacto" className="relative pt-16 pb-4 px-4 bg-transparent transition-colors duration-300">
       
@@ -25,7 +27,7 @@ export default function ContactForm() {
             <div className="relative inline-block">
               <span className="text-6xl md:text-8xl font-serif text-blue-500/20 dark:text-blue-500/10 absolute -top-8 -left-10 select-none">“</span>
               <p className="text-xl md:text-3xl font-extrabold text-slate-800 dark:text-slate-100 leading-relaxed tracking-tight relative z-10 px-4">
-                La verdadera innovación ocurre en la intersección de la precisión física y la escalabilidad digital. En LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. no solo creamos sistemas integrados de hardware y software; diseñamos soluciones de alta ingeniería que potencian el crecimiento y la soberanía tecnológica de nuestros socios comerciales.
+                {t.contact.ceoQuote}
               </p>
               <span className="text-6xl md:text-8xl font-serif text-blue-500/20 dark:text-blue-500/10 absolute -bottom-16 -right-6 select-none">”</span>
             </div>
@@ -37,7 +39,7 @@ export default function ContactForm() {
                   Carmen Terán Vda. de Becerra
                 </h4>
                 <p className="text-[10px] md:text-xs font-mono font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 mt-1">
-                  CEO & Co-Fundadora de LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.
+                  {t.contact.ceoRole}
                 </p>
               </div>
             </div>

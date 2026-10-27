@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useScrollLock, resetScrollLock } from "../utils/scrollLock";
+import { closeModalWithHistory } from "../utils/navigation";
 import { 
   HelpCircle, 
   ChevronDown, 
@@ -23,12 +24,14 @@ export default function FaqModal({ isOpen: controlledIsOpen, onClose: controlled
   const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
 
   const handleClose = () => {
-    if (controlledOnClose) {
-      controlledOnClose();
-    } else {
-      setInternalIsOpen(false);
-      resetScrollLock();
-    }
+    closeModalWithHistory(() => {
+      if (controlledOnClose) {
+        controlledOnClose();
+      } else {
+        setInternalIsOpen(false);
+        resetScrollLock();
+      }
+    });
   };
 
   useScrollLock(isOpen);
@@ -47,6 +50,9 @@ export default function FaqModal({ isOpen: controlledIsOpen, onClose: controlled
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
     const handleReset = () => {
+      if (controlledOnClose) {
+        controlledOnClose();
+      }
       setInternalIsOpen(false);
       resetScrollLock();
     };
@@ -54,6 +60,8 @@ export default function FaqModal({ isOpen: controlledIsOpen, onClose: controlled
     window.addEventListener("open-faq-fullview", handleOpen);
     window.addEventListener("open-faq-modal", handleOpen);
     window.addEventListener("reset-to-home", handleReset);
+    window.addEventListener("close-all-modals", handleReset);
+    window.addEventListener("popstate", handleReset);
 
     // ESC key listener to close full screen
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -110,7 +118,7 @@ export default function FaqModal({ isOpen: controlledIsOpen, onClose: controlled
                 className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm transition-all hover:shadow-md cursor-pointer group"
               >
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                <span>Volver al Inicio</span>
+                <span>{t.solutions.fullviews.backHome}</span>
               </button>
 
               <div className="flex items-center gap-3">

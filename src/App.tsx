@@ -19,6 +19,7 @@ import { Cpu, FileDown, ShieldCheck } from "lucide-react";
 import { LegalModals, RegulatoryBadges } from "./components/LegalModals";
 import SecurityModal from "./components/SecurityModal";
 import { useLanguage } from "./utils/i18n";
+import { pushModalHistory, closeModalWithHistory } from "./utils/navigation";
 
 export default function App() {
   const { t } = useLanguage();
@@ -50,10 +51,19 @@ export default function App() {
     };
     checkHash();
     window.addEventListener("hashchange", checkHash);
-    const handleOpenPrivacidad = () => setActiveLegalModal("privacidad");
-    const handleOpenTerminos = () => setActiveLegalModal("terminos");
+
+    const handleOpenPrivacidad = () => {
+      setActiveLegalModal("privacidad");
+      pushModalHistory("privacidad");
+    };
+    const handleOpenTerminos = () => {
+      setActiveLegalModal("terminos");
+      pushModalHistory("terminos");
+    };
+
     window.addEventListener("open-privacidad-modal", handleOpenPrivacidad);
     window.addEventListener("open-terminos-modal", handleOpenTerminos);
+
     return () => {
       window.removeEventListener("hashchange", checkHash);
       window.removeEventListener("open-privacidad-modal", handleOpenPrivacidad);
@@ -82,20 +92,41 @@ export default function App() {
     }
   }, [isDarkMode]);
 
-  // Global event listeners for opening corporate brochure, FAQ & Security
+  // Global event listeners for opening corporate brochure, FAQ & Security, and closing all on popstate/back
   useEffect(() => {
-    const handleOpenBrochure = () => setIsBrochureOpen(true);
-    const handleOpenFaq = () => setIsFaqOpen(true);
-    const handleOpenSecurity = () => setIsSecurityOpen(true);
+    const handleOpenBrochure = () => {
+      setIsBrochureOpen(true);
+      pushModalHistory("brochure");
+    };
+    const handleOpenFaq = () => {
+      setIsFaqOpen(true);
+      pushModalHistory("faq");
+    };
+    const handleOpenSecurity = () => {
+      setIsSecurityOpen(true);
+      pushModalHistory("seguridad");
+    };
+    const handleCloseAll = () => {
+      setIsBrochureOpen(false);
+      setIsFaqOpen(false);
+      setIsSecurityOpen(false);
+      setActiveLegalModal(null);
+    };
+
     window.addEventListener("open-brochure-modal", handleOpenBrochure);
     window.addEventListener("open-faq-modal", handleOpenFaq);
     window.addEventListener("open-faq-fullview", handleOpenFaq);
     window.addEventListener("open-security-modal", handleOpenSecurity);
+    window.addEventListener("close-all-modals", handleCloseAll);
+    window.addEventListener("popstate", handleCloseAll);
+
     return () => {
       window.removeEventListener("open-brochure-modal", handleOpenBrochure);
       window.removeEventListener("open-faq-modal", handleOpenFaq);
       window.removeEventListener("open-faq-fullview", handleOpenFaq);
       window.removeEventListener("open-security-modal", handleOpenSecurity);
+      window.removeEventListener("close-all-modals", handleCloseAll);
+      window.removeEventListener("popstate", handleCloseAll);
     };
   }, []);
 
@@ -198,45 +229,30 @@ export default function App() {
 
         </div>
 
-        {/* Legal notice banner */}
-        <div className="relative max-w-[1400px] mx-auto mt-8 pt-4 border-t border-slate-200/40 dark:border-slate-800/60 text-center sm:text-left z-10">
-          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium italic">
-            🛡️ {t.footer.legalNotice}
-          </p>
-        </div>
-
-        {/* Legal copyrights details bar */}
-        <div className="relative max-w-[1400px] mx-auto mt-6 pt-6 border-t border-slate-200/60 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-400 font-medium z-10">
-          <div className="space-y-1 text-center sm:text-left">
-            <p>© {new Date().getFullYear()} LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. {t.footer.rights} | RUC: 20616650735 | Domicilio Legal: La Libertad, Perú | Dominio Oficial: <a href="https://luxproc.com" className="text-blue-500 hover:underline font-mono" target="_blank" rel="noopener noreferrer">www.luxproc.com</a></p>
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">
-              <button 
-                onClick={() => setIsSecurityOpen(true)}
-                className="flex items-center gap-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-500/25 transition-all cursor-pointer font-bold"
-                title="Ver Certificado de Seguridad y Escudo Anti-Phishing"
-              >
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Plataforma Encriptada TLS 1.3 / AES-256</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-0.5"></span>
-              </button>
-              <button 
-                onClick={() => setIsSecurityOpen(true)}
-                className="flex items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-emerald-500 transition-colors cursor-pointer"
-              >
-                • Protección Anti-Phishing HSTS Preload
-              </button>
-              <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
-                • Cumplimiento Ley N° 29733 (LPDP)
-              </span>
-              <a 
-                href="mailto:luxproc.11@gmail.com" 
-                className="flex items-center gap-1 text-blue-500 hover:underline"
-              >
-                • Contacto Oficial: luxproc.11@gmail.com
-              </a>
-            </div>
+        {/* Centered clean copyright & regulatory bar */}
+        <div className="relative max-w-[1400px] mx-auto mt-10 pt-8 border-t border-slate-200/60 dark:border-slate-800/80 flex flex-col items-center justify-center gap-4 text-[11px] text-slate-400 font-medium z-10 text-center">
+          <div className="flex flex-wrap items-center justify-center gap-3 text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">
+            <button 
+              onClick={() => setIsSecurityOpen(true)}
+              className="flex items-center gap-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-500/25 transition-all cursor-pointer font-bold"
+              title="Ver Certificado de Seguridad y Escudo Anti-Phishing"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+              <span>{t.footer.tlsBadge}</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-0.5"></span>
+            </button>
+            <button 
+              onClick={() => setIsSecurityOpen(true)}
+              className="flex items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-emerald-500 transition-colors cursor-pointer"
+            >
+              {t.footer.antiPhishingBadge}
+            </button>
+            <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+              {t.footer.lpdpBadge}
+            </span>
           </div>
-          <div className="flex items-center gap-4 text-xs shrink-0">
+
+          <div className="flex items-center justify-center gap-4 text-xs">
             <a 
               href="/terms.html"
               className="hover:text-blue-500 hover:underline cursor-pointer transition-colors"
@@ -253,26 +269,30 @@ export default function App() {
               {t.footer.privacy}
             </a>
           </div>
+
+          <p className="text-center text-xs text-slate-500 dark:text-slate-400 font-medium pt-1">
+            © {new Date().getFullYear()} LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. {t.footer.rights}
+          </p>
         </div>
       </footer>
 
       {/* Interactive Regulatory compliance modals */}
-      <LegalModals activeModal={activeLegalModal} onClose={() => setActiveLegalModal(null)} />
+      <LegalModals activeModal={activeLegalModal} onClose={() => closeModalWithHistory(() => setActiveLegalModal(null))} />
 
       {/* Security & Anti-Phishing Certificate Modal */}
-      <SecurityModal isOpen={isSecurityOpen} onClose={() => setIsSecurityOpen(false)} />
+      <SecurityModal isOpen={isSecurityOpen} onClose={() => closeModalWithHistory(() => setIsSecurityOpen(false))} />
 
       {/* Official Corporate Brochure Modal & Printable PDF */}
       <BrochureModal 
         isOpen={isBrochureOpen} 
-        onClose={() => setIsBrochureOpen(false)} 
+        onClose={() => closeModalWithHistory(() => setIsBrochureOpen(false))} 
         isDarkMode={isDarkMode} 
       />
 
       {/* Technical FAQ Modal Window */}
       <FaqModal 
         isOpen={isFaqOpen} 
-        onClose={() => setIsFaqOpen(false)} 
+        onClose={() => closeModalWithHistory(() => setIsFaqOpen(false))} 
       />
 
     </div>

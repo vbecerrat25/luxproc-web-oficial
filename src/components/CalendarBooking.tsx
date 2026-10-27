@@ -23,6 +23,7 @@ import { Booking } from "../types";
 import { initAuth, googleSignIn, logout } from "../googleAuth";
 import { db } from "../lib/firebase";
 import { doc, setDoc, getDocs, collection } from "firebase/firestore";
+import { useLanguage } from "../utils/i18n";
 
 const TIMEZONES = [
   { id: "America/Bogota", name: "Bogotá / Lima (UTC-5)", offset: -5 },
@@ -232,6 +233,8 @@ const createGoogleCalendarUrl = (booking: Booking) => {
 };
 
 export default function CalendarBooking() {
+  const { t, language } = useLanguage();
+  const localeCode = language === "en" ? "en-US" : language === "pt" ? "pt-BR" : "es-ES";
   const [selectedTimezone, setSelectedTimezone] = useState("America/Bogota");
   const [dynamicTimezones, setDynamicTimezones] = useState(TIMEZONES);
   const [selectedDate, setSelectedDate] = useState<string>("");
@@ -261,7 +264,7 @@ export default function CalendarBooking() {
   const [errorMessage, setErrorMessage] = useState("");
   const [copiedMeet, setCopiedMeet] = useState(false);
 
-  // Get next 7 business dates (excluding Sundays) helper
+  // Get next 7 business dates (excluding Sundays) helper localized to active language
   const getNextBusinessDays = () => {
     const list = [];
     let current = new Date();
@@ -275,9 +278,9 @@ export default function CalendarBooking() {
         const dy = String(current.getDate()).padStart(2, "0");
         list.push({
           dateStr: `${yr}-${mo}-${dy}`,
-          dayName: current.toLocaleDateString("es-ES", { weekday: "short" }),
+          dayName: current.toLocaleDateString(localeCode, { weekday: "short" }),
           dayNum: current.getDate(),
-          monthName: current.toLocaleDateString("es-ES", { month: "short" }),
+          monthName: current.toLocaleDateString(localeCode, { month: "short" }),
         });
       }
       current.setDate(current.getDate() + 1);
@@ -789,7 +792,7 @@ export default function CalendarBooking() {
   const formatFriendlySelectedDate = () => {
     if (!selectedDate) return "";
     const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(selectedDate + "T00:00:00").toLocaleDateString('es-ES', options);
+    return new Date(selectedDate + "T00:00:00").toLocaleDateString(localeCode, options);
   };
 
   const isTodaySelected = () => {
@@ -887,23 +890,23 @@ END:VCALENDAR`;
             <div className="flex flex-wrap items-center gap-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold uppercase tracking-wider">
                 <CalendarIcon className="w-3.5 h-3.5" />
-                Sincronización en Tiempo Real
+                {t.calendar.badge}
               </div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold font-mono">
                 <Lock className="w-3.5 h-3.5" />
-                BLINDAJE MILITAR NIVEL 4 • PERSISTENCIA PERPETUA
+                {t.calendar.shieldBadge}
               </div>
             </div>
             <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-800 dark:text-white">
-              Agendar Consultoría de Ingeniería
+              {t.calendar.title}
             </h2>
             <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 max-w-2xl leading-relaxed">
-              Reserva una reunión de 30 minutos con nuestro equipo técnico principal para analizar el plan de arquitectura web, CRM, ERP o innovación aplicada. Sincronización bidireccional automática con Google Calendar y generación de salas para Google Meet al instante.
+              {t.calendar.description}
             </p>
             <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 flex items-center gap-3 text-xs text-slate-600 dark:text-slate-300 max-w-2xl">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
               <span>
-                <strong>Garantía de Retención Inmutable:</strong> Toda reunión generada con Google Meet y datos de cliente quedan salvaguardados en triple capa (Disco Local Inmutable + Cloud Firestore + Bóveda Criptográfica), 100% inmunes a cualquier actualización o modificación de la plataforma.
+                {t.calendar.retentionNotice}
               </span>
             </div>
           </div>
@@ -915,7 +918,7 @@ END:VCALENDAR`;
             </div>
             <div className="flex-grow space-y-1">
               <label className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">
-                Zona Horaria Activa
+                {t.calendar.timezoneLabel}
               </label>
               <select
                 value={selectedTimezone}
@@ -950,7 +953,7 @@ END:VCALENDAR`;
                 <div className="space-y-4">
                   <h3 className="text-base font-extrabold text-slate-800 dark:text-white flex items-center gap-2.5">
                     <span className="w-5 h-5 flex items-center justify-center rounded-full bg-blue-600 text-white text-[10px] font-mono font-bold">1</span>
-                    Seleccione un Día hábil en el Calendario:
+                    {t.calendar.step1}
                   </h3>
                   
                   {/* Calendar list */}
@@ -1003,7 +1006,7 @@ END:VCALENDAR`;
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <h3 className="text-base font-extrabold text-slate-800 dark:text-white flex items-center gap-2.5">
                       <span className="w-5 h-5 flex items-center justify-center rounded-full bg-blue-600 text-white text-[10px] font-mono font-bold">2</span>
-                      Seleccione una Hora disponible:
+                      {t.calendar.step2}
                     </h3>
 
                     {/* Shift tabs for compact visual size */}
@@ -1018,7 +1021,7 @@ END:VCALENDAR`;
                               : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-300/40 dark:hover:bg-slate-800/50"
                           }`}
                         >
-                          <span>🌅</span> Mañana
+                          <span>🌅</span> {t.calendar.morning}
                           {hasSelectedSlotInShift("morning") && (
                             <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                           )}
@@ -1033,7 +1036,7 @@ END:VCALENDAR`;
                             : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-300/40 dark:hover:bg-slate-800/50"
                         }`}
                       >
-                        <span>🌇</span> Tarde
+                        <span>🌇</span> {t.calendar.afternoon}
                         {hasSelectedSlotInShift("afternoon") && (
                           <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                         )}
@@ -1042,7 +1045,7 @@ END:VCALENDAR`;
                   </div>
 
                   <p className="text-xs text-slate-500 dark:text-slate-400 italic pb-1">
-                    Visualizando el {formatFriendlySelectedDate()}. Los bloques ocupados están bloqueados automáticamente.
+                    {t.calendar.viewingNotice} {formatFriendlySelectedDate()}. {t.calendar.blockedNotice}
                   </p>
 
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -1072,11 +1075,11 @@ END:VCALENDAR`;
                           {/* Booked badging tag */}
                           {isBooked ? (
                             <span className="absolute bottom-1 text-[8px] font-bold text-red-500 tracking-tight uppercase">
-                              OCUPADO
+                              {t.calendar.bookedTag}
                             </span>
                           ) : (
                             <span className={`text-[8px] mt-1 font-bold ${isSelected ? "text-blue-100" : "text-slate-400"}`}>
-                              30 minutos
+                              {t.calendar.duration30}
                             </span>
                           )}
                         </button>
@@ -1087,8 +1090,8 @@ END:VCALENDAR`;
 
                 {/* Technical integration footnotes inside the left card to fill the blank bottom beautifully */}
                 <div className="pt-4 border-t border-slate-200/50 dark:border-slate-800/50 flex flex-col sm:flex-row justify-between items-center text-[10px] text-slate-400 font-mono gap-2">
-                  <span>🔒 Canales cifrados de extremo a extremo</span>
-                  <span>🚀 API de Google Meet autogenerada</span>
+                  <span>🔒 {t.calendar.sslChannels}</span>
+                  <span>🚀 {t.calendar.meetApiTag}</span>
                 </div>
 
               </div>
@@ -1109,19 +1112,19 @@ END:VCALENDAR`;
                         <div>
                           <div className="flex items-center justify-between border-b border-slate-200/60 dark:border-slate-800/80 pb-4 mb-4">
                             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">
-                              Detalles de la Sesión
+                              {t.calendar.sessionDetailsTitle}
                             </h3>
                             <span className="px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase">
-                              30 Mins • Meet
+                              {t.calendar.sessionMeetBadge}
                             </span>
                           </div>
 
                           <div className="space-y-4">
                             <h4 className="text-base md:text-lg font-extrabold text-slate-800 dark:text-white tracking-tight leading-tight">
-                              Consultoría de Alta Ingeniería y Ecosistemas Digitales
+                              {t.calendar.sessionMainTitle}
                             </h4>
                             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                              Una sesión uno-a-uno para analizar cuellos de botella en su ERP/CRM, optimización de infraestructura y factibilidad de desarrollos a medida.
+                              {t.calendar.sessionMainDesc}
                             </p>
 
                             {/* Host details */}
@@ -1131,26 +1134,20 @@ END:VCALENDAR`;
                               </div>
                               <div>
                                 <p className="text-xs font-bold text-slate-800 dark:text-white">Carmen Terán Vda. de Becerra</p>
-                                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">CEO & Co-Fundadora • Dirección Ejecutiva</p>
+                                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">{t.calendar.executiveRole}</p>
                               </div>
                             </div>
 
                             {/* Meeting contents list */}
                             <div className="space-y-2.5 pt-2">
-                              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">¿Qué cubriremos en la sesión?</p>
+                              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">{t.calendar.whatCoverTitle}</p>
                               <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
-                                <div className="flex items-start gap-2">
-                                  <span className="text-blue-500 font-bold">✓</span>
-                                  <span>Diagnóstico de flujos operativos y silos de datos.</span>
-                                </div>
-                                <div className="flex items-start gap-2">
-                                  <span className="text-blue-500 font-bold">✓</span>
-                                  <span>Propuesta de sincronización en tiempo real.</span>
-                                </div>
-                                <div className="flex items-start gap-2">
-                                  <span className="text-blue-500 font-bold">✓</span>
-                                  <span>Estimación técnica preliminar y roadmap de R&D.</span>
-                                </div>
+                                {t.calendar.coverPoints.map((pointText, ptIdx) => (
+                                  <div key={ptIdx} className="flex items-start gap-2">
+                                    <span className="text-blue-500 font-bold">✓</span>
+                                    <span>{pointText}</span>
+                                  </div>
+                                ))}
                               </div>
                             </div>
                           </div>
@@ -1159,10 +1156,10 @@ END:VCALENDAR`;
                         {/* Pulsing Guide Indicator */}
                         <div className="mt-6 p-4 rounded-2xl bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/10 dark:border-blue-500/25 text-center space-y-2">
                           <p className="text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center justify-center gap-1.5 animate-pulse">
-                            <Clock className="w-4 h-4" /> Seleccione un día y hora disponible
+                            <Clock className="w-4 h-4" /> {t.calendar.selectDayPrompt}
                           </p>
                           <p className="text-[10px] text-slate-400 dark:text-slate-400 leading-normal">
-                            Habilite el formulario de registro instantáneo seleccionando un bloque de 30 mins a la izquierda.
+                            {t.calendar.selectDayHelp}
                           </p>
                         </div>
                       </motion.div>
@@ -1177,26 +1174,26 @@ END:VCALENDAR`;
                       >
                         <div className="flex items-center justify-between border-b border-slate-200/60 dark:border-slate-800/80 pb-3 mb-3">
                           <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800 dark:text-white flex items-center gap-1.5">
-                            <Workflow className="w-4 h-4 text-blue-500" /> Registro de Reserva
+                            <Workflow className="w-4 h-4 text-blue-500" /> {t.calendar.bookingRegisterTitle}
                           </h3>
                           <button
                             type="button"
                             onClick={() => setSelectedSlot("")}
                             className="text-[10px] font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 underline cursor-pointer"
                           >
-                            Cambiar Horario
+                            {t.calendar.changeSchedule}
                           </button>
                         </div>
 
                         <div className="p-4 rounded-2xl bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/20">
                           <p className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">
-                            Horario pre-seleccionado
+                            {t.calendar.preselectedTime}
                           </p>
                           <p className="text-xs md:text-sm font-bold text-slate-800 dark:text-white mt-1">
-                            ⏱️ {formatFriendlySelectedDate()} a las {selectedSlot}
+                            ⏱️ {formatFriendlySelectedDate()} - {selectedSlot}
                           </p>
                           <p className="text-[10px] text-slate-500 mt-1 flex items-center gap-1">
-                            <Globe className="w-3.5 h-3.5 text-slate-400" /> Huso: {selectedTimezone}
+                            <Globe className="w-3.5 h-3.5 text-slate-400" /> {t.calendar.timezonePrefix} {selectedTimezone}
                           </p>
                         </div>
 
@@ -1222,7 +1219,7 @@ END:VCALENDAR`;
                                       {userName || user?.displayName || "Usuario de Google"}
                                     </span>
                                     <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/60 px-2 py-0.5 rounded-full flex items-center gap-1">
-                                      <Check className="w-2.5 h-2.5 stroke-[3]" /> Correo Verificado
+                                      <Check className="w-2.5 h-2.5 stroke-[3]" /> {t.calendar.verifiedEmailTag}
                                     </span>
                                   </div>
                                   <p className="text-xs font-medium text-slate-600 dark:text-slate-300">
@@ -1240,7 +1237,7 @@ END:VCALENDAR`;
                                 }}
                                 className="text-xs text-slate-400 hover:text-red-500 underline font-medium shrink-0 cursor-pointer"
                               >
-                                Cambiar
+                                {t.calendar.changeBtn}
                               </button>
                             </div>
                           ) : (
@@ -1251,10 +1248,10 @@ END:VCALENDAR`;
                                 </div>
                                 <div>
                                   <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                                    Correo Electrónico
+                                    {t.calendar.emailLabel}
                                   </p>
                                   <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                                    Reconocido automáticamente desde tu cuenta de Google (sin escribirlo)
+                                    {t.calendar.autoEmailNote}
                                   </p>
                                 </div>
                               </div>
@@ -1274,7 +1271,7 @@ END:VCALENDAR`;
                                       <path fill="#FBBC05" d="M5.3 14.5c-.25-.75-.4-1.55-.4-2.5s.15-1.75.4-2.5L1.5 6.55C.55 8.45 0 10.15 0 12s.55 3.55 1.5 5.45l3.8-2.95z" />
                                       <path fill="#34A853" d="M12 23c3.25 0 5.95-1.08 7.95-2.9l-3.6-2.8c-1.1.74-2.5 1.18-4.35 1.18-3.15 0-5.8-2-6.7-4.95l-3.8 2.95C3.4 20.35 7.35 23 12 23z" />
                                     </svg>
-                                    <span>Vincular Google</span>
+                                    <span>{t.calendar.linkGoogleBtn}</span>
                                   </>
                                 )}
                               </button>
@@ -1283,12 +1280,12 @@ END:VCALENDAR`;
 
                           <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                              <User className="w-3.5 h-3.5" /> Nombre del Solicitante:
+                              <User className="w-3.5 h-3.5" /> {t.calendar.nameLabel}
                             </label>
                             <input
                               type="text"
                               required
-                              placeholder="Nombre completo"
+                              placeholder={t.calendar.placeholderName}
                               value={userName}
                               onChange={(e) => setUserName(e.target.value)}
                               className="w-full text-xs md:text-sm p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white focus:outline-none focus:border-blue-500 transition-all shadow-sm"
@@ -1297,12 +1294,12 @@ END:VCALENDAR`;
 
                           <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                              📌 Título de la Reunión:
+                              📌 {t.calendar.projectLabel}
                             </label>
                             <input
                               type="text"
                               required
-                              placeholder="Ej. Planificación de ERP / Sesión de Consultoría Técnica"
+                              placeholder={t.calendar.placeholderProject}
                               value={userProjectName}
                               onChange={(e) => setUserProjectName(e.target.value)}
                               className="w-full text-xs md:text-sm p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:border-blue-500 text-slate-800 dark:text-white transition-all shadow-sm"
@@ -1311,12 +1308,12 @@ END:VCALENDAR`;
 
                           <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                              📞 Número de Celular:
+                              📞 {t.calendar.phoneLabel}
                             </label>
                             <input
                               type="tel"
                               required
-                              placeholder="Ej. +51 987 654 321"
+                              placeholder={t.calendar.placeholderPhone}
                               value={userPhone}
                               onChange={(e) => setUserPhone(e.target.value)}
                               className="w-full text-xs md:text-sm p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:border-blue-500 text-slate-800 dark:text-white transition-all shadow-sm"
@@ -1325,10 +1322,10 @@ END:VCALENDAR`;
 
                           <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                              🗒️ Motivo de la Reunión (Opcional):
+                              🗒️ {t.calendar.notesLabel}
                             </label>
                             <textarea
-                              placeholder="Ej. Analizar problemas de sincronización de la base de datos y proponer un roadmap de ingeniería..."
+                              placeholder={t.calendar.placeholderNotes}
                               value={userNotes}
                               onChange={(e) => setUserNotes(e.target.value)}
                               className="w-full text-xs md:text-sm p-3 h-20 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:border-blue-500 text-slate-800 dark:text-white transition-all shadow-sm resize-none"
@@ -1350,12 +1347,12 @@ END:VCALENDAR`;
                               {isLoading ? (
                                 <>
                                   <RefreshCw className="w-4 h-4 animate-spin" />
-                                  <span>Sincronizando Google Calendar & Meet y enviando correos...</span>
+                                  <span>{t.calendar.syncingGoogleMeet}</span>
                                 </>
                               ) : (
                                 <>
                                   <Send className="w-4 h-4" />
-                                  Confirmar y Agendar Reunión en Tiempo Real
+                                  {t.calendar.submitBtn}
                                 </>
                               )}
                             </button>
@@ -1379,13 +1376,13 @@ END:VCALENDAR`;
                                 )}
                                 <span>
                                   {isLoggingIn
-                                    ? "Conectando con Google..."
-                                    : "Iniciar Sesión con Google y Agendar Cita"}
+                                    ? t.calendar.connectingGoogle
+                                    : t.calendar.submitBtn}
                                 </span>
                               </button>
                               
                               <p className="text-[10px] text-center text-slate-400 dark:text-slate-500">
-                                🔒 Autenticación oficial de Google. El correo y nombre se reconocen de manera automática.
+                                🔒 {t.calendar.officialAuthNote}
                               </p>
                             </div>
                           )}

@@ -14,6 +14,7 @@ import {
   UserCheck 
 } from "lucide-react";
 import { LUXPROC_SECURITY_INFO, LUXPROC_DESIGNATED_RECIPIENT } from "../utils/cryptoSecurity";
+import { useLanguage } from "../utils/i18n";
 
 interface SecurityModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ interface SecurityModalProps {
 
 export default function SecurityModal({ isOpen, onClose }: SecurityModalProps) {
   useScrollLock(isOpen);
+  const { t } = useLanguage();
   const [persistenceData, setPersistenceData] = useState<any>(null);
 
   useEffect(() => {
@@ -71,10 +73,10 @@ export default function SecurityModal({ isOpen, onClose }: SecurityModalProps) {
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tight">
-                    Escudo Militar de Seguridad Criptográfica
+                    {t.securityModal.shieldTitle}
                   </h3>
                   <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-[10px] font-mono font-bold">
-                    NIVEL 4 (DEFENSA EN PROFUNDIDAD)
+                    {t.securityModal.levelBadge}
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
@@ -89,15 +91,15 @@ export default function SecurityModal({ isOpen, onClose }: SecurityModalProps) {
                 <div className="flex items-center gap-2">
                   <Lock className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   <span className="text-xs font-extrabold text-emerald-800 dark:text-emerald-300">
-                    Cifrado Militar de Extremo a Extremo (FIPS 140-2 / AES-256-GCM)
+                    {t.securityModal.encryptionTitle}
                   </span>
                 </div>
                 <span className="text-[10px] font-mono font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
-                  TLS 1.3 / AES-GCM 256
+                  {t.securityModal.tlsBadge}
                 </span>
               </div>
               <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
-                Toda la información tratada en esta plataforma web (reuniones con Google Meet, datos del cliente, Libro de Reclamaciones, solicitudes ARCO y proyectos) está blindada bajo un escudo criptográfico militar de nivel 4. Se prohíbe y previene la exfiltración de datos, ataques Man-In-The-Middle, robo de información o suplantación (phishing).
+                {t.securityModal.encryptionDesc}
               </p>
             </div>
 
@@ -106,34 +108,34 @@ export default function SecurityModal({ isOpen, onClose }: SecurityModalProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300 font-extrabold text-xs">
                   <Database className="w-4 h-4 text-blue-500" />
-                  <span>Garantía de Persistencia Perpetua Inmutable</span>
+                  <span>{t.securityModal.persistenceTitle}</span>
                 </div>
                 <span className="text-[10px] font-mono font-bold text-blue-600 dark:text-blue-300 bg-blue-500/15 px-2 py-0.5 rounded-full">
-                  RETENCIÓN 100% GARANTIZADA
+                  {t.securityModal.persistenceBadge}
                 </span>
               </div>
               <p className="text-[11px] text-slate-700 dark:text-slate-300 leading-relaxed">
-                Ninguna información de reuniones de Calendar, enlaces de Google Meet, quejas o datos de clientes se pierde al actualizar, modificar o reiniciar la plataforma. Funciona con un motor de <strong>triple capa de persistencia</strong>:
+                {t.securityModal.persistenceDesc}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-[10px] font-mono">
                 <div className="p-2 rounded-xl bg-white/70 dark:bg-slate-950/70 border border-blue-200 dark:border-blue-900">
-                  <div className="font-bold text-blue-600 dark:text-blue-400">Capa 1: Disco Inmutable</div>
-                  <div className="text-slate-500">JSON Vault local protegido</div>
+                  <div className="font-bold text-blue-600 dark:text-blue-400">{t.securityModal.layer1Title}</div>
+                  <div className="text-slate-500">{t.securityModal.layer1Desc}</div>
                 </div>
                 <div className="p-2 rounded-xl bg-white/70 dark:bg-slate-950/70 border border-blue-200 dark:border-blue-900">
-                  <div className="font-bold text-blue-600 dark:text-blue-400">Capa 2: Cloud Firestore</div>
-                  <div className="text-slate-500">Base de datos en la nube</div>
+                  <div className="font-bold text-blue-600 dark:text-blue-400">{t.securityModal.layer2Title}</div>
+                  <div className="text-slate-500">{t.securityModal.layer2Desc}</div>
                 </div>
                 <div className="p-2 rounded-xl bg-white/70 dark:bg-slate-950/70 border border-blue-200 dark:border-blue-900">
-                  <div className="font-bold text-blue-600 dark:text-blue-400">Capa 3: Bóveda Navegador</div>
-                  <div className="text-slate-500">Almacenamiento encriptado</div>
+                  <div className="font-bold text-blue-600 dark:text-blue-400">{t.securityModal.layer3Title}</div>
+                  <div className="text-slate-500">{t.securityModal.layer3Desc}</div>
                 </div>
               </div>
               {persistenceData?.metrics && (
                 <div className="pt-1 text-[10px] text-slate-500 dark:text-slate-400 flex flex-wrap gap-x-4 gap-y-1">
-                  <span>Reuniones guardadas: <strong>{persistenceData.metrics.totalBookings}</strong></span>
-                  <span>Reclamaciones: <strong>{persistenceData.metrics.totalClaims}</strong></span>
-                  <span>Solicitudes ARCO: <strong>{persistenceData.metrics.totalArcoRequests}</strong></span>
+                  <span>{t.securityModal.savedBookings} <strong>{persistenceData.metrics.totalBookings}</strong></span>
+                  <span>{t.securityModal.totalClaims} <strong>{persistenceData.metrics.totalClaims}</strong></span>
+                  <span>{t.securityModal.totalArco} <strong>{persistenceData.metrics.totalArcoRequests}</strong></span>
                 </div>
               )}
             </div>
@@ -143,24 +145,24 @@ export default function SecurityModal({ isOpen, onClose }: SecurityModalProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-extrabold text-xs">
                   <UserCheck className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                  <span>Persona Oficial Designada para Recepción y Validación</span>
+                  <span>{t.securityModal.recipientTitle}</span>
                 </div>
                 <span className="text-[10px] font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-500/15 px-2 py-0.5 rounded-full">
-                  100% VALIDADO
+                  {t.securityModal.validatedBadge}
                 </span>
               </div>
               <div className="text-xs text-slate-700 dark:text-slate-300 space-y-1">
                 <p>
-                  <strong>Representante Legal y Oficial de Datos Personales:</strong> {LUXPROC_DESIGNATED_RECIPIENT.legalRepresentative}
+                  <strong>{t.securityModal.legalRepLabel}</strong> {LUXPROC_DESIGNATED_RECIPIENT.legalRepresentative}
                 </p>
                 <p>
-                  <strong>Dirección Técnica de Ingeniería:</strong> {LUXPROC_DESIGNATED_RECIPIENT.engineeringDirector}
+                  <strong>{t.securityModal.techDirLabel}</strong> {t.securityModal.techDirVal}
                 </p>
                 <p>
-                  <strong>Correo Oficial Directo:</strong> <a href={`mailto:${LUXPROC_DESIGNATED_RECIPIENT.officialEmail}`} className="text-blue-600 dark:text-blue-400 font-bold underline">{LUXPROC_DESIGNATED_RECIPIENT.officialEmail}</a>
+                  <strong>{t.securityModal.officialEmailLabel}</strong> <a href={`mailto:${LUXPROC_DESIGNATED_RECIPIENT.officialEmail}`} className="text-blue-600 dark:text-blue-400 font-bold underline">{LUXPROC_DESIGNATED_RECIPIENT.officialEmail}</a>
                 </p>
                 <p className="text-[10px] text-slate-500 dark:text-slate-400">
-                  Cualquier gestión formal (Libro de Reclamaciones, Derechos ARCO o contrataciones) es canalizada formalmente y con sellos criptográficos SHA-256 hacia dicha titularidad.
+                  {t.securityModal.channelNote}
                 </p>
               </div>
             </div>
@@ -168,50 +170,50 @@ export default function SecurityModal({ isOpen, onClose }: SecurityModalProps) {
             {/* Anti-Phishing Highlights */}
             <div className="mt-5 space-y-3">
               <h4 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                <Fingerprint className="w-4 h-4 text-blue-500" /> Medidas Oficiales contra Ataques de Phishing y Spoofing
+                <Fingerprint className="w-4 h-4 text-blue-500" /> {t.securityModal.antiPhishingTitle}
               </h4>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                 {/* 1. Official Domain */}
                 <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-1">
-                  <span className="text-[10px] font-bold uppercase text-slate-400 block">Dominio Oficial Certificado</span>
+                  <span className="text-[10px] font-bold uppercase text-slate-400 block">{t.securityModal.certDomainTitle}</span>
                   <div className="flex items-center justify-between">
                     <span className="font-mono font-bold text-blue-600 dark:text-blue-400 text-xs">https://luxproc.com</span>
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                   </div>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Verifique siempre el candado de seguridad y el dominio exacto.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">{t.securityModal.certDomainDesc}</p>
                 </div>
 
                 {/* 2. Official RUC */}
                 <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-1">
-                  <span className="text-[10px] font-bold uppercase text-slate-400 block">Registro Tributario Oficial (RUC)</span>
+                  <span className="text-[10px] font-bold uppercase text-slate-400 block">{t.securityModal.rucTitle}</span>
                   <div className="flex items-center justify-between">
                     <span className="font-mono font-bold text-amber-600 dark:text-amber-400 text-xs">{LUXPROC_SECURITY_INFO.ruc}</span>
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                   </div>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400">LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. - RUC Formal Activo.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">{t.securityModal.rucDesc}</p>
                 </div>
 
                 {/* 3. Official Email */}
                 <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-1">
-                  <span className="text-[10px] font-bold uppercase text-slate-400 block">Único Correo Oficial de Contacto</span>
+                  <span className="text-[10px] font-bold uppercase text-slate-400 block">{t.securityModal.emailTitle}</span>
                   <div className="flex items-center justify-between">
                     <a href={`mailto:${LUXPROC_SECURITY_INFO.officialEmail}`} className="font-mono font-bold text-indigo-600 dark:text-indigo-400 text-xs hover:underline">
                       {LUXPROC_SECURITY_INFO.officialEmail}
                     </a>
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                   </div>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Rechace remitentes alternativos o no autorizados.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">{t.securityModal.emailDesc}</p>
                 </div>
 
                 {/* 4. Strict Headers */}
                 <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-1">
-                  <span className="text-[10px] font-bold uppercase text-slate-400 block">Cabeceras de Servidor Blindadas</span>
+                  <span className="text-[10px] font-bold uppercase text-slate-400 block">{t.securityModal.headersTitle}</span>
                   <div className="flex items-center justify-between">
                     <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 text-xs">HSTS Preload & Anti-Clickjacking</span>
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                   </div>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400">X-Frame-Options SAMEORIGIN bloquea clonaciones maliciosas.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">{t.securityModal.headersDesc}</p>
                 </div>
               </div>
             </div>
@@ -220,16 +222,16 @@ export default function SecurityModal({ isOpen, onClose }: SecurityModalProps) {
             <div className="mt-5 p-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 text-xs space-y-1">
               <div className="flex items-center gap-2 font-bold text-slate-700 dark:text-slate-200">
                 <ShieldAlert className="w-4 h-4 text-amber-500 shrink-0" />
-                <span>Aviso de Desvinculación Institucional</span>
+                <span>{t.securityModal.disclaimerTitle}</span>
               </div>
               <p className="text-[11px] leading-relaxed text-slate-500 dark:text-slate-400 font-medium">
-                Esta plataforma tecnológica, sus desarrollos de software (ERP, CRM, sistemas cloud) y servicios de consultoría no tienen vínculo con CIP (Colegio de Ingenieros del Perú), SUNAT u OSE.
+                {t.securityModal.disclaimerDesc}
               </p>
             </div>
 
             {/* Legal regulatory compliance footer note */}
             <p className="mt-5 text-[11px] text-slate-500 dark:text-slate-400 text-center font-medium">
-              Cumplimiento pleno de la <strong>Ley N° 29733 (Protección de Datos Personales de la República del Perú)</strong> y la <strong>Ley N° 29571 (Código de Protección y Defensa del Consumidor)</strong>.
+              {t.securityModal.lawsNote}
             </p>
 
             {/* Footer button */}
@@ -239,7 +241,7 @@ export default function SecurityModal({ isOpen, onClose }: SecurityModalProps) {
                 onClick={onClose}
                 className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer"
               >
-                Cerrar Certificado de Seguridad
+                {t.securityModal.closeBtn}
               </button>
             </div>
           </motion.div>
