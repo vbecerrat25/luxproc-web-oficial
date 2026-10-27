@@ -1,0 +1,108 @@
+{
+  "entities": {
+    "Booking": {
+      "title": "Booking",
+      "description": "Sesión agendada de auditoría técnica, consultoría o reunión por Google Meet",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "projectName": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "timezone": { "type": "string" },
+        "meetUrl": { "type": "string" },
+        "notes": { "type": "string" },
+        "phone": { "type": "string" },
+        "status": { "type": "string", "enum": ["confirmed", "cancelled"] },
+        "createdAt": { "type": "string" },
+        "calendarEventId": { "type": "string" },
+        "sha256Seal": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "projectName", "date", "time", "meetUrl", "status", "createdAt"]
+    },
+    "ClaimRecord": {
+      "title": "ClaimRecord",
+      "description": "Hoja de reclamación virtual formal conforme a la Ley N° 29571",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "trackingId": { "type": "string" },
+        "docType": { "type": "string" },
+        "docNum": { "type": "string" },
+        "fullName": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "address": { "type": "string" },
+        "assetType": { "type": "string", "enum": ["servicio", "producto"] },
+        "assetDescription": { "type": "string" },
+        "claimedAmount": { "type": "string" },
+        "claimType": { "type": "string", "enum": ["reclamo", "queja"] },
+        "claimDetail": { "type": "string" },
+        "consumerRequest": { "type": "string" },
+        "sha256Seal": { "type": "string" },
+        "encryptedPayload": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "status": { "type": "string", "enum": ["registrado", "en_revision", "atendido"] },
+        "recipientOfficialEmail": { "type": "string" },
+        "designatedOfficer": { "type": "string" }
+      },
+      "required": ["id", "trackingId", "docNum", "fullName", "email", "claimType", "claimDetail", "sha256Seal", "createdAt"]
+    },
+    "ArcoRecord": {
+      "title": "ArcoRecord",
+      "description": "Solicitud formal de ejercicio de derechos ARCO conforme a la Ley N° 29733",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "trackingId": { "type": "string" },
+        "arcoType": { "type": "string" },
+        "docType": { "type": "string" },
+        "docNum": { "type": "string" },
+        "fullName": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "detail": { "type": "string" },
+        "sha256Seal": { "type": "string" },
+        "encryptedPayload": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "status": { "type": "string", "enum": ["recibido", "en_proceso", "completado"] },
+        "recipientOfficialEmail": { "type": "string" },
+        "designatedOfficer": { "type": "string" }
+      },
+      "required": ["id", "trackingId", "arcoType", "docNum", "fullName", "email", "detail", "sha256Seal", "createdAt"]
+    },
+    "ContactMessage": {
+      "title": "ContactMessage",
+      "description": "Mensaje de consulta o cotización técnica empresarial",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "company": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "message", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/bookings/{bookingId}": {
+      "schema": { "$ref": "#/entities/Booking" },
+      "description": "Reservaciones y citas de Google Meet sincronizadas"
+    },
+    "/claims/{claimId}": {
+      "schema": { "$ref": "#/entities/ClaimRecord" },
+      "description": "Hojas de reclamación virtual con sello criptográfico SHA-256"
+    },
+    "/arco_requests/{arcoId}": {
+      "schema": { "$ref": "#/entities/ArcoRecord" },
+      "description": "Solicitudes ARCO de protección de datos personales"
+    },
+    "/contact_messages/{messageId}": {
+      "schema": { "$ref": "#/entities/ContactMessage" },
+      "description": "Consultas técnicas de clientes y empresas"
+    }
+  }
+}

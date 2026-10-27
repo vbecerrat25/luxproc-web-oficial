@@ -65,7 +65,7 @@ const CASE_STUDIES: CaseStudy[] = [
     solutionArchitecture: [
       "Módulo de Corte con cálculo algorítmico de pies cuadrados consumidos vs. estándar.",
       "Estaciones táctiles de marcado para operarios con lector óptico 2D.",
-      "Generación instantánea de Guías de Remisión Electrónicas (GRE) y Facturación SUNAT."
+      "Generación instantánea de Guías de Remisión Electrónicas (GRE) y Facturación Electrónica Corporativa."
     ],
     kpis: [
       { label: "Mermas de Materia Prima", value: "-34%", change: "de 12.8% a 4.2%", positive: true },
@@ -123,7 +123,7 @@ const CASE_STUDIES: CaseStudy[] = [
     tag: "AUDITORÍA & SEGURIDAD ELÉCTRICA",
     category: "peritaje",
     title: "Certificación ITSE sin Observaciones y Resistencia de Pozo a Tierra Reducida a 3.8 Ω",
-    subtitle: "Peritaje Técnico de Instalaciones, Calidad de Energía y Dossier Colegiado CIP",
+    subtitle: "Peritaje Técnico de Instalaciones, Calidad de Energía y Dossier con Firma de Ingeniero Registrado",
     clientType: "Edificio Corporativo & Centro de Distribución Logística",
     location: "Lima (San Isidro / Lurín) - Perú",
     period: "Intervención: 5 días hábiles • Certificado INDECI Aprobado",
@@ -133,11 +133,11 @@ const CASE_STUDIES: CaseStudy[] = [
       "Plazo de 7 días hábiles otorgado por la Municipalidad para levantar observaciones ITSE.",
       "Desequilibrio de fases superior al 18% en el tablero general de distribución."
     ],
-    solution: "Auditoría pericial integral con LUXPROC E-DIAGNOSIS: regeneración química de pozos PAT con telurómetro calibrado, balanceo de cargas en alimentadores y emisión de dossier pericial con firma de Ingeniero Colegiado CIP.",
+    solution: "Auditoría pericial integral con LUXPROC E-DIAGNOSIS: regeneración química de pozos PAT con telurómetro calibrado, balanceo de cargas en alimentadores y emisión de dossier firmado por el ingeniero registrado con su código CIP, especialidad y departamento donde se encuentra (sin vinculación institucional con el CIP, SUNAT u OSE).",
     solutionArchitecture: [
       "Medición de resistividad de terreno y protocolo de pruebas de puesta a tierra.",
       "Inspección termográfica infrarroja en barras de distribución y llaves termomagnéticas.",
-      "Firma y habilitación CIP N° 278034 del Ing. Mecánico-Eléctrico Víctor Becerra conforme CNE."
+      "Firma del ingeniero registrado con su código CIP, especialidad y departamento donde se encuentra conforme a normas CNE."
     ],
     kpis: [
       { label: "Resistencia PAT Final", value: "3.8 Ω", change: "norma exige ≤ 25 Ω", positive: true },
@@ -145,7 +145,7 @@ const CASE_STUDIES: CaseStudy[] = [
       { label: "Aprobación INDECI", value: "100%", change: "inspección aprobada", positive: true },
       { label: "Plazo de Entrega", value: "72 hrs", change: "dossier físico + digital", positive: true }
     ],
-    quote: "El expediente técnico con certificado de habilitación CIP y protocolo de pruebas firmado por LUXPROC fue aceptado inmediatamente por los inspectores de seguridad de la municipalidad, evitando la paralización del centro logístico.",
+    quote: "El expediente técnico con protocolo de pruebas firmado por el ingeniero registrado de LUXPROC fue aceptado inmediatamente por los inspectores de seguridad técnica, optimizando la operatividad del centro logístico.",
     author: "Lic. Patricia Saldaña",
     role: "Directora de Infraestructura y Operaciones",
     systemUsed: "LUXPROC E-DIAGNOSIS",

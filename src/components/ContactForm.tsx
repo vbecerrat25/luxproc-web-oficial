@@ -12,7 +12,7 @@ export default function ContactForm() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         
-        {/* CEO Quote block (Inspiring message from Victor Becerra) */}
+        {/* CEO Quote block (Inspiring message from leadership) */}
         <div className="max-w-4xl mx-auto text-center px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

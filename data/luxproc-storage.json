@@ -1,0 +1,71 @@
+{
+  "lastSaved": "2026-10-22T13:25:16.770Z",
+  "encryptionGrade": "MILITARY_LEVEL_4_AES_256_GCM",
+  "designatedRecipient": "Carmen Terán Vda. de Becerra (luxproc.11@gmail.com)",
+  "ruc": "20616650735",
+  "domain": "https://luxproc.com",
+  "bookings": [
+    {
+      "id": "b1",
+      "name": "Alejandro Ruiz",
+      "email": "aruiz@nova-corp.io",
+      "projectName": "CRM Integrado de Ventas",
+      "date": "2026-10-22",
+      "time": "13:00",
+      "timezone": "America/Santiago",
+      "meetUrl": "https://meet.google.com/abc-xzy-qwe",
+      "notes": "Reunión de alineación arquitectónica para ERP",
+      "status": "confirmed",
+      "createdAt": "2026-10-22T13:17:13.562Z"
+    },
+    {
+      "id": "b2",
+      "name": "Elena Gómez",
+      "email": "elena@vertex-digital.com",
+      "projectName": "Arquitectura Web con NextJS",
+      "date": "2026-10-22",
+      "time": "13:30",
+      "timezone": "Europe/Madrid",
+      "meetUrl": "https://meet.google.com/tgk-vypw-jqs",
+      "notes": "Análisis técnico de migración de CRM legacy.",
+      "status": "confirmed",
+      "createdAt": "2026-10-22T13:17:13.562Z"
+    },
+    {
+      "id": "b3",
+      "name": "Soporte Técnico",
+      "email": "luxproc.11@gmail.com",
+      "projectName": "Mantenimiento de Servidores I+D+i",
+      "date": "2026-10-22",
+      "time": "14:00",
+      "timezone": "America/Santiago",
+      "meetUrl": "https://meet.google.com/xyz-abc-123",
+      "notes": "Bloque de mantenimiento reservado por LUXPROC.",
+      "status": "confirmed",
+      "createdAt": "2026-10-22T13:17:13.562Z"
+    }
+  ],
+  "claimsLedger": [],
+  "arcoLedger": [],
+  "contactMessages": [
+    {
+      "id": "m1",
+      "name": "Carlos Mendoza",
+      "email": "cmendoza@volt-solutions.com",
+      "company": "Volt Solutions",
+      "message": "Cotización para una arquitectura modular de IoT e instalaciones eléctricas customizadas para planta automatizada de I+D+i.",
+      "createdAt": "2026-10-22T13:17:13.562Z"
+    }
+  ],
+  "emailLogs": [
+    {
+      "id": "e1",
+      "bookingId": "b1",
+      "recipient": "aruiz@nova-corp.io",
+      "subject": "Confirmación de Reunión: CRM Integrado de Ventas - Google Meet",
+      "body": "¡Hola Alejandro! Tu reunión ha sido programada con éxito para hoy a las 10:00 (Huso: America/Chile). Enlace Meet: https://meet.google.com/abc-xzy-qwe",
+      "sentAt": "2026-10-22T13:17:13.562Z",
+      "type": "confirmation"
+    }
+  ]
+}

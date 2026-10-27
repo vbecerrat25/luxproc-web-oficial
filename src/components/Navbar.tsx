@@ -1,19 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import BrandLogo from "./BrandLogo";
 import { useScrollLock } from "../utils/scrollLock";
+import { useLanguage, LANGUAGE_OPTIONS, Language } from "../utils/i18n";
 import { 
   Sun, 
   Moon, 
-  Terminal, 
-  Layers, 
   Calendar, 
   Sparkles, 
   Workflow, 
   X, 
   Share2, 
-  Download,
-  FileDown
+  Clock,
+  ShieldCheck,
+  Globe,
+  ChevronDown,
+  Check
 } from "lucide-react";
 
 interface NavbarProps {
@@ -31,19 +33,34 @@ interface SocialItem {
   bgColor: string;
   borderColor: string;
   icon: React.ReactNode;
-  url: string;
-  actionText: string;
+  isActive: boolean;
+  url?: string;
+  actionText?: string;
+  isInternalAnchor?: boolean;
 }
 
 const SOCIAL_NETWORKS: SocialItem[] = [
   {
+    name: "Google Meet",
+    description: "Canal oficial activo. Agendamiento técnico directo de 30 minutos. Coordina con nuestro equipo de ingeniería la arquitectura de tu software ERP/CRM o asesoría tecnológica con enlace oficial.",
+    color: "text-[#00897B]",
+    bgColor: "bg-[#00897B]/10",
+    borderColor: "border-[#00897B]/30 hover:border-[#00897B]/60",
+    url: "#calendario",
+    actionText: "Agendar Reunión Meet",
+    isActive: true,
+    isInternalAnchor: true,
+    icon: (
+      <Calendar className="w-6 h-6" />
+    )
+  },
+  {
     name: "LinkedIn",
-    description: "Conexiones corporativas de LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C., anuncios de proyectos de ingeniería I+D+i, ofertas de empleo tecnológico, y publicaciones del Ing. Víctor Becerra.",
+    description: "Canal corporativo para anuncios de proyectos de ingeniería I+D+i, ofertas de empleo tecnológico y publicaciones del equipo de ingeniería.",
     color: "text-[#0077B5]",
     bgColor: "bg-[#0077B5]/10",
-    borderColor: "border-[#0077B5]/20 hover:border-[#0077B5]/50",
-    url: "https://www.linkedin.com",
-    actionText: "Conectar en LinkedIn",
+    borderColor: "border-[#0077B5]/20",
+    isActive: false,
     icon: (
       <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
         <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
@@ -51,27 +68,12 @@ const SOCIAL_NETWORKS: SocialItem[] = [
     )
   },
   {
-    name: "WhatsApp",
-    description: "Asistencia de ingeniería inmediata. Solicita cotizaciones personalizadas de ERP/CRM, automatización industrial SEC y soporte técnico 24/7.",
-    color: "text-[#25D366]",
-    bgColor: "bg-[#25D366]/10",
-    borderColor: "border-[#25D366]/20 hover:border-[#25D366]/50",
-    url: "https://wa.me/51900000000",
-    actionText: "Chatear por WhatsApp",
-    icon: (
-      <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
-        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.454L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.747 1.451 5.436 0 9.86-4.411 9.863-9.83 0-2.625-1.023-5.093-2.879-6.953-1.856-1.857-4.327-2.88-6.953-2.88-5.438 0-9.862 4.412-9.865 9.831-.001 1.765.463 3.49 1.345 5.021l-.975 3.558 3.638-.954zm10.155-7.142c-.273-.137-1.62-.8-1.871-.892-.253-.093-.437-.137-.62.137-.183.273-.708.892-.868 1.075-.16.183-.321.206-.594.069-.273-.137-1.153-.425-2.196-1.355-.811-.723-1.358-1.617-1.517-1.892-.16-.273-.017-.42.12-.557.123-.122.273-.321.411-.481.137-.16.183-.273.274-.457.09-.183.046-.343-.023-.48-.069-.137-.62-1.492-.85-2.043-.223-.538-.448-.464-.62-.473-.16-.008-.344-.01-.527-.01-.183 0-.48.069-.73.343-.25.273-.956.934-.956 2.278 0 1.343.977 2.639 1.084 2.784.11.146 1.921 2.932 4.654 4.113.65.28 1.157.447 1.554.573.654.208 1.25.178 1.72.108.524-.078 1.62-.663 1.85-1.302.23-.639.23-1.186.16-1.303-.07-.11-.253-.183-.526-.32z"/>
-      </svg>
-    )
-  },
-  {
     name: "YouTube",
-    description: "Demostraciones técnicas de tableros de control IoT, simulaciones de circuitos impresos personalizados, y documentales de desarrollo de software empresarial.",
+    description: "Canal de demostraciones técnicas de tableros IoT, simulaciones de circuitos impresos personalizados y software empresarial.",
     color: "text-[#FF0000]",
     bgColor: "bg-[#FF0000]/10",
-    borderColor: "border-[#FF0000]/20 hover:border-[#FF0000]/50",
-    url: "https://www.youtube.com",
-    actionText: "Ir al Canal de YouTube",
+    borderColor: "border-[#FF0000]/20",
+    isActive: false,
     icon: (
       <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
         <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
@@ -80,12 +82,11 @@ const SOCIAL_NETWORKS: SocialItem[] = [
   },
   {
     name: "Instagram",
-    description: "Renders tridimensionales en CAD, modelados esquemáticos UX/UI, cobertura de eventos de innovación y el día a día de nuestro equipo.",
+    description: "Canal de renders tridimensionales en CAD, modelados esquemáticos UX/UI y novedades de tecnología.",
     color: "text-[#E1306C]",
     bgColor: "bg-[#E1306C]/10",
-    borderColor: "border-[#E1306C]/20 hover:border-[#E1306C]/50",
-    url: "https://www.instagram.com",
-    actionText: "Ver Instagram",
+    borderColor: "border-[#E1306C]/20",
+    isActive: false,
     icon: (
       <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
@@ -94,12 +95,11 @@ const SOCIAL_NETWORKS: SocialItem[] = [
   },
   {
     name: "Facebook",
-    description: "Casos de éxito y testimonios, reportes de soporte reactivo y preventivo, y actualizaciones de alianzas estratégicas corporativas.",
+    description: "Canal de actualizaciones corporativas, comunicados técnicos y reportes de desarrollo.",
     color: "text-[#1877F2]",
     bgColor: "bg-[#1877F2]/10",
-    borderColor: "border-[#1877F2]/20 hover:border-[#1877F2]/50",
-    url: "https://www.facebook.com",
-    actionText: "Seguir en Facebook",
+    borderColor: "border-[#1877F2]/20",
+    isActive: false,
     icon: (
       <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -108,9 +108,24 @@ const SOCIAL_NETWORKS: SocialItem[] = [
   }
 ];
 
-export default function Navbar({ isDarkMode, setIsDarkMode, onOpenBrochure, onOpenFaq, onOpenCasos }: NavbarProps) {
+export default function Navbar({ isDarkMode, setIsDarkMode, onOpenBrochure, onOpenFaq }: NavbarProps) {
   const [isSocialsOpen, setIsSocialsOpen] = useState(false);
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+  const langDropdownRef = useRef<HTMLDivElement>(null);
+  const { language, setLanguage, t } = useLanguage();
+
   useScrollLock(isSocialsOpen);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (langDropdownRef.current && !langDropdownRef.current.contains(e.target as Node)) {
+        setIsLangMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleFaqClick = () => {
     if (onOpenFaq) {
@@ -120,17 +135,11 @@ export default function Navbar({ isDarkMode, setIsDarkMode, onOpenBrochure, onOp
     }
   };
 
-  const handleCasosClick = () => {
-    if (onOpenCasos) {
-      onOpenCasos();
-    } else {
-      window.dispatchEvent(new CustomEvent("open-casos-fullview"));
-    }
-  };
+  const currentLangOption = LANGUAGE_OPTIONS.find((l) => l.code === language) || LANGUAGE_OPTIONS[0];
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-900 transition-colors duration-300">
+      <header className="sticky top-0 z-40 w-full bg-white/85 dark:bg-slate-950/85 backdrop-blur-xl border-b border-slate-200 dark:border-slate-900 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           
           {/* Brand Logo design */}
@@ -147,7 +156,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode, onOpenBrochure, onOp
             <BrandLogo className="h-10 sm:h-12 w-auto max-w-[150px] sm:max-w-[200px] object-contain" isDarkMode={isDarkMode} id="navbar-logo-fallback" />
           </a>
 
-          {/* Desktop Anchor Navigation links */}
+          {/* Desktop Anchor Navigation links (Casos de éxito hidden per user request) */}
           <nav className="hidden lg:flex items-center gap-6 xl:gap-7">
             <button
               onClick={() => {
@@ -155,69 +164,98 @@ export default function Navbar({ isDarkMode, setIsDarkMode, onOpenBrochure, onOp
               }}
               className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
             >
-              Nosotros
+              {t.nav.about}
             </button>
             <a
               href="#soluciones"
-              onClick={(e) => {
+              onClick={() => {
                 window.dispatchEvent(new CustomEvent("open-solutions-fullview"));
               }}
               className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
             >
-              Soluciones
+              {t.nav.solutions}
             </a>
-            <button
-              onClick={handleCasosClick}
-              className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
-            >
-              Casos de Éxito
-            </button>
             <button
               onClick={handleFaqClick}
               className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
             >
-              FAQ
+              {t.nav.faq}
             </button>
             <button
               onClick={() => setIsSocialsOpen(true)}
               className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-amber-400 transition-colors cursor-pointer"
             >
-              Redes
+              {t.nav.networks}
             </button>
           </nav>
 
-          {/* Controls - Light/Dark toggle + Call to action */}
+          {/* Controls - Language Switcher, Light/Dark toggle + Call to action */}
           <div className="flex items-center gap-2 sm:gap-3">
             
-            {/* Brochure PDF Download Button */}
-            <button
-              onClick={() => {
-                if (onOpenBrochure) {
-                  onOpenBrochure();
-                } else {
-                  window.dispatchEvent(new CustomEvent("open-brochure-modal"));
-                }
-              }}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors text-xs font-bold text-slate-700 dark:text-slate-200 cursor-pointer border border-slate-200/80 dark:border-slate-700"
-              title="Descargar Brochure Corporativo 2026 (PDF)"
-            >
-              <FileDown className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-              <span>Brochure PDF</span>
-            </button>
+            {/* Automatic Multi-Language Selector Dropdown */}
+            <div className="relative" ref={langDropdownRef}>
+              <button
+                onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 text-xs font-bold transition-all cursor-pointer"
+                title="Cambiar Idioma / Change Language / Mudar Idioma"
+                aria-label="Language Selector"
+                aria-expanded={isLangMenuOpen}
+              >
+                <span className="text-sm">{currentLangOption.flag}</span>
+                <span className="hidden sm:inline font-mono uppercase text-[11px]">{currentLangOption.name}</span>
+                <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${isLangMenuOpen ? "rotate-180 text-blue-500" : ""}`} />
+              </button>
 
-            {/* Mobile Brochure icon button */}
+              <AnimatePresence>
+                {isLangMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: -4 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -4 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 mt-1.5 w-44 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl py-1.5 z-50 overflow-hidden"
+                  >
+                    <div className="px-3 py-1.5 text-[10px] uppercase font-bold tracking-wider text-slate-400 border-b border-slate-100 dark:border-slate-800">
+                      {t.nav.language}
+                    </div>
+                    {LANGUAGE_OPTIONS.map((opt) => {
+                      const isSelected = opt.code === language;
+                      return (
+                        <button
+                          key={opt.code}
+                          onClick={() => {
+                            setLanguage(opt.code);
+                            setIsLangMenuOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between px-3.5 py-2 text-xs font-medium text-left transition-colors cursor-pointer ${
+                            isSelected
+                              ? "bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 font-bold"
+                              : "text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <span>{opt.flag}</span>
+                            <span>{opt.name}</span>
+                          </span>
+                          {isSelected && <Check className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />}
+                        </button>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Security & Anti-Phishing Shield Button */}
             <button
               onClick={() => {
-                if (onOpenBrochure) {
-                  onOpenBrochure();
-                } else {
-                  window.dispatchEvent(new CustomEvent("open-brochure-modal"));
-                }
+                window.dispatchEvent(new CustomEvent("open-security-modal"));
               }}
-              className="sm:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-all cursor-pointer relative"
-              title="Descargar Brochure"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25 transition-all text-xs font-bold cursor-pointer"
+              title="Plataforma Encriptada TLS 1.3 / Escudo Anti-Phishing (RUC 20616650735)"
             >
-              <FileDown className="w-4.5 h-4.5 text-blue-600 dark:text-blue-400" />
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+              <span className="hidden md:inline">{t.nav.secureSite}</span>
             </button>
 
             {/* Mobile Nosotros button */}
@@ -225,17 +263,9 @@ export default function Navbar({ isDarkMode, setIsDarkMode, onOpenBrochure, onOp
               onClick={() => {
                 window.dispatchEvent(new CustomEvent("open-nosotros-fullview"));
               }}
-              className="lg:hidden px-2 py-1.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[11px] font-bold uppercase tracking-wider hover:bg-blue-500/20 transition-all cursor-pointer"
+              className="lg:hidden px-2.5 py-1.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[11px] font-bold uppercase tracking-wider hover:bg-blue-500/20 transition-all cursor-pointer"
             >
-              Nosotros
-            </button>
-
-            {/* Mobile Casos button */}
-            <button
-              onClick={handleCasosClick}
-              className="lg:hidden px-2 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold uppercase tracking-wider hover:bg-emerald-500/20 transition-all cursor-pointer"
-            >
-              Casos
+              {t.nav.about}
             </button>
 
             {/* Mobile/All screens networks shortcut */}
@@ -267,7 +297,7 @@ export default function Navbar({ isDarkMode, setIsDarkMode, onOpenBrochure, onOp
               className="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-550 transition-colors text-xs font-bold text-white shadow-sm shadow-blue-500/10 cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5" />
-              Agendar Ahora
+              {t.nav.bookNow}
             </a>
           </div>
 
@@ -293,17 +323,17 @@ export default function Navbar({ isDarkMode, setIsDarkMode, onOpenBrochure, onOp
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: "spring", duration: 0.5, bounce: 0.15 }}
-              className="relative w-full max-w-2xl max-h-[85vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-3xl shadow-2xl p-6 md:p-8 overflow-y-auto z-10 flex flex-col"
+              className="relative w-full max-w-2xl max-h-[85vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-3xl shadow-2xl p-6 md:p-8 overflow-y-auto z-10 flex flex-col text-left"
             >
               {/* Header */}
               <div className="flex items-start justify-between pb-4 border-b border-slate-100 dark:border-slate-800/60 mb-6">
                 <div>
                   <h3 className="text-xl font-extrabold text-slate-800 dark:text-white flex items-center gap-2">
                     <Workflow className="w-5 h-5 text-blue-500 animate-pulse" />
-                    Nuestras Redes Sociales
+                    {t.nav.networkTitle}
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    Conéctate con el equipo de LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. y descubre nuestra ingeniería.
+                    {t.nav.networkSubtitle}
                   </p>
                 </div>
                 <button
@@ -314,41 +344,91 @@ export default function Navbar({ isDarkMode, setIsDarkMode, onOpenBrochure, onOp
                 </button>
               </div>
 
+              {/* Notice Banner - Networks Not Active */}
+              <div className="mb-5 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 text-amber-900 dark:text-amber-200 text-xs flex items-start gap-3">
+                <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="font-bold text-[11px] sm:text-xs text-amber-800 dark:text-amber-300">
+                    {t.nav.networkSubtitle}
+                  </p>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                    {t.nav.networkNotice}
+                  </p>
+                </div>
+              </div>
+
               {/* Social List */}
               <div className="space-y-4 overflow-y-auto pr-1">
-                {SOCIAL_NETWORKS.map((social) => (
-                  <motion.a
-                    key={social.name}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ x: 4, scale: 1.01 }}
-                    className={`flex items-start gap-4 p-4 rounded-2xl border bg-slate-50/40 dark:bg-slate-900/40 ${social.borderColor} transition-all cursor-pointer`}
-                  >
-                    <div className={`p-3 rounded-xl ${social.bgColor} ${social.color} flex-shrink-0`}>
-                      {social.icon}
-                    </div>
-                    <div className="space-y-1 flex-grow">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-extrabold text-slate-800 dark:text-slate-100">
-                          {social.name}
-                        </span>
-                        <span className="text-[10px] font-bold text-blue-600 dark:text-amber-400 underline">
-                          {social.actionText} →
-                        </span>
+                {SOCIAL_NETWORKS.map((social) => {
+                  if (social.isActive && social.isInternalAnchor) {
+                    return (
+                      <motion.a
+                        key={social.name}
+                        href={social.url}
+                        onClick={() => {
+                          setIsSocialsOpen(false);
+                          setTimeout(() => {
+                            const el = document.getElementById("calendario");
+                            if (el) el.scrollIntoView({ behavior: "smooth" });
+                          }, 100);
+                        }}
+                        whileHover={{ x: 3, scale: 1.01 }}
+                        className={`flex items-start gap-4 p-4 rounded-2xl border bg-emerald-50/50 dark:bg-emerald-950/20 ${social.borderColor} transition-all cursor-pointer`}
+                      >
+                        <div className={`p-3 rounded-xl ${social.bgColor} ${social.color} flex-shrink-0`}>
+                          {social.icon}
+                        </div>
+                        <div className="space-y-1.5 flex-grow">
+                          <div className="flex flex-wrap items-center justify-between gap-1">
+                            <span className="text-sm font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                              {social.name}
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
+                                {t.nav.networkActiveBadge}
+                              </span>
+                            </span>
+                            <span className="text-xs font-bold text-teal-600 dark:text-teal-400 underline">
+                              {social.actionText} →
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                            {social.description}
+                          </p>
+                        </div>
+                      </motion.a>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={social.name}
+                      className="flex items-start gap-4 p-4 rounded-2xl border bg-slate-50/60 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/80 transition-all opacity-85"
+                    >
+                      <div className={`p-3 rounded-xl ${social.bgColor} ${social.color} flex-shrink-0 opacity-75`}>
+                        {social.icon}
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-                        {social.description}
-                      </p>
+                      <div className="space-y-1.5 flex-grow">
+                        <div className="flex flex-wrap items-center justify-between gap-1">
+                          <span className="text-sm font-extrabold text-slate-800 dark:text-slate-200">
+                            {social.name}
+                          </span>
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-200/70 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-300/60 dark:border-slate-700">
+                            <Clock className="w-3 h-3 text-amber-500" />
+                            {t.nav.networkInactiveBadge}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                          {social.description}
+                        </p>
+                      </div>
                     </div>
-                  </motion.a>
-                ))}
+                  );
+                })}
               </div>
               
               {/* Footer inside modal */}
               <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/60 text-center">
                 <p className="text-[10px] text-slate-400 font-medium">
-                  Sigue a LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. • Consultoría de Ingeniería de Precisión & Software de Alto Rendimiento
+                  LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. • Consultoría de Ingeniería de Precisión & Software de Alto Rendimiento
                 </p>
               </div>
             </motion.div>

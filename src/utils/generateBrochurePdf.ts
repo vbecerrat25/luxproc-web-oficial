@@ -12,11 +12,11 @@ export interface BrochureData {
 
 export const DEFAULT_BROCHURE_DATA: BrochureData = {
   companyName: "LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C.",
-  ruc: "20504794637",
+  ruc: "20616650735",
   domicile: "La Libertad, Perú",
-  technicalSpecialist: "Ing. Víctor Becerra",
-  cipNumber: "278034",
-  email: "contacto@luxproc.com",
+  technicalSpecialist: "Ingeniero Registrado con CIP",
+  cipNumber: "CIP y Especialidad",
+  email: "luxproc.11@gmail.com",
   domain: "www.luxproc.com"
 };
 
@@ -173,12 +173,12 @@ export function createBrochurePdf(data: BrochureData = DEFAULT_BROCHURE_DATA): j
   doc.setTextColor(4, 120, 87);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(8);
-  doc.text("LUXPROC E-DIAGNOSIS (Peritaje CIP)", margin + 3, curY + 5);
+  doc.text("LUXPROC E-DIAGNOSIS (Diagnostico CNE)", margin + 3, curY + 5);
 
   doc.setTextColor(71, 85, 105);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(7);
-  const diagDesc = "Auditorias electricas integrales, medicion de pozo a tierra (PAT <= 25 Ohm), termografia de tableros, caida de tension y fotometria lux. Expedientes con firma CIP.";
+  const diagDesc = "Auditorias electricas integrales, medicion de pozo a tierra (PAT <= 25 Ohm), termografia de tableros, caida de tension y fotometria lux. Expedientes con firma del ingeniero registrado.";
   doc.text(doc.splitTextToSize(diagDesc, cardWidth - 6), margin + 3, curY + 10);
   doc.setTextColor(4, 120, 87);
   doc.setFont("helvetica", "bold");
@@ -218,9 +218,9 @@ export function createBrochurePdf(data: BrochureData = DEFAULT_BROCHURE_DATA): j
   const badgeWidth = (contentWidth - 6) / 4;
   const badgeHeight = 12;
 
-  // Explicit CIP N° 278034 as requested by user
+  // Registered engineer compliance
   const badges = [
-    { title: "CIP Habilitado", subtitle: `CIP N° ${data.cipNumber}` },
+    { title: "Ing. Registrado", subtitle: "CIP y Especialidad" },
     { title: "CNE / RNE", subtitle: "Norma EM.010" },
     { title: "IEEE 142 PAT", subtitle: "Tierra <= 25 Ohm" },
     { title: "ISO 55001 / 9001", subtitle: "Gestion Activos" }
@@ -260,7 +260,7 @@ export function createBrochurePdf(data: BrochureData = DEFAULT_BROCHURE_DATA): j
   doc.setTextColor(71, 85, 105);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(7);
-  const legalText = "Este expediente tecnico y portafolio de ingenieria cuenta con la validez de la Ley del Ejercicio Profesional de la Ingenieria en el Peru y la representacion facultada de Carmen Teran Vda. de Becerra (CEO & Co-Fundadora).";
+  const legalText = "Este expediente tecnico y portafolio de ingenieria cuenta con la validez de la Ley del Ejercicio Profesional de la Ingenieria en el Peru y la representacion facultada de Carmen Teran Vda. de Becerra (CEO & Co-Fundadora). Nota legal: servicios independientes sin vinculacion institucional con el CIP, SUNAT u OSE.";
   doc.text(doc.splitTextToSize(legalText, contentWidth - 62), margin + 4, curY + 10);
 
   // Signature box on the right
@@ -272,16 +272,16 @@ export function createBrochurePdf(data: BrochureData = DEFAULT_BROCHURE_DATA): j
   doc.setTextColor(100, 116, 139);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(6);
-  doc.text("FIRMA Y SELLO TECNICO", pageWidth - margin - 27.5, curY + 6.5, { align: "center" });
+  doc.text("FIRMA Y RESPALDO TECNICO", pageWidth - margin - 27.5, curY + 6.5, { align: "center" });
 
   doc.setTextColor(15, 23, 42);
-  doc.setFontSize(7.5);
-  doc.text(data.technicalSpecialist.toUpperCase(), pageWidth - margin - 27.5, curY + 12, { align: "center" });
+  doc.setFontSize(7);
+  doc.text("INGENIERO REGISTRADO", pageWidth - margin - 27.5, curY + 12, { align: "center" });
 
   doc.setTextColor(37, 99, 235);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(6.5);
-  doc.text(`COLEGIADO CIP N° ${data.cipNumber}`, pageWidth - margin - 27.5, curY + 16.5, { align: "center" });
+  doc.setFontSize(6);
+  doc.text("CON CODIGO CIP Y ESPECIALIDAD", pageWidth - margin - 27.5, curY + 16.5, { align: "center" });
 
   curY += 32;
 

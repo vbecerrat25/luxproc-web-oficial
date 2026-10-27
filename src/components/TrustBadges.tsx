@@ -31,12 +31,12 @@ interface BadgeItem {
 const ACCREDITATIONS: BadgeItem[] = [
   {
     id: "cip",
-    code: "CIP N° 278034 - HABILITADO",
-    title: "Colegio de Ingenieros del Perú",
-    authority: "Consejo Nacional CIP / C.D. La Libertad - Lima",
-    description: "Todos los peritajes eléctricos, expedientes técnicos de obras, certificaciones de pozo a tierra y auditorías de automatización cuentan con firma, sello y certificado de habilitación de Ingeniero Mecánico-Eléctrico Colegiado (CIP N° 278034).",
-    normative: "Ley N° 28858 y Ley N° 16053 del Ejercicio Profesional de la Ingeniería en el Perú.",
-    highlight: "Expedientes 100% admisibles para INDECI y Municipalidades",
+    code: "INGENIERO REGISTRADO CIP",
+    title: "Ingeniería y Peritaje Técnico",
+    authority: "Ingeniero Registrado con CIP y Especialidad",
+    description: "Los peritajes eléctricos, expedientes técnicos de obras, certificaciones de pozo a tierra y auditorías cuentan con firma y respaldo del ingeniero registrado con su código CIP, especialidad y departamento donde se encuentra (sin vinculación institucional con el CIP, SUNAT u OSE).",
+    normative: "Ley N° 28858 del Ejercicio Profesional de la Ingeniería en el Perú.",
+    highlight: "Expedientes técnicos de ingeniería conforme a normas CNE",
     icon: Award,
     color: "text-amber-500 dark:text-amber-400",
     borderColor: "border-amber-500/30 hover:border-amber-500/70",
@@ -83,11 +83,11 @@ const ACCREDITATIONS: BadgeItem[] = [
   },
   {
     id: "sunat-ose",
-    code: "SUNAT / UBL 2.1",
-    title: "Comprobantes y Guías Electrónicas",
-    authority: "Superintendencia Nacional de Aduanas y de Administración Tributaria",
-    description: "Nuestros sistemas ERP generan facturas, boletas, notas de crédito y Guías de Remisión Electrónicas (GRE) validadas en tiempo real vía OSE / SUNAT con firma digital XML UBL 2.1 y códigos QR tributarios.",
-    normative: "Resolución de Superintendencia N° 123-2022/SUNAT y normas conexas.",
+    code: "XML UBL 2.1 ESTÁNDAR",
+    title: "Gestión y Comprobantes Digitales",
+    authority: "Estándar Abierto OASIS UBL 2.1",
+    description: "Nuestros sistemas ERP generan facturas, boletas, notas de crédito y Guías de Remisión en formato digital XML UBL 2.1 estándar y códigos QR de trazabilidad comercial y logística autónoma.",
+    normative: "Estándares internacionales de intercambio de documentos estructurados.",
     highlight: "Emisión sin caídas y sincronización contable automática",
     icon: FileCheck2,
     color: "text-cyan-500 dark:text-cyan-400",
@@ -126,7 +126,7 @@ export default function TrustBadges() {
             Ingeniería Certificada Bajo <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">Estándares Oficiales</span>
           </h2>
           <p className="mt-3 text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-            Nuestras plataformas tecnológicas, peritajes de campo y sistemas de automatización cumplen rigurosamente con las exigencias del Colegio de Ingenieros del Perú, INDECI, SUNAT y normativas internacionales.
+            Nuestras plataformas tecnológicas, peritajes de campo y sistemas de automatización se desarrollan conforme a las normas técnicas peruanas e internacionales de ingeniería (sin vinculación institucional con el CIP, SUNAT u OSE).
           </p>
         </div>
 
@@ -173,7 +173,7 @@ export default function TrustBadges() {
         <div className="mt-8 pt-6 border-t border-slate-200/60 dark:border-slate-800/60 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-[11px] font-medium text-slate-500 dark:text-slate-400">
           <span className="flex items-center gap-1.5">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-            Ingeniero Mecánico-Eléctrico Colegiado y Habilitado (CIP N° 278034)
+            Ingeniero registrado con código CIP, especialidad y departamento (servicios independientes)
           </span>
           <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
           <span className="flex items-center gap-1.5">
@@ -183,7 +183,12 @@ export default function TrustBadges() {
           <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
           <span className="flex items-center gap-1.5">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-            RUC 20504794637 - Empresa Formal y Homologable
+            RUC 20616650735 - Empresa Formal y Homologable
+          </span>
+          <span className="hidden sm:inline text-slate-300 dark:text-slate-700">•</span>
+          <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+            Plataforma Encriptada de Extremo a Extremo (Anti-Phishing TLS 1.3)
           </span>
         </div>
 

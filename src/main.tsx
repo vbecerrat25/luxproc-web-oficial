@@ -2,6 +2,7 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import { LanguageProvider } from './utils/i18n.tsx';
 
 // Suppress benign Vite dev server WebSocket disconnect errors from appearing in console alerts or debug overlay
 if (typeof window !== "undefined") {
@@ -83,6 +84,8 @@ if (typeof window !== "undefined") {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <LanguageProvider>
+      <App />
+    </LanguageProvider>
   </StrictMode>,
 );

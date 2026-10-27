@@ -15,8 +15,10 @@ import {
   ArrowLeft 
 } from "lucide-react";
 import { useScrollLock, resetScrollLock } from "../utils/scrollLock";
+import { useLanguage } from "../utils/i18n";
 
 export default function BusinessInfo() {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   useScrollLock(isOpen);
 
@@ -137,16 +139,16 @@ export default function BusinessInfo() {
                 onClick={() => setIsOpen(false)}
                 className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm transition-all hover:shadow-md cursor-pointer group"
               >
-                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Volver al Inicio
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {t.business.backHome}
               </button>
 
               <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 font-mono text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-400">
                 <span className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-blue-500 animate-ping" />
-                  Ventana Corporativa: <span className="font-bold text-slate-800 dark:text-white">Nosotros</span>
+                  {t.business.windowCorporate}
                 </span>
                 <span className="hidden sm:inline text-slate-300 dark:text-slate-700">|</span>
-                <span className="text-slate-500 dark:text-slate-400">Cultura, Misión, Visión & Principios</span>
+                <span className="text-slate-500 dark:text-slate-400">{t.business.cultureSubtitle}</span>
               </div>
             </div>
 
@@ -154,13 +156,13 @@ export default function BusinessInfo() {
             <div className="mb-16 text-left max-w-4xl">
               <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold uppercase tracking-wider mb-4">
                 <Building2 className="w-3.5 h-3.5 shrink-0 text-blue-500" />
-                <span>Nosotros — Cultura & Principios LUXPROC</span>
+                <span>{t.business.badge}</span>
               </div>
               <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
-                Arquitectos del <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 dark:from-blue-400 dark:via-indigo-300 dark:to-cyan-300">Futuro Digital</span>
+                {t.business.title1}<span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 dark:from-blue-400 dark:via-indigo-300 dark:to-cyan-300">{t.business.title2}</span>
               </h1>
               <p className="mt-6 text-base md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
-                LUXPROC nace con la visión de unificar ingeniería de hardware avanzada, desarrollo de software de misión crítica (ERPs, CRMs) y proyectos de innovación científica (I+D+i) para crear impacto real y sostenible.
+                {t.business.desc}
               </p>
             </div>
 
@@ -192,12 +194,12 @@ export default function BusinessInfo() {
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-blue-500 text-xs font-black">▲</span>
                     <h3 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                      ¿Qué Hacemos?
+                      {t.business.whatWeDoTitle}
                     </h3>
                   </div>
 
                   <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                    Diseñamos, desarrollamos e implementamos ecosistemas empresariales integrales. No solo escribimos código inteligente para CRM y ERP corporativos; también diseñamos soluciones de hardware dedicadas e instalaciones eléctricas certificadas que sustentan la infraestructura física de tu compañía.
+                    {t.business.whatWeDoDesc}
                   </p>
                 </div>
 
@@ -233,12 +235,12 @@ export default function BusinessInfo() {
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-sky-400 text-xs font-black">▲</span>
                     <h3 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                      Misión
+                      {t.business.missionTitle}
                     </h3>
                   </div>
 
                   <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                    Transformar los procesos de nuestros clientes mediante soluciones tecnológicas inteligentes, seguras y escalables, generando eficiencia, productividad y crecimiento sostenible.
+                    {t.business.missionDesc}
                   </p>
                 </div>
 
@@ -272,12 +274,12 @@ export default function BusinessInfo() {
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-indigo-400 text-xs font-black">▲</span>
                     <h3 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                      Visión
+                      {t.business.visionTitle}
                     </h3>
                   </div>
 
                   <p className="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                    Ser la empresa tecnológica de referencia en transformación digital e innovación, reconocida por su excelencia, confiabilidad e impacto en la modernización de organizaciones a nivel nacional e internacional.
+                    {t.business.visionDesc}
                   </p>
                 </div>
 
@@ -333,19 +335,19 @@ export default function BusinessInfo() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-md mb-20">
               <div className="text-center">
                 <p className="text-2xl md:text-4xl font-extrabold text-blue-600 dark:text-blue-400">99.8%</p>
-                <p className="text-xs uppercase font-bold tracking-wider text-slate-600 dark:text-slate-300 mt-1">Uptime de Sistemas</p>
+                <p className="text-xs uppercase font-bold tracking-wider text-slate-600 dark:text-slate-300 mt-1">{t.business.statsUptime}</p>
               </div>
               <div className="text-center border-l border-slate-200 dark:border-slate-800">
                 <p className="text-2xl md:text-4xl font-extrabold text-emerald-600 dark:text-emerald-400">2</p>
-                <p className="text-xs uppercase font-bold tracking-wider text-slate-600 dark:text-slate-300 mt-1">Sistemas ERP/CRM Implementados</p>
+                <p className="text-xs uppercase font-bold tracking-wider text-slate-600 dark:text-slate-300 mt-1">{t.business.statsErp}</p>
               </div>
               <div className="text-center border-l border-slate-200 dark:border-slate-800">
                 <p className="text-2xl md:text-4xl font-extrabold text-purple-600 dark:text-purple-400">3</p>
-                <p className="text-xs uppercase font-bold tracking-wider text-slate-600 dark:text-slate-300 mt-1">Proyectos de Innovación I+D+i</p>
+                <p className="text-xs uppercase font-bold tracking-wider text-slate-600 dark:text-slate-300 mt-1">{t.business.statsProjects}</p>
               </div>
               <div className="text-center border-l border-slate-200 dark:border-slate-800">
                 <p className="text-2xl md:text-4xl font-extrabold text-indigo-600 dark:text-indigo-400">100%</p>
-                <p className="text-xs uppercase font-bold tracking-wider text-slate-600 dark:text-slate-300 mt-1">Sincronización Directa Calendar</p>
+                <p className="text-xs uppercase font-bold tracking-wider text-slate-600 dark:text-slate-300 mt-1">{t.business.statsSync}</p>
               </div>
             </div>
 
@@ -353,10 +355,10 @@ export default function BusinessInfo() {
             <div className="p-8 md:p-12 rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white text-center border border-indigo-500/20 shadow-xl relative overflow-hidden mb-12">
               <Sparkles className="w-10 h-10 text-amber-300 mx-auto mb-6 animate-pulse" />
               <h3 className="text-2xl md:text-3xl font-extrabold mb-4 leading-tight">
-                ¿Quieres conocer más sobre nuestras capacidades de ingeniería?
+                {t.business.bottomCtaTitle}
               </h3>
               <p className="text-slate-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-8">
-                Agenda una consultoría técnica directamente con nuestro equipo ejecutivo para analizar tu proyecto o requerimiento de software/hardware.
+                {t.business.bottomCtaDesc}
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <a
@@ -370,13 +372,13 @@ export default function BusinessInfo() {
                   }}
                   className="py-3.5 px-8 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm transition-all shadow-md active:scale-[0.98] cursor-pointer"
                 >
-                  Agendar Consultoría de Ingeniería
+                  {t.business.scheduleCta}
                 </a>
                 <button
                   onClick={() => setIsOpen(false)}
                   className="py-3.5 px-8 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-sm border border-white/10 transition-all active:scale-[0.98] cursor-pointer"
                 >
-                  Volver a Inicio
+                  {t.business.backHome}
                 </button>
               </div>
             </div>

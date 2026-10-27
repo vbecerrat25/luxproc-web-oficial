@@ -38,7 +38,9 @@ import {
   Gauge,
   Workflow,
   Boxes,
-  ShoppingBag
+  ShoppingBag,
+  HeartHandshake,
+  UserCheck
 } from "lucide-react";
 
 // Types for the CRM and ERP modules
@@ -131,7 +133,7 @@ export default function Solutions() {
       id: "crm",
       title: "Soluciones CRM a la Medida",
       description: "Sistemas avanzados de retención, automatización de embudos comerciales y fidelización de clientes con integraciones omnicanal.",
-      icon: Users,
+      icon: HeartHandshake,
       color: "from-blue-500 to-indigo-600",
       badge: "Software",
       details: "Sistemas CRM robustos diseñados desde cero o integrados con plataformas líderes. Automatizamos sus flujos de ventas y de soporte de extremo a extremo.",
@@ -141,11 +143,11 @@ export default function Solutions() {
       id: "erp",
       title: "Ecosistemas ERP de Clase Mundial",
       description: "Automatización total de inventarios, contabilidad, adquisiciones y logística integral, centralizando la toma de decisiones empresariales.",
-      icon: Building,
+      icon: Boxes,
       color: "from-purple-500 to-indigo-700",
       badge: "Enterprise",
-      details: "Soporte completo para facturación electrónica, adquisiciones, control de inventario multialmacén y contabilidad integrada con normativas fiscales chilenas.",
-      features: ["Facturación Electrónica SII certificada", "Gestión Multibodega y trazabilidad en tiempo real", "Control de Activos, Costos de Importación y Compras", "Contabilidad de doble entrada adaptada al SII"]
+      details: "Soporte completo para facturación electrónica, adquisiciones, control de inventario multialmacén y contabilidad integrada.",
+      features: ["Facturación Electrónica corporativa", "Gestión Multibodega y trazabilidad en tiempo real", "Control de Activos, Costos de Importación y Compras", "Contabilidad analítica y libros integrados"]
     },
     {
       id: "web",
@@ -495,61 +497,88 @@ export default function Solutions() {
   // Helper to retrieve highly customized, unique micro-interactions for each of the 6 core solution icons (triggered when parent card is hovered)
   const getIconVariants = (id: string) => {
     switch (id) {
-      case "crm": // Users icon: Bounces up and sways gracefully
+      case "crm": // HeartHandshake CRM icon: rhythmic heartbeat pulse & gentle harmonic sway that loops continuously while card is hovered
         return {
           hover: { 
-            scale: [1, 1.25, 1.15],
-            rotate: [0, -8, 8, 0],
-            transition: { duration: 0.5, ease: "easeInOut" }
+            scale: [1, 1.18, 1.06, 1.22, 1.12, 1],
+            rotate: [0, -6, 6, -4, 4, 0],
+            y: [0, -4, -1, -5, -2, 0],
+            transition: { 
+              duration: 1.6, 
+              repeat: Infinity, 
+              repeatType: "loop" as const,
+              ease: "easeInOut" 
+            }
           },
           tap: { scale: 0.92 }
         };
-      case "erp": // Building icon: Solid upward structural rise
+      case "erp": // Boxes ERP icon: continuous 3D modular elevation, subtle perspective tilt & expansion
         return {
           hover: { 
-            y: [0, -8, -4],
-            scale: 1.15,
-            transition: { duration: 0.4, ease: "easeOut" }
+            y: [0, -6, -2, -7, -3, 0],
+            scale: [1, 1.16, 1.08, 1.18, 1.12, 1],
+            rotate: [0, 8, -6, 4, -2, 0],
+            transition: { 
+              duration: 1.8, 
+              repeat: Infinity, 
+              repeatType: "loop" as const,
+              ease: "easeInOut" 
+            }
           },
           tap: { scale: 0.95, y: 0 }
         };
-      case "web": // Terminal icon: horizontal slider mimicking command execution cursor
+      case "web": // Terminal icon: continuous horizontal typing pulse & smooth command prompt bounce
         return {
           hover: { 
-            x: [0, 5, -3, 3, 0],
-            scale: 1.12,
-            transition: { duration: 0.5, ease: "easeInOut" }
+            x: [0, 4, -2, 3, 0],
+            scale: [1, 1.14, 1.08, 1.14, 1],
+            transition: { 
+              duration: 1.3, 
+              repeat: Infinity, 
+              repeatType: "loop" as const,
+              ease: "easeInOut" 
+            }
           },
           tap: { scale: 0.95 }
         };
-      case "electricidad": // Zap icon: Fast electric jitter and expand
+      case "electricidad": // Zap icon: Fast electric jitter, energy pulsation and expand
         return {
           hover: { 
-            scale: 1.25,
-            x: [0, -2, 2, -2, 2, 0],
-            y: [0, 1.5, -1.5, 1, -1, 0],
-            transition: { duration: 0.35, repeat: Infinity, repeatType: "reverse" as const }
+            scale: [1, 1.24, 1.12, 1.26, 1],
+            rotate: [0, -8, 8, -4, 4, 0],
+            y: [0, -3, 1, -2, 0],
+            transition: { 
+              duration: 0.7, 
+              repeat: Infinity, 
+              repeatType: "loop" as const,
+              ease: "easeInOut" 
+            }
           },
           tap: { scale: 0.92, rotate: -15 }
         };
-      case "hardware": // Cpu icon: Rotates on clock cycles
+      case "hardware": // Cpu icon: continuous smooth clock-cycle rotation and data pulse
         return {
           hover: { 
-            rotate: 180,
-            scale: 1.2,
-            transition: { type: "spring", stiffness: 220, damping: 12 }
+            rotate: [0, 90, 180, 270, 360],
+            scale: [1, 1.14, 1.18, 1.14, 1],
+            transition: { 
+              duration: 3, 
+              repeat: Infinity, 
+              repeatType: "loop" as const,
+              ease: "linear" 
+            }
           },
           tap: { scale: 0.9, rotate: 270 }
         };
-      case "innovacion": // Lightbulb icon: dynamic pulsing glow beacon
+      case "innovacion": // Lightbulb icon: continuous radiant glow & breathing inspiration pulse
         return {
           hover: { 
-            scale: [1, 1.28, 1.2],
-            filter: ["brightness(1)", "brightness(1.4)", "brightness(1.15)"],
+            scale: [1, 1.24, 1.14, 1.24, 1],
+            filter: ["brightness(1)", "brightness(1.4)", "brightness(1.1)", "brightness(1.4)", "brightness(1)"],
             transition: { 
-              duration: 1.1, 
+              duration: 1.4, 
               repeat: Infinity, 
-              repeatType: "reverse" as const,
+              repeatType: "loop" as const,
               ease: "easeInOut"
             }
           },
@@ -557,7 +586,11 @@ export default function Solutions() {
         };
       default:
         return {
-          hover: { scale: 1.2, rotate: 12 },
+          hover: { 
+            scale: [1, 1.16, 1], 
+            rotate: [0, 8, 0],
+            transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+          },
           tap: { scale: 0.9, rotate: -10 }
         };
     }
@@ -986,7 +1019,7 @@ export default function Solutions() {
               {/* Main Banner Hero */}
               <div className="mb-12 sm:mb-16 text-left max-w-4xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-semibold uppercase tracking-wider mb-3 sm:mb-4">
-                  <Building className="w-3.5 h-3.5" />
+                  <Boxes className="w-3.5 h-3.5" />
                   Ecosistema ERP Empresarial
                 </div>
                 <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight break-words">
@@ -1234,7 +1267,7 @@ export default function Solutions() {
               {/* Main Banner Hero */}
               <div className="mb-12 sm:mb-16 text-left max-w-4xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3 sm:mb-4">
-                  <Users className="w-3.5 h-3.5" />
+                  <HeartHandshake className="w-3.5 h-3.5" />
                   Ecosistema Comercial & Clientes
                 </div>
                 <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight break-words">
@@ -1615,7 +1648,7 @@ export default function Solutions() {
                     id: "web-e-diagnosis",
                     title: "LUXPROC E-DIAGNOSIS",
                     sector: "Auditoría & Peritaje Eléctrico",
-                    desc: "Plataforma profesional para realizar mediciones de corriente eléctrica, conexiones de luminarias y focos, diagnóstico de pozo a tierra y análisis técnico integral con documentación y peritaje certificado bajo normas CNE y RNE.",
+                    desc: "Plataforma profesional para realizar mediciones de corriente eléctrica, conexiones de luminarias y focos, diagnóstico de pozo a tierra y análisis técnico integral con documentación firmada por el ingeniero registrado con su código CIP, especialidad y departamento donde se encuentra (sin vinculación institucional con el CIP, SUNAT u OSE).",
                     icon: Zap,
                     color: "border-amber-500/50 hover:border-amber-500/90 bg-gradient-to-br from-amber-500/5 to-blue-500/5 dark:from-amber-900/20 dark:to-slate-900",
                     badgeColor: "bg-amber-500/20 text-amber-600 dark:text-amber-300 font-extrabold border border-amber-500/30",
@@ -1623,11 +1656,11 @@ export default function Solutions() {
                       "Mediciones de corriente eléctrica, cargas y caída de tensión (CNE)",
                       "Conexiones de luminarias, focos y fotometría lux (RNE EM.010)",
                       "Diagnóstico de pozo a tierra y resistencia PAT (≤25Ω / IEEE 142)",
-                      "Análisis técnico completo con informes y dossier pericial certificado CIP"
+                      "Análisis técnico con informes y dossier firmado por el ingeniero registrado con su código CIP, especialidad y departamento donde se encuentra"
                     ],
                     metrics: {
                       label: "PERITAJE CNE / RNE",
-                      score: "CONFORME CIP",
+                      score: "CONFORME CNE / RNE",
                       rows: [
                         { label: "Pozo a Tierra (PAT):", val: "< 25 Ω (Cumple)" },
                         { label: "Caída de Tensión:", val: "< 2.5% (Conforme)" },

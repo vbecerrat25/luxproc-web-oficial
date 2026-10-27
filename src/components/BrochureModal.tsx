@@ -171,10 +171,10 @@ export default function BrochureModal({ isOpen, onClose, isDarkMode }: BrochureM
               <div>
                 <BrandLogo className="h-10 sm:h-12 w-auto max-w-[200px] mb-2" isDarkMode={isDarkMode} id="brochure-logo-fallback" />
                 <p className="font-mono text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                  R.U.C. 20504794637 • Trujillo / La Libertad - Perú
+                  R.U.C. 20616650735 • Trujillo / La Libertad - Perú
                 </p>
                 <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                  Ingeniería Física, Software Industrial y Peritaje CIP
+                  Ingeniería Física, Software Industrial y Diagnóstico Técnico Especializado
                 </p>
               </div>
 
@@ -182,9 +182,9 @@ export default function BrochureModal({ isOpen, onClose, isDarkMode }: BrochureM
                 <div className="inline-block px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold mb-1">
                   DOSSIER TÉCNICO OFICIAL 2026
                 </div>
-                <div>Ingeniería y Peritaje: <strong>Ing. Víctor Becerra</strong></div>
-                <div>Colegiado CIP: <strong className="text-emerald-600 dark:text-emerald-400 font-bold">N° 278034</strong></div>
-                <div>Contacto: <strong>contacto@luxproc.com</strong></div>
+                <div>Ingeniería y Peritaje: <strong>Ingeniero registrado con código CIP, especialidad y departamento</strong></div>
+                <div>Aviso Institucional: <strong className="text-emerald-600 dark:text-emerald-400 font-bold">Sin vínculo con CIP, SUNAT u OSE</strong></div>
+                <div>Contacto: <strong>luxproc.11@gmail.com</strong></div>
               </div>
             </div>
 
@@ -243,14 +243,14 @@ export default function BrochureModal({ isOpen, onClose, isDarkMode }: BrochureM
                   <div className="flex items-center gap-2">
                     <Zap className="w-4 h-4 text-emerald-500" />
                     <h5 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
-                      LUXPROC E-DIAGNOSIS (Peritaje CIP)
+                      LUXPROC E-DIAGNOSIS (Diagnóstico y Peritaje CNE)
                     </h5>
                   </div>
                   <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
-                    Auditorías eléctricas integrales, medición de pozo a tierra (PAT ≤ 25Ω), termografía predictiva de tableros generales, caída de tensión y fotometría lux. Expedientes con firma de Ingeniero Colegiado CIP.
+                    Auditorías eléctricas integrales, medición de pozo a tierra (PAT ≤ 25Ω), termografía predictiva de tableros generales, caída de tensión y fotometría lux. Expedientes firmados por el ingeniero registrado con su código CIP, especialidad y departamento donde se encuentra (sin vinculación institucional con el CIP, SUNAT u OSE).
                   </p>
                   <div className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
-                    • 100% admisibles para licencias INDECI y defensa civil.
+                    • Elaborados conforme a normas CNE y RNE EM.010.
                   </div>
                 </div>
 
@@ -281,11 +281,7 @@ export default function BrochureModal({ isOpen, onClose, isDarkMode }: BrochureM
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-mono text-slate-600 dark:text-slate-300">
                 <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center gap-1.5 border border-emerald-500/20">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
-                  <span className="font-bold text-emerald-700 dark:text-emerald-300">CIP N° 278034</span>
-                </div>
-                <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-                  <span>CNE / RNE EM.010</span>
+                  <span className="font-bold text-emerald-700 dark:text-emerald-300">CNE / RNE EM.010</span>
                 </div>
                 <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center gap-1.5">
                   <ShieldCheck className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
@@ -294,6 +290,10 @@ export default function BrochureModal({ isOpen, onClose, isDarkMode }: BrochureM
                 <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center gap-1.5">
                   <ShieldCheck className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
                   <span>ISO 9001 / 55001</span>
+                </div>
+                <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+                  <span>SEGURIDAD TLS 1.3</span>
                 </div>
               </div>
             </div>
@@ -305,21 +305,20 @@ export default function BrochureModal({ isOpen, onClose, isDarkMode }: BrochureM
                   Validación Técnica y Respaldo Profesional:
                 </span>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  Expediente emitido bajo los estándares de la Ley del Ejercicio Profesional de la Ingeniería en el Perú (Ley N° 28858) y la representación facultada de Carmen Terán Vda. de Becerra (CEO & Co-Fundadora).
+                  Expediente emitido bajo los estándares de la Ley del Ejercicio Profesional de la Ingeniería en el Perú (Ley N° 28858) y la representación facultada de Carmen Terán Vda. de Becerra (CEO & Co-Fundadora). Aviso legal: Todos los servicios profesionales se emiten de forma independiente y no representan vinculación con el CIP, SUNAT u OSE.
                 </p>
               </div>
 
               <div className="text-center sm:text-right border-t sm:border-t-0 sm:border-l border-slate-200 dark:border-slate-800 pt-3 sm:pt-0 sm:pl-4 flex-shrink-0">
-                <span className="text-[10px] font-mono text-slate-400 block">FIRMA Y SELLO TÉCNICO</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200 font-mono text-xs">ING. VÍCTOR BECERRA</span>
-                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono font-bold block">COLEGIADO CIP N° 278034</span>
+                <span className="text-[10px] font-mono text-slate-400 block">FIRMA Y RESPALDO TÉCNICO</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200 font-mono text-xs">INGENIERO REGISTRADO</span>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono font-bold block">CON CÓDIGO CIP Y ESPECIALIDAD</span>
               </div>
             </div>
 
-            {/* Footer Contact Details */}
             <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400 font-mono">
-              <span>LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. • www.luxproc.com</span>
-              <span>Central: +51 900 000 000 • contacto@luxproc.com</span>
+              <span>LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. • RUC 20616650735 • www.luxproc.com</span>
+              <span>Central Oficial: luxproc.11@gmail.com</span>
               <span>Trujillo - La Libertad, Perú</span>
             </div>
 
