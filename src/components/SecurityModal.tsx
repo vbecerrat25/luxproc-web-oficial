@@ -10,10 +10,9 @@ import {
   Fingerprint, 
   Mail, 
   Database, 
-  ShieldAlert, 
-  UserCheck 
+  ShieldAlert 
 } from "lucide-react";
-import { LUXPROC_SECURITY_INFO, LUXPROC_DESIGNATED_RECIPIENT } from "../utils/cryptoSecurity";
+import { LUXPROC_SECURITY_INFO } from "../utils/cryptoSecurity";
 import { useLanguage } from "../utils/i18n";
 
 interface SecurityModalProps {
@@ -138,33 +137,6 @@ export default function SecurityModal({ isOpen, onClose }: SecurityModalProps) {
                   <span>{t.securityModal.totalArco} <strong>{persistenceData.metrics.totalArcoRequests}</strong></span>
                 </div>
               )}
-            </div>
-
-            {/* Designated Recipient Official Box */}
-            <div className="mt-4 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-extrabold text-xs">
-                  <UserCheck className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                  <span>{t.securityModal.recipientTitle}</span>
-                </div>
-                <span className="text-[10px] font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-500/15 px-2 py-0.5 rounded-full">
-                  {t.securityModal.validatedBadge}
-                </span>
-              </div>
-              <div className="text-xs text-slate-700 dark:text-slate-300 space-y-1">
-                <p>
-                  <strong>{t.securityModal.legalRepLabel}</strong> {LUXPROC_DESIGNATED_RECIPIENT.legalRepresentative}
-                </p>
-                <p>
-                  <strong>{t.securityModal.techDirLabel}</strong> {t.securityModal.techDirVal}
-                </p>
-                <p>
-                  <strong>{t.securityModal.officialEmailLabel}</strong> <a href={`mailto:${LUXPROC_DESIGNATED_RECIPIENT.officialEmail}`} className="text-blue-600 dark:text-blue-400 font-bold underline">{LUXPROC_DESIGNATED_RECIPIENT.officialEmail}</a>
-                </p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400">
-                  {t.securityModal.channelNote}
-                </p>
-              </div>
             </div>
 
             {/* Anti-Phishing Highlights */}

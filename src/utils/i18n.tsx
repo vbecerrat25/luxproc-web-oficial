@@ -188,10 +188,10 @@ export const TRANSLATIONS = {
           ]
         },
         innovacion: {
-          title: "Proyectos de Innovación (I+D+i)",
+          title: "Proyectos de Innovación (I+D+i+e)",
           description: "Investigación, desarrollo tecnológico e innovación aplicada para generar soluciones de patentes que resuelvan cuellos de botella científicos.",
           badge: "Innovación Científica",
-          details: "Soporte completo en la estructuración de proyectos de I+D+i, formulación para financiamientos y prototipado físico/virtual avanzado.",
+          details: "Soporte completo en la estructuración de proyectos de I+D+i+e, formulación para financiamientos y prototipado físico/virtual avanzado.",
           features: [
             "Diseño conceptual y viabilidad para patentes de invención",
             "Formulación de proyectos para fondos de innovación",
@@ -360,7 +360,7 @@ export const TRANSLATIONS = {
           filterAll: "Todas las Soluciones",
           filterSoftware: "Software & Cloud",
           filterHardware: "Hardware & Electricidad",
-          filterInnovation: "Innovación I+D+i",
+          filterInnovation: "Innovación I+D+i+e",
           viewDetail: "Ver Especificaciones Técnicas",
           holisticBadge: "Ingeniería Física y Digital",
           holisticTitle: "Ingeniería Física y Digital bajo el Mismo Techo",
@@ -601,7 +601,7 @@ export const TRANSLATIONS = {
       ]
     },
     footer: {
-      desc: "Líderes en ingeniería física y digital integrada. Desarrollamos ERPs, CRMs avanzados, arquitecturas web escalables y lideramos proyectos de innovación científica (I+D+i) para orquestar la eficiencia del mañana.",
+      desc: "Líderes en ingeniería física y digital integrada. Desarrollamos ERPs, CRMs avanzados, arquitecturas web escalables y lideramos proyectos de innovación científica (I+D+i+e) para orquestar la eficiencia del mañana.",
       brochureBtn: "Dossier / Brochure 2026",
       ecosystems: "Ecosistemas",
       erp: "Plataformas ERP",
@@ -786,7 +786,7 @@ export const TRANSLATIONS = {
           ]
         },
         innovacion: {
-          title: "R&D Innovation Projects",
+          title: "Proyectos de Innovación (I+D+i+e)",
           description: "Applied scientific research and technological development to engineer patentable solutions overcoming technical bottlenecks.",
           badge: "Scientific Innovation",
           details: "Full advisory in R&D project structuring, innovation grant formulation, and advanced physical/virtual rapid prototyping.",
@@ -958,7 +958,7 @@ export const TRANSLATIONS = {
           filterAll: "All Solutions",
           filterSoftware: "Software & Cloud",
           filterHardware: "Hardware & Electrical",
-          filterInnovation: "R&D Innovation",
+          filterInnovation: "R&D+i+e Innovation",
           viewDetail: "View Technical Specifications",
           holisticBadge: "Physical & Digital Engineering",
           holisticTitle: "Physical and Digital Engineering Under One Roof",
@@ -1384,7 +1384,7 @@ export const TRANSLATIONS = {
           ]
         },
         innovacion: {
-          title: "Projetos de Inovação (P&D)",
+          title: "Projetos de Inovação (I+D+i+e)",
           description: "Pesquisa científica e desenvolvimento tecnológico aplicado para gerar soluções e patentes para desafios complexos.",
           badge: "Inovação Científica",
           details: "Estruturação completa de projetos de P&D, editais de financiamento e prototipagem física e virtual de alta fidelidade.",
@@ -1556,7 +1556,7 @@ export const TRANSLATIONS = {
           filterAll: "Todas as Soluções",
           filterSoftware: "Software & Cloud",
           filterHardware: "Hardware & Eletricidade",
-          filterInnovation: "Inovação P&D",
+          filterInnovation: "Inovação P&D+i+e",
           viewDetail: "Ver Especificações Técnicas",
           holisticBadge: "Engenharia Física e Digital",
           holisticTitle: "Engenharia Física e Digital sob o Mesmo Teto",
@@ -1838,6 +1838,13 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (saved === "es" || saved === "en" || saved === "pt") {
         return saved;
       }
+      try {
+        const sysLang = (navigator.languages && navigator.languages[0]) || navigator.language || "";
+        const lower = sysLang.toLowerCase();
+        if (lower.startsWith("pt")) return "pt";
+        if (lower.startsWith("en")) return "en";
+        if (lower.startsWith("es")) return "es";
+      } catch (e) {}
     }
     return "es";
   });

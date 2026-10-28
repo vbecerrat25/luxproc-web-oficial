@@ -15,7 +15,7 @@ import ContactForm from "./components/ContactForm";
 import FaqModal from "./components/FaqModal";
 import BrochureModal from "./components/BrochureModal";
 import BrandLogo from "./components/BrandLogo";
-import { Cpu, FileDown, ShieldCheck } from "lucide-react";
+import { Cpu, FileDown } from "lucide-react";
 import { LegalModals, RegulatoryBadges } from "./components/LegalModals";
 import SecurityModal from "./components/SecurityModal";
 import { useLanguage } from "./utils/i18n";
@@ -176,7 +176,7 @@ export default function App() {
           <div className="md:col-span-4 space-y-4">
             <div className="flex flex-col sm:items-start items-center gap-3">
               <BrandLogo 
-                className="h-10 sm:h-12 w-auto max-w-[150px] sm:max-w-[200px] object-contain" 
+                className="h-20 sm:h-28 md:h-32 lg:h-36 w-auto max-w-[320px] sm:max-w-[420px] lg:max-w-[460px] object-contain" 
                 isDarkMode={isDarkMode} 
                 id="logo-text-fallback" 
               />
@@ -229,48 +229,9 @@ export default function App() {
 
         </div>
 
-        {/* Centered clean copyright & regulatory bar */}
-        <div className="relative max-w-[1400px] mx-auto mt-10 pt-8 border-t border-slate-200/60 dark:border-slate-800/80 flex flex-col items-center justify-center gap-4 text-[11px] text-slate-400 font-medium z-10 text-center">
-          <div className="flex flex-wrap items-center justify-center gap-3 text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">
-            <button 
-              onClick={() => setIsSecurityOpen(true)}
-              className="flex items-center gap-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-500/25 transition-all cursor-pointer font-bold"
-              title="Ver Certificado de Seguridad y Escudo Anti-Phishing"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-              <span>{t.footer.tlsBadge}</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-0.5"></span>
-            </button>
-            <button 
-              onClick={() => setIsSecurityOpen(true)}
-              className="flex items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-emerald-500 transition-colors cursor-pointer"
-            >
-              {t.footer.antiPhishingBadge}
-            </button>
-            <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
-              {t.footer.lpdpBadge}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-center gap-4 text-xs">
-            <a 
-              href="/terms.html"
-              className="hover:text-blue-500 hover:underline cursor-pointer transition-colors"
-              title="Ver Términos y Condiciones oficiales"
-            >
-              {t.footer.terms}
-            </a>
-            <span className="text-slate-300 dark:text-slate-700">•</span>
-            <a 
-              href="/privacy.html"
-              className="hover:text-emerald-500 hover:underline cursor-pointer font-semibold text-slate-600 dark:text-slate-300 transition-colors"
-              title="Ver Política de Privacidad oficial estática"
-            >
-              {t.footer.privacy}
-            </a>
-          </div>
-
-          <p className="text-center text-xs text-slate-500 dark:text-slate-400 font-medium pt-1">
+        {/* Centered clean copyright notice */}
+        <div className="relative max-w-[1400px] mx-auto mt-10 pt-8 border-t border-slate-200/60 dark:border-slate-800/80 flex flex-col items-center justify-center text-slate-400 font-medium z-10 text-center">
+          <p className="text-center text-xs text-slate-500 dark:text-slate-400 font-medium">
             © {new Date().getFullYear()} LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C. {t.footer.rights}
           </p>
         </div>

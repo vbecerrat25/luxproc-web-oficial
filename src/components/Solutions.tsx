@@ -509,44 +509,21 @@ export default function Solutions() {
     );
   };
 
-  // Helper to retrieve highly customized, unique micro-interactions for each of the 6 core solution icons (triggered when parent card is hovered)
+  // Helper to retrieve highly customized, unique micro-interactions for each of the 6 core solution icons (triggered continuously while parent card is hovered)
   const getIconVariants = (id: string) => {
     switch (id) {
-      case "crm": // HeartHandshake CRM icon: rhythmic heartbeat pulse & gentle harmonic sway that loops continuously while card is hovered
+      case "crm": // Row 1, Card 1 - Rhythmic Heartbeat pulse & magnetic blue/indigo aura
         return {
           hover: { 
-            scale: [1, 1.18, 1.06, 1.22, 1.12, 1],
-            rotate: [0, -6, 6, -4, 4, 0],
-            y: [0, -4, -1, -5, -2, 0],
-            transition: { 
-              duration: 1.6, 
-              repeat: Infinity, 
-              repeatType: "loop" as const,
-              ease: "easeInOut" 
-            }
-          },
-          tap: { scale: 0.92 }
-        };
-      case "erp": // Boxes ERP icon: continuous 3D modular elevation, subtle perspective tilt & expansion
-        return {
-          hover: { 
-            y: [0, -6, -2, -7, -3, 0],
-            scale: [1, 1.16, 1.08, 1.18, 1.12, 1],
-            rotate: [0, 8, -6, 4, -2, 0],
-            transition: { 
-              duration: 1.8, 
-              repeat: Infinity, 
-              repeatType: "loop" as const,
-              ease: "easeInOut" 
-            }
-          },
-          tap: { scale: 0.95, y: 0 }
-        };
-      case "web": // Terminal icon: continuous horizontal typing pulse & smooth command prompt bounce
-        return {
-          hover: { 
-            x: [0, 4, -2, 3, 0],
-            scale: [1, 1.14, 1.08, 1.14, 1],
+            scale: [1, 1.15, 1.05, 1.2, 1.1, 1],
+            y: [0, -6, -1, -8, -3, 0],
+            boxShadow: [
+              "0 10px 15px -3px rgba(59, 130, 246, 0.3)",
+              "0 0 25px 6px rgba(59, 130, 246, 0.7)",
+              "0 0 10px 2px rgba(59, 130, 246, 0.3)",
+              "0 0 35px 10px rgba(99, 102, 241, 0.8)",
+              "0 10px 15px -3px rgba(59, 130, 246, 0.3)"
+            ],
             transition: { 
               duration: 1.3, 
               repeat: Infinity, 
@@ -554,16 +531,62 @@ export default function Solutions() {
               ease: "easeInOut" 
             }
           },
-          tap: { scale: 0.95 }
+          tap: { scale: 0.92 }
         };
-      case "electricidad": // Zap icon: Fast electric jitter, energy pulsation and expand
+      case "erp": // Row 1, Card 2 - 3D Isometric block elevator & modular warehouse cubes lifting
         return {
           hover: { 
-            scale: [1, 1.24, 1.12, 1.26, 1],
-            rotate: [0, -8, 8, -4, 4, 0],
-            y: [0, -3, 1, -2, 0],
+            y: [0, -12, -4, -14, -6, 0],
+            scale: [1, 1.15, 1.06, 1.2, 1.1, 1],
+            boxShadow: [
+              "0 10px 15px -3px rgba(168, 85, 247, 0.3)",
+              "0 0 30px 8px rgba(168, 85, 247, 0.75)",
+              "0 0 12px 3px rgba(147, 51, 234, 0.3)",
+              "0 0 38px 10px rgba(126, 34, 206, 0.85)",
+              "0 10px 15px -3px rgba(168, 85, 247, 0.3)"
+            ],
             transition: { 
-              duration: 0.7, 
+              duration: 2.2, 
+              repeat: Infinity, 
+              repeatType: "loop" as const,
+              ease: "easeInOut" 
+            }
+          },
+          tap: { scale: 0.95, y: 0 }
+        };
+      case "web": // Row 1, Card 3 - Digital Matrix command terminal typing stream & scanline pulse
+        return {
+          hover: { 
+            scale: [1, 1.12, 1.04, 1.15, 1],
+            boxShadow: [
+              "0 10px 15px -3px rgba(16, 185, 129, 0.3)",
+              "0 0 30px 8px rgba(16, 185, 129, 0.75)",
+              "0 0 10px 2px rgba(16, 185, 129, 0.3)",
+              "0 0 36px 10px rgba(52, 211, 153, 0.85)",
+              "0 10px 15px -3px rgba(16, 185, 129, 0.3)"
+            ],
+            transition: { 
+              duration: 0.85, 
+              repeat: Infinity, 
+              repeatType: "loop" as const,
+              ease: "easeInOut" 
+            }
+          },
+          tap: { scale: 0.95 }
+        };
+      case "electricidad": // Row 2, Card 1 - High-voltage arc & electric vibration
+        return {
+          hover: { 
+            scale: [1, 1.18, 1.08, 1.22, 1],
+            boxShadow: [
+              "0 10px 15px -3px rgba(245, 158, 11, 0.3)",
+              "0 0 30px 8px rgba(245, 158, 11, 0.8)",
+              "0 0 12px 3px rgba(217, 119, 6, 0.3)",
+              "0 0 36px 10px rgba(251, 191, 36, 0.9)",
+              "0 10px 15px -3px rgba(245, 158, 11, 0.3)"
+            ],
+            transition: { 
+              duration: 0.55, 
               repeat: Infinity, 
               repeatType: "loop" as const,
               ease: "easeInOut" 
@@ -571,13 +594,19 @@ export default function Solutions() {
           },
           tap: { scale: 0.92, rotate: -15 }
         };
-      case "hardware": // Cpu icon: continuous smooth clock-cycle rotation and data pulse
+      case "hardware": // Row 2, Card 2 - Continuous microprocessor rotation & computing telemetry
         return {
           hover: { 
-            rotate: [0, 90, 180, 270, 360],
-            scale: [1, 1.14, 1.18, 1.14, 1],
+            scale: [1, 1.12, 1.06, 1.15, 1],
+            boxShadow: [
+              "0 10px 15px -3px rgba(6, 182, 212, 0.3)",
+              "0 0 28px 6px rgba(6, 182, 212, 0.65)",
+              "0 0 12px 2px rgba(6, 182, 212, 0.3)",
+              "0 0 32px 8px rgba(56, 189, 248, 0.75)",
+              "0 10px 15px -3px rgba(6, 182, 212, 0.2)"
+            ],
             transition: { 
-              duration: 3, 
+              duration: 2.8, 
               repeat: Infinity, 
               repeatType: "loop" as const,
               ease: "linear" 
@@ -585,11 +614,18 @@ export default function Solutions() {
           },
           tap: { scale: 0.9, rotate: 270 }
         };
-      case "innovacion": // Lightbulb icon: continuous radiant glow & breathing inspiration pulse
+      case "innovacion": // Row 2, Card 3 - Radiant Lightbulb ignition halo: turns on and radiates intense golden illumination!
         return {
           hover: { 
-            scale: [1, 1.24, 1.14, 1.24, 1],
-            filter: ["brightness(1)", "brightness(1.4)", "brightness(1.1)", "brightness(1.4)", "brightness(1)"],
+            scale: [1, 1.2, 1.1, 1.25, 1.18],
+            y: [0, -6, -2, -8, -5],
+            boxShadow: [
+              "0 10px 15px -3px rgba(244, 63, 94, 0.3)",
+              "0 0 40px 10px rgba(251, 191, 36, 0.9), 0 0 70px 20px rgba(245, 158, 11, 0.6)",
+              "0 0 20px 4px rgba(251, 191, 36, 0.5)",
+              "0 0 60px 18px rgba(251, 191, 36, 1), 0 0 95px 30px rgba(245, 158, 11, 0.75)",
+              "0 0 45px 12px rgba(251, 191, 36, 0.95), 0 0 75px 22px rgba(245, 158, 11, 0.65)"
+            ],
             transition: { 
               duration: 1.4, 
               repeat: Infinity, 
@@ -608,6 +644,121 @@ export default function Solutions() {
           },
           tap: { scale: 0.9, rotate: -10 }
         };
+    }
+  };
+
+  // Dedicated complementary motion for the icon inside the container
+  const getIconChildVariants = (id: string) => {
+    switch (id) {
+      case "crm": // Heartbeat double-thump sway
+        return {
+          hover: {
+            scale: [1, 1.35, 1.08, 1.45, 1.15, 1],
+            rotate: [0, -10, 8, -4, 4, 0],
+            transition: {
+              duration: 1.3,
+              repeat: Infinity,
+              repeatType: "loop" as const,
+              ease: "easeInOut"
+            }
+          },
+          tap: { scale: 0.92 }
+        };
+      case "erp": // 3D cube rotation & mechanical alignment
+        return {
+          hover: {
+            rotate: [0, 45, 90, 45, 0],
+            scale: [1, 1.2, 1.08, 1.25, 1.12, 1],
+            transition: {
+              duration: 2.2,
+              repeat: Infinity,
+              repeatType: "loop" as const,
+              ease: "easeInOut"
+            }
+          },
+          tap: { scale: 0.95 }
+        };
+      case "web": // Matrix command prompt typing jitter & horizontal bracket expansion
+        return {
+          hover: {
+            scaleX: [1, 1.3, 0.95, 1.25, 1],
+            scaleY: [1, 0.95, 1.2, 0.95, 1],
+            x: [0, -5, 5, -3, 3, 0],
+            filter: [
+              "brightness(1) drop-shadow(0 0 0px #10b981)",
+              "brightness(2) drop-shadow(0 0 16px #34d399)",
+              "brightness(1.1) drop-shadow(0 0 4px #10b981)",
+              "brightness(2.2) drop-shadow(0 0 24px #10b981)",
+              "brightness(1) drop-shadow(0 0 0px #10b981)"
+            ],
+            transition: {
+              duration: 0.85,
+              repeat: Infinity,
+              repeatType: "loop" as const,
+              ease: "easeInOut"
+            }
+          },
+          tap: { scale: 0.95 }
+        };
+      case "electricidad": // High-voltage arc vibration
+        return {
+          hover: {
+            rotate: [0, -20, 20, -12, 12, 0],
+            scale: [1, 1.35, 1.1, 1.4, 1],
+            filter: [
+              "drop-shadow(0 0 0px #f59e0b)",
+              "drop-shadow(0 0 16px #fbbf24)",
+              "drop-shadow(0 0 4px #d97706)",
+              "drop-shadow(0 0 20px #f59e0b)",
+              "drop-shadow(0 0 0px #f59e0b)"
+            ],
+            transition: {
+              duration: 0.55,
+              repeat: Infinity,
+              repeatType: "loop" as const,
+              ease: "easeInOut"
+            }
+          },
+          tap: { scale: 0.95 }
+        };
+      case "hardware": // 360-degree clock cycle rotation
+        return {
+          hover: {
+            rotate: [0, 90, 180, 270, 360],
+            scale: [1, 1.18, 1.1, 1.18, 1],
+            transition: {
+              duration: 2.8,
+              repeat: Infinity,
+              repeatType: "loop" as const,
+              ease: "linear"
+            }
+          },
+          tap: { scale: 0.95 }
+        };
+      case "innovacion": // THE LIGHTBULB TURNS ON: Filament catches fire, flickers and shines with brilliant incandescent golden light!
+        return {
+          hover: {
+            scale: [1, 1.35, 1.18, 1.5, 1.38],
+            y: [0, -4, -1, -6, -4],
+            filter: [
+              "brightness(1) drop-shadow(0 0 0px #ffffff)",
+              "brightness(2.7) drop-shadow(0 0 18px #ffffff) drop-shadow(0 0 35px #fef08a)",
+              "brightness(1.5) drop-shadow(0 0 8px #fde047)",
+              "brightness(3.4) drop-shadow(0 0 28px #ffffff) drop-shadow(0 0 55px #fbbf24) drop-shadow(0 0 85px #f59e0b)",
+              "brightness(2.8) drop-shadow(0 0 22px #fef08a) drop-shadow(0 0 48px #f59e0b)"
+            ],
+            color: ["#ffffff", "#fffbeb", "#fef9c3", "#ffffff", "#fef08a"],
+            transition: {
+              duration: 1.4,
+              repeat: Infinity,
+              repeatType: "loop" as const,
+              ease: "easeInOut"
+            }
+          },
+          tap: { scale: 0.95 }
+        };
+      default:
+        return {};
     }
   };
 
@@ -698,9 +849,11 @@ export default function Solutions() {
                 <div>
                   <motion.div 
                     variants={getIconVariants(sol.id)}
-                    className={`p-4 rounded-2xl bg-gradient-to-br ${sol.color} text-white w-fit mb-6 shadow-md shadow-blue-500/10 flex items-center justify-center`}
+                    className={`p-4 rounded-2xl bg-gradient-to-br ${sol.color} text-white w-fit mb-6 shadow-md shadow-blue-500/10 flex items-center justify-center relative overflow-visible`}
                   >
-                    <Icon className="w-6 h-6" />
+                    <motion.div variants={getIconChildVariants(sol.id)} className="flex items-center justify-center">
+                      <Icon className="w-6 h-6" />
+                    </motion.div>
                   </motion.div>
                   <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-full">
                     {sol.badge}
@@ -1879,8 +2032,10 @@ export default function Solutions() {
                 {CORE_SOLUTIONS.map((sol, index) => {
                   const Icon = sol.icon;
                   return (
-                    <div
+                    <motion.div
                       key={index}
+                      whileHover="hover"
+                      whileTap="tap"
                       onClick={() => {
                         if (sol.id === "erp") {
                           setIsERPFulviewOpen(true);
@@ -1902,12 +2057,17 @@ export default function Solutions() {
                           pushModalHistory("soluciones-detalle");
                         }
                       }}
-                      className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-blue-500/40 transition-all flex flex-col justify-between cursor-pointer group"
+                      className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-blue-500/40 transition-all flex flex-col justify-between cursor-pointer group select-none"
                     >
                       <div>
-                        <div className={`p-4 rounded-2xl bg-gradient-to-br ${sol.color} text-white w-fit mb-6 shadow-md`}>
-                          <Icon className="w-6 h-6" />
-                        </div>
+                        <motion.div 
+                          variants={getIconVariants(sol.id)}
+                          className={`p-4 rounded-2xl bg-gradient-to-br ${sol.color} text-white w-fit mb-6 shadow-md flex items-center justify-center relative overflow-visible`}
+                        >
+                          <motion.div variants={getIconChildVariants(sol.id)} className="flex items-center justify-center">
+                            <Icon className="w-6 h-6" />
+                          </motion.div>
+                        </motion.div>
                         <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-full">
                           {sol.badge}
                         </span>
@@ -1921,7 +2081,7 @@ export default function Solutions() {
                       <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 font-bold group-hover:gap-3 transition-all">
                         {t.solutions.fullviews.solutionsDirectory.viewDetail} <ArrowRight className="w-4 h-4" />
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
