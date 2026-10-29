@@ -1780,7 +1780,7 @@ export default function Solutions() {
                         { label: "Tiempo Reparación (MTTR):", val: "42 min" }
                       ]
                     },
-                    externalUrl: "https://maintenancecloud-1109.ai.studio",
+                    externalUrl: "https://cloud.maintenance.luxproc.com/",
                     ctaText: t.solutions.fullviews.web.cards.maintenanceCloud.ctaText
                   },
                   {

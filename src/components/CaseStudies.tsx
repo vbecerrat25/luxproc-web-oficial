@@ -113,7 +113,7 @@ const CASE_STUDIES: CaseStudy[] = [
     author: "Ing. Roberto Alarcón",
     role: "Jefe de Mantenimiento y Confiabilidad",
     systemUsed: "LUXPROC Cloud Maintenance System",
-    systemUrl: "https://maintenancecloud-1109.ai.studio",
+    systemUrl: "https://cloud.maintenance.luxproc.com/",
     icon: Gauge,
     accentGradient: "from-blue-500/10 via-blue-500/5 to-transparent border-blue-500/30",
     badgeBg: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"
