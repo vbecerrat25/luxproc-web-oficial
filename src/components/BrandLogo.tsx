@@ -36,7 +36,7 @@ export default function BrandLogo({
     <div className="inline-flex items-center select-none group">
       <img 
         src={src} 
-        alt="LUXPROC" 
+        alt="Luxproc — LUXPROC INNOVACIÓN Y TECNOLOGÍA S.A.C." 
         className={`${className} object-contain transition-transform duration-300 group-hover:scale-[1.02]`}
         referrerPolicy="no-referrer"
         onError={handleError}
@@ -48,7 +48,7 @@ export default function BrandLogo({
       >
         <img 
           src="/favicon-32x32.png" 
-          alt="LUXPROC" 
+          alt="Luxproc" 
           className="w-7 h-7 object-contain inline-block" 
         />
         <span>LUXPROC</span>

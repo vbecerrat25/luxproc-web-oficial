@@ -21,14 +21,14 @@ function TypewriterHeading() {
   const p1Len = tw.part1.length;
   const p2Len = tw.part2.length;
 
-  const [charCount, setCharCount] = useState(0);
+  const [charCount, setCharCount] = useState<number>(() => fullText.length);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Reset typewriter when language changes
+  // Reset typewriter with full text visible immediately when language changes (SEO-safe)
   useEffect(() => {
-    setCharCount(0);
+    setCharCount(fullText.length);
     setIsDeleting(false);
-  }, [language]);
+  }, [language, fullText.length]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;

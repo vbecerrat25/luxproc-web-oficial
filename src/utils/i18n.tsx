@@ -25,6 +25,10 @@ export interface FaqItemI18n {
 
 export const TRANSLATIONS = {
   es: {
+    seo: {
+      title: "Luxproc | Ingeniería de Software ERP, CRM, Web e I+D+i+e",
+      description: "Luxproc desarrolla ecosistemas ERP, CRM a medida, arquitectura web de alto rendimiento, hardware IoT y proyectos de innovación (I+D+i+e). Agenda una consultoría."
+    },
     nav: {
       about: "Nosotros",
       solutions: "Soluciones",
@@ -43,13 +47,13 @@ export const TRANSLATIONS = {
       close: "Cerrar",
     },
     hero: {
-      badge: "Consultoría de Ingeniería & Software Completo",
+      badge: "Luxproc • Consultoría de Ingeniería & Software Completo",
       typewriter: {
         part1: "Sistemas ERP, CRM y ",
         part2: "Desarrollo Moderno",
         part3: " Sin Fricciones."
       },
-      description: "Diseñamos soluciones tecnológicas integrales que vinculan software escalable, control logístico inteligente e ingeniería de hardware a la medida. Agenda una consultoría automatizada por Google Meet hoy.",
+      description: "En Luxproc diseñamos soluciones tecnológicas integrales que vinculan software escalable, control logístico inteligente e ingeniería de hardware a la medida. Agenda una consultoría automatizada por Google Meet hoy.",
       bookCta: "Agendar Consultoría Gratuita",
       exploreCta: "Explorar Soluciones ERP/CRM",
       brochureBtn: "Brochure 2026 (PDF)",
@@ -623,6 +627,10 @@ export const TRANSLATIONS = {
   },
 
   en: {
+    seo: {
+      title: "Luxproc | ERP, CRM Software Engineering, Web & R&D+i+e",
+      description: "Luxproc builds scalable ERP ecosystems, custom CRM platforms, modern web architecture, IoT hardware, and R&D+i+e innovation projects. Book a consultation."
+    },
     nav: {
       about: "About Us",
       solutions: "Solutions",
@@ -641,13 +649,13 @@ export const TRANSLATIONS = {
       close: "Close",
     },
     hero: {
-      badge: "Engineering Consultation & Complete Software",
+      badge: "Luxproc • Engineering Consultation & Complete Software",
       typewriter: {
         part1: "ERP, CRM Systems & ",
         part2: "Modern Development",
         part3: " Without Friction."
       },
-      description: "We design comprehensive technology solutions uniting scalable software, intelligent logistics control, and custom hardware engineering. Schedule an automated Google Meet consultation today.",
+      description: "At Luxproc, we design comprehensive technology solutions uniting scalable software, intelligent logistics control, and custom hardware engineering. Schedule an automated Google Meet consultation today.",
       bookCta: "Book Free Consultation",
       exploreCta: "Explore ERP/CRM Solutions",
       brochureBtn: "Brochure 2026 (PDF)",
@@ -1221,6 +1229,10 @@ export const TRANSLATIONS = {
   },
 
   pt: {
+    seo: {
+      title: "Luxproc | Engenharia de Software ERP, CRM, Web e P&D+i+e",
+      description: "A Luxproc desenvolve ecossistemas ERP, CRM sob medida, arquitetura web moderna, hardware IoT e projetos de inovação (P&D+i+e). Agende uma consultoria."
+    },
     nav: {
       about: "Sobre Nós",
       solutions: "Soluções",
@@ -1239,13 +1251,13 @@ export const TRANSLATIONS = {
       close: "Fechar",
     },
     hero: {
-      badge: "Consultoria de Engenharia & Software Completo",
+      badge: "Luxproc • Consultoria de Engenharia & Software Completo",
       typewriter: {
         part1: "Sistemas ERP, CRM e ",
         part2: "Desenvolvimento Moderno",
         part3: " Sem Fricções."
       },
-      description: "Desenvolvemos soluções tecnológicas integrais que unem software escalável, controle logístico inteligente e engenharia de hardware sob medida. Agende uma consultoria automatizada no Google Meet hoje.",
+      description: "Na Luxproc desenvolvemos soluções tecnológicas integrais que unem software escalável, controle logístico inteligente e engenharia de hardware sob medida. Agende uma consultoria automatizada no Google Meet hoje.",
       bookCta: "Agendar Consultoria Gratuita",
       exploreCta: "Explorar Soluções ERP/CRM",
       brochureBtn: "Catálogo 2026 (PDF)",
@@ -1834,6 +1846,12 @@ const LanguageContext = createContext<LanguageContextType>({
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
     if (typeof window !== "undefined") {
+      try {
+        const urlLang = new URLSearchParams(window.location.search).get("lang")?.toLowerCase();
+        if (urlLang === "es" || urlLang === "en" || urlLang === "pt") {
+          return urlLang;
+        }
+      } catch (e) {}
       const saved = localStorage.getItem("luxproc_lang");
       if (saved === "es" || saved === "en" || saved === "pt") {
         return saved;

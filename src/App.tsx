@@ -22,7 +22,7 @@ import { useLanguage } from "./utils/i18n";
 import { pushModalHistory, closeModalWithHistory } from "./utils/navigation";
 
 export default function App() {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
       return window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -33,6 +33,42 @@ export default function App() {
   const [isBrochureOpen, setIsBrochureOpen] = useState<boolean>(false);
   const [isFaqOpen, setIsFaqOpen] = useState<boolean>(false);
   const [isSecurityOpen, setIsSecurityOpen] = useState<boolean>(false);
+
+  // Sync dynamic document title, meta description, OpenGraph, and canonical URL for SEO
+  useEffect(() => {
+    if (typeof document === "undefined" || !t.seo) return;
+    document.title = t.seo.title;
+
+    const setMetaContent = (selector: string, content: string) => {
+      const el = document.querySelector(selector);
+      if (el) el.setAttribute("content", content);
+    };
+
+    setMetaContent('meta[name="description"]', t.seo.description);
+    setMetaContent('meta[property="og:title"]', t.seo.title);
+    setMetaContent('meta[property="og:description"]', t.seo.description);
+    setMetaContent('meta[name="twitter:title"]', t.seo.title);
+    setMetaContent('meta[name="twitter:description"]', t.seo.description);
+
+    const localeMap: Record<string, string> = {
+      es: "es_PE",
+      en: "en_US",
+      pt: "pt_BR",
+    };
+    setMetaContent('meta[property="og:locale"]', localeMap[language] || "es_PE");
+
+    const urlLang = new URLSearchParams(window.location.search).get("lang")?.toLowerCase();
+    const canonicalUrl =
+      urlLang === "en" || urlLang === "pt"
+        ? `https://luxproc.com/?lang=${urlLang}`
+        : "https://luxproc.com/";
+
+    setMetaContent('meta[property="og:url"]', canonicalUrl);
+    const canonicalEl = document.querySelector('link[rel="canonical"]');
+    if (canonicalEl) {
+      canonicalEl.setAttribute("href", canonicalUrl);
+    }
+  }, [language, t.seo]);
 
   // Hash & URL query detection for legal modals (Google Verification support for /#privacidad)
   useEffect(() => {

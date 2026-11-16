@@ -1,7 +1,7 @@
 {
   "hosting": [
     {
-      "target": "sitio-web-oficial",
+      "target": "sitio-principal",
       "public": "dist",
       "ignore": [
         "firebase.json",

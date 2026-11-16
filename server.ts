@@ -236,26 +236,30 @@ async function startServer() {
     next();
   });
 
-  // High-priority static handler for all Favicons, Manifest and Brand Assets with public caching
+  // High-priority static handler for all Favicons, Sitemap, Manifest and Brand Assets with public caching
   app.use((req, res, next) => {
     const p = req.path;
     if (
       p.startsWith("/favicon") ||
       p.startsWith("/apple-touch-icon") ||
       p.startsWith("/logo-") ||
+      p === "/google-logo.png" ||
       p.endsWith(".ico") ||
       p === "/site.webmanifest" ||
-      p === "/robots.txt"
+      p === "/robots.txt" ||
+      p === "/sitemap.xml"
     ) {
       const filename = path.basename(p);
       const publicFile = path.join(process.cwd(), "public", filename);
       if (fs.existsSync(publicFile)) {
-        res.setHeader("Cache-Control", "public, max-age=86400, immutable");
+        res.setHeader("Cache-Control", p === "/sitemap.xml" || p === "/robots.txt" ? "public, max-age=3600" : "public, max-age=86400, immutable");
         res.setHeader("Access-Control-Allow-Origin", "*");
         if (filename.endsWith(".ico")) res.setHeader("Content-Type", "image/x-icon");
         else if (filename.endsWith(".png")) res.setHeader("Content-Type", "image/png");
+        else if (filename.endsWith(".svg")) res.setHeader("Content-Type", "image/svg+xml");
         else if (filename.endsWith(".webmanifest")) res.setHeader("Content-Type", "application/manifest+json");
-        else if (filename.endsWith(".txt")) res.setHeader("Content-Type", "text/plain");
+        else if (filename.endsWith(".xml")) res.setHeader("Content-Type", "application/xml; charset=utf-8");
+        else if (filename.endsWith(".txt")) res.setHeader("Content-Type", "text/plain; charset=utf-8");
         return res.sendFile(publicFile);
       }
     }
